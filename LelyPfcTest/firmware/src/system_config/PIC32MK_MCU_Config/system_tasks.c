@@ -75,11 +75,14 @@ void SYS_Tasks ( void )
     SYS_CONSOLE_Tasks(sysObj.sysConsole0);
 
     /* Maintain Device Drivers */
+    DRV_USART_TasksTransmit(sysObj.drvUsart0);
+    DRV_USART_TasksError (sysObj.drvUsart0);
+    DRV_USART_TasksReceive(sysObj.drvUsart0);
 
     /* Maintain Middleware & Other Libraries */
 
     /* Maintain the application's state machine. */
-    ANALOG_VOLTAGE_MONITOR_APP_Tasks();
+    ANALOG_VOLTAGE_MONITOR_Tasks();
 }
 
 

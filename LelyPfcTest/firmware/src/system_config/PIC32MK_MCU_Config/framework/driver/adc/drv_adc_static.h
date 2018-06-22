@@ -80,9 +80,6 @@ inline void DRV_ADC1_Close(void);
 inline void DRV_ADC2_Open(void);
 
 inline void DRV_ADC2_Close(void);
-inline void DRV_ADC3_Open(void);
-
-inline void DRV_ADC3_Close(void);
 inline void DRV_ADC4_Open(void);
 
 inline void DRV_ADC4_Close(void);

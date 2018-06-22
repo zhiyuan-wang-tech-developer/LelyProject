@@ -59,6 +59,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include <stdbool.h>                    // Defines true
 #include <stdlib.h>                     // Defines EXIT_FAILURE
 #include "system/common/sys_module.h"   // SYS function prototypes
+#include "system/debug/sys_debug.h"
+#include <peripheral/peripheral.h>
 
 
 // *****************************************************************************
@@ -69,6 +71,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 int main ( void )
 {
+    printf("Start\r\n");
+    SYS_DEBUG_BreakPoint();
     /* Initialize all MPLAB Harmony modules, including application(s). */
     SYS_Initialize ( NULL );
 

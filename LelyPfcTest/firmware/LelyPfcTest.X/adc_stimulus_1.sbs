@@ -1,0 +1,65 @@
+## SCL Builder Setup File: Do not edit!!
+
+## VERSION: MPLAB X
+## FORMAT:  v2.00.01
+## DEVICE:  PIC32MK0512MCF100
+
+## PINREGACTIONS
+cyc
+No Repeat
+--
+&
+## ADVPINREGACTIONS
+--
+&
+--
+&
+## CLOCK
+
+
+Always
+Never
+Low
+1
+1
+
+--
+&
+## STIMULUSFILE
+&
+## RESPONSEFILE
+&
+## ASYNCH
+Pin
+AVDD
+Set Voltage
+3300 mV
+ADC reference
+-1
+--
+Pin
+AVSS
+Set Voltage
+0 mV
+ADC reference
+-1
+--
+Pin
+VDD
+Set Voltage
+3300 mV
+
+-1
+--
+Pin
+VSS
+Set Voltage
+0 mV
+
+-1
+--
+&
+## ADVANCEDSCL
+
+0
+&

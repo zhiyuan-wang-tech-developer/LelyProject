@@ -142,26 +142,16 @@ extern "C" {
 #define SYS_PORT_F_CNPD         0x0000
 #define SYS_PORT_F_CNEN         0x0000
 
-#define SYS_PORT_G_ANSEL        0x8D3C
-#define SYS_PORT_G_TRIS         0x8DFF
+#define SYS_PORT_G_ANSEL        0x893C
+#define SYS_PORT_G_TRIS         0x89FF
 #define SYS_PORT_G_LAT          0x0000
 #define SYS_PORT_G_ODC          0x0000
 #define SYS_PORT_G_CNPU         0x0000
 #define SYS_PORT_G_CNPD         0x0000
-#define SYS_PORT_G_CNEN         0x00C0
+#define SYS_PORT_G_CNEN         0x0000
 
-
-/*** Console System Service Configuration ***/
-
-#define SYS_CONSOLE_OVERRIDE_STDIO
-#define SYS_CONSOLE_DEVICE_MAX_INSTANCES        2
+#define SYS_CONSOLE_DEVICE_MAX_INSTANCES        1
 #define SYS_CONSOLE_INSTANCES_NUMBER            1
-#define SYS_CONSOLE_UART_IDX               DRV_USART_INDEX_0
-#define SYS_CONSOLE_UART_BAUD_RATE_IDX     DRV_USART_BAUD_RATE_IDX0
-#define SYS_CONSOLE_UART_RD_QUEUE_DEPTH    32
-#define SYS_CONSOLE_UART_WR_QUEUE_DEPTH    128
-#define SYS_CONSOLE_BUFFER_DMA_READY
-
 
 
 /*** Debug System Service Configuration ***/
@@ -181,49 +171,12 @@ extern "C" {
 // *****************************************************************************
 /* USART Driver Configuration Options
 */
-#define DRV_USART_INTERRUPT_MODE                    true
-
-#define DRV_USART_BYTE_MODEL_SUPPORT                false
-
-#define DRV_USART_READ_WRITE_MODEL_SUPPORT          true
-
-#define DRV_USART_BUFFER_QUEUE_SUPPORT              true
-
-#define DRV_USART_CLIENTS_NUMBER                    1
 #define DRV_USART_INSTANCES_NUMBER                  1
-
-#define DRV_USART_PERIPHERAL_ID_IDX0                USART_ID_1
-#define DRV_USART_OPER_MODE_IDX0                    DRV_USART_OPERATION_MODE_NORMAL
-#define DRV_USART_OPER_MODE_DATA_IDX0               
-#define DRV_USART_INIT_FLAG_WAKE_ON_START_IDX0      false
-#define DRV_USART_INIT_FLAG_AUTO_BAUD_IDX0          false
-#define DRV_USART_INIT_FLAG_STOP_IN_IDLE_IDX0       false
-#define DRV_USART_INIT_FLAGS_IDX0                   0
-#define DRV_USART_BRG_CLOCK_IDX0                    120000000
-#define DRV_USART_BAUD_RATE_IDX0                    9600
-#define DRV_USART_LINE_CNTRL_IDX0                   DRV_USART_LINE_CONTROL_8NONE1
-#define DRV_USART_HANDSHAKE_MODE_IDX0               DRV_USART_HANDSHAKE_NONE
-#define DRV_USART_LINES_ENABLE_IDX0                 USART_ENABLE_TX_RX_USED
-#define DRV_USART_XMIT_INT_SRC_IDX0                 INT_SOURCE_USART_1_TRANSMIT
-#define DRV_USART_RCV_INT_SRC_IDX0                  INT_SOURCE_USART_1_RECEIVE
-#define DRV_USART_ERR_INT_SRC_IDX0                  INT_SOURCE_USART_1_ERROR
-#define DRV_USART_XMIT_INT_VECTOR_IDX0              INT_VECTOR_UART1_TX
-#define DRV_USART_XMIT_INT_PRIORITY_IDX0            INT_PRIORITY_LEVEL1
-#define DRV_USART_XMIT_INT_SUB_PRIORITY_IDX0        INT_SUBPRIORITY_LEVEL0
-#define DRV_USART_RCV_INT_VECTOR_IDX0               INT_VECTOR_UART1_RX
-#define DRV_USART_RCV_INT_PRIORITY_IDX0             INT_PRIORITY_LEVEL1
-#define DRV_USART_RCV_INT_SUB_PRIORITY_IDX0         INT_SUBPRIORITY_LEVEL0
-#define DRV_USART_ERR_INT_VECTOR_IDX0               INT_VECTOR_UART1_FAULT
-#define DRV_USART_ERR_INT_PRIORITY_IDX0             INT_PRIORITY_LEVEL1
-#define DRV_USART_ERR_INT_SUB_PRIORITY_IDX0         INT_SUBPRIORITY_LEVEL0
-
-#define DRV_USART_XMIT_QUEUE_SIZE_IDX0              10
-#define DRV_USART_RCV_QUEUE_SIZE_IDX0               10
-
-
-#define DRV_USART_POWER_STATE_IDX0                  SYS_MODULE_POWER_RUN_FULL
-
-#define DRV_USART_QUEUE_DEPTH_COMBINED              20
+#define DRV_USART_CLIENTS_NUMBER                    1
+#define DRV_USART_INTERRUPT_MODE                    false
+#define DRV_USART_BYTE_MODEL_SUPPORT                true
+#define DRV_USART_READ_WRITE_MODEL_SUPPORT          false
+#define DRV_USART_BUFFER_QUEUE_SUPPORT              false
 
 // *****************************************************************************
 // *****************************************************************************
@@ -246,6 +199,13 @@ extern "C" {
 #define V_EN_1V8_2Off() PLIB_PORTS_PinClear(PORTS_ID_0, PORT_CHANNEL_G, PORTS_BIT_POS_9)
 #define V_EN_1V8_2StateGet() PLIB_PORTS_PinGetLatched(PORTS_ID_0, PORT_CHANNEL_G, PORTS_BIT_POS_9)
 #define V_EN_1V8_2StateSet(Value) PLIB_PORTS_PinWrite(PORTS_ID_0, PORT_CHANNEL_G, PORTS_BIT_POS_9, Value)
+
+/*** Functions for V_EN_3V3_AN2 pin ***/
+#define V_EN_3V3_AN2Toggle() PLIB_PORTS_PinToggle(PORTS_ID_0, PORT_CHANNEL_G, PORTS_BIT_POS_10)
+#define V_EN_3V3_AN2On() PLIB_PORTS_PinSet(PORTS_ID_0, PORT_CHANNEL_G, PORTS_BIT_POS_10)
+#define V_EN_3V3_AN2Off() PLIB_PORTS_PinClear(PORTS_ID_0, PORT_CHANNEL_G, PORTS_BIT_POS_10)
+#define V_EN_3V3_AN2StateGet() PLIB_PORTS_PinGetLatched(PORTS_ID_0, PORT_CHANNEL_G, PORTS_BIT_POS_10)
+#define V_EN_3V3_AN2StateSet(Value) PLIB_PORTS_PinWrite(PORTS_ID_0, PORT_CHANNEL_G, PORTS_BIT_POS_10, Value)
 
 /*** Functions for V_EN_3V3_2 pin ***/
 #define V_EN_3V3_2Toggle() PLIB_PORTS_PinToggle(PORTS_ID_0, PORT_CHANNEL_E, PORTS_BIT_POS_8)

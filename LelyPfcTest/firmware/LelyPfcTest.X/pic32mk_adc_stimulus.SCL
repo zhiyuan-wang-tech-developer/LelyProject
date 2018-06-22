@@ -1,0 +1,8 @@
+testbench for "pic32mk0512mcf100" is
+    begin
+        process is
+            begin
+                ADCCON2.BGVRRDY <= '1';
+                wait;
+            end process;
+    end testbench;
