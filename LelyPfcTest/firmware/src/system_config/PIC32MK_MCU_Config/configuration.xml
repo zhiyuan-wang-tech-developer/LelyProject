@@ -9,7 +9,7 @@
     <Processor dnOrder="1" name="PIC32MK0512MCF100"/>
     <Board dnOrder="2" name=" "/>
     <ForceOptimization dnOrder="3" flag="true"/>
-    <MergeStrategy dnOrder="4" flag="USER_RECENT"/>
+    <MergeStrategy dnOrder="4" flag="USER_ALL"/>
   </General>
   <Manifest>
     <Files dnOrder="0">
@@ -143,7 +143,7 @@
       <Template dnOrder="2">
         <Name dnOrder="0">system_init.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/PIC32MK_MCU_Config</Path>
-        <Checksum dnOrder="2">D729D69D9BEB8CA3FE2425203FB05214</Checksum>
+        <Checksum dnOrder="2">F7C32BC399257B0DAFDB051A09F492A0</Checksum>
       </Template>
       <Template dnOrder="3">
         <Name dnOrder="0">drv_usart_mapping.c</Name>
@@ -157,7 +157,8 @@
       <Template dnOrder="5">
         <Name dnOrder="0">system_config.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/app/system_config/PIC32MK_MCU_Config</Path>
-        <Checksum dnOrder="2">35D518F6128850878E311F53234B00F2</Checksum>
+        <Checksum dnOrder="2">6EBFAE66ADE5AEF4775D7CB9B600748E</Checksum>
+        <ProjectFileChecksum dnOrder="3">A7BAB4866F64E035A234572AC80F8B0A</ProjectFileChecksum>
       </Template>
       <Template dnOrder="6">
         <Name dnOrder="0">sys_devcon_local.h</Name>
@@ -206,7 +207,7 @@
       <Template dnOrder="15">
         <Name dnOrder="0">sys_ports_static.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/PIC32MK_MCU_Config/framework/system/ports/src</Path>
-        <Checksum dnOrder="2">8DD374B8A40760FAE49A56483DD2EE43</Checksum>
+        <Checksum dnOrder="2">9746EDDEC563D82E85E2849501C8A780</Checksum>
       </Template>
       <Template dnOrder="16">
         <Name dnOrder="0">sys_console_static.c</Name>
@@ -221,7 +222,7 @@
       <Template dnOrder="18">
         <Name dnOrder="0">drv_adc_static.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/PIC32MK_MCU_Config/framework/driver/adc/src</Path>
-        <Checksum dnOrder="2">AB9C7215A8B6319D3CDADC2131BA1EDC</Checksum>
+        <Checksum dnOrder="2">BEF9652F96364A84FF1D93E6DC079856</Checksum>
       </Template>
       <Template dnOrder="19">
         <Name dnOrder="0">drv_usart_static.h</Name>

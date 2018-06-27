@@ -80,7 +80,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #pragma config DMTINTV =    WIN_127_128
 #pragma config FSOSCEN =    ON
 #pragma config IESO =       ON
-#pragma config POSCMOD =    OFF
+#pragma config POSCMOD =    EC
 #pragma config OSCIOFNC =   OFF
 #pragma config FCKSM =      CSECME
 #pragma config WDTPS =      PS1048576
@@ -112,7 +112,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #pragma config FVBUSIO2 =  ON
 #pragma config PGL1WAY =    OFF
 #pragma config PMDL1WAY =   OFF
-#pragma config IOL1WAY =    ON
+#pragma config IOL1WAY =    OFF
 #pragma config FUSBIDIO1 =   ON
 #pragma config FVBUSIO1 =  ON
 #pragma config PWMLOCK =  OFF

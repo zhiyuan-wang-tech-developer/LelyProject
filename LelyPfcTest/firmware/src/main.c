@@ -71,16 +71,15 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 int main ( void )
 {
-    printf("Start\r\n");
-    SYS_DEBUG_BreakPoint();
+    printf("\nSimulator started!\r\n");    
     /* Initialize all MPLAB Harmony modules, including application(s). */
     SYS_Initialize ( NULL );
-
+    SYS_DEBUG_BreakPoint();
 
     while ( true )
     {
         /* Maintain state machines of all polled MPLAB Harmony modules. */
-        SYS_Tasks ( );
+        SYS_Tasks ();
 
     }
 

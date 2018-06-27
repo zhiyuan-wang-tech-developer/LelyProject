@@ -7,23 +7,149 @@
 ## PINREGACTIONS
 cyc
 No Repeat
+ADCCON2.BGVRRDY
+ADCANCON.WKRDY0
+ADCANCON.WKRDY1
+ADCANCON.WKRDY2
+ADCANCON.WKRDY3
+ADCANCON.WKRDY4
+ADCANCON.WKRDY5
+ADCANCON.WKRDY7
+--
+1
+1
+1
+1
+1
+1
+1
+1
+1
 --
 &
 ## ADVPINREGACTIONS
+AVDD
+VDD
+AVSS
+VSS
+AN0
+AN1
+AN2
+AN4
+AN5
+AN6
+AN7
+AN8
+AN9
+AN10
+AN11
+AN12
+AN13
+AN17
+AN23
+AN27
+AN35
+AN36
+AN37
+AN39
+AN45
+AN46
+AN47
+ADCCON2.BGVRRDY
+ADCCON2.REFFLT
+--
+1
+COND1
+1x
+
+
+3300mV
+3300mV
+0mV
+0mV
+1500mV
+1400mV
+1300mV
+1100mV
+1000mV
+900mV
+800mV
+700mV
+600mV
+500mV
+400mV
+300mV
+200mV
+100mV
+200mV
+300mV
+400mV
+500mV
+600mV
+700mV
+800mV
+900mV
+1000mV
+
+
+--
+1
+COND2
+1x
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1
+0
 --
 &
+--
+COND1
+Any
+
+
+
+1
+cyc
+
+--
+COND2
+Bit
+ADCCON2.BGVRRDY
+=
+0
+1
+cyc
+
 --
 &
 ## CLOCK
-
-
-Always
-Never
-Low
-1
-1
-
---
 &
 ## STIMULUSFILE
 &
@@ -58,8 +184,190 @@ Set Voltage
 
 -1
 --
+Pin
+MCLR
+Set Low
+
+
+-1
+--
+Pin
+RC13
+Pulse High
+100 cyc
+
+-1
+--
+Pin
+RD6
+Pulse High
+100 cyc
+
+-1
+--
+Pin
+AN0
+Set Voltage
+1900 mV
+
+-1
+--
+Pin
+AN1
+Set Voltage
+1800 mV
+
+-1
+--
+Pin
+AN2
+Set Voltage
+1700 mV
+
+-1
+--
+Pin
+AN4
+Set Voltage
+1600 mV
+
+-1
+--
+Pin
+AN5
+Set Voltage
+1500 mV
+
+-1
+--
+Pin
+AN6
+Set Voltage
+1400 mV
+
+-1
+--
+Pin
+AN7
+Set Voltage
+1300 mV
+
+-1
+--
+Pin
+AN8
+Set Voltage
+1200 mV
+
+-1
+--
+Pin
+AN9
+Set Voltage
+1100 mV
+
+-1
+--
+Pin
+AN10
+Set Voltage
+1000 mV
+
+-1
+--
+Pin
+AN11
+Set Voltage
+900 mV
+
+-1
+--
+Pin
+AN12
+Set Voltage
+800 mV
+
+-1
+--
+Pin
+AN13
+Set Voltage
+700 mV
+
+-1
+--
+Pin
+AN17
+Set Voltage
+600 mV
+
+-1
+--
+Pin
+AN23
+Set Voltage
+500 mV
+
+-1
+--
+Pin
+AN27
+Set Voltage
+400 mV
+
+-1
+--
+Pin
+AN35
+Set Voltage
+300 mV
+
+-1
+--
+Pin
+AN36
+Set Voltage
+200 mV
+
+-1
+--
+Pin
+AN37
+Set Voltage
+100 mV
+
+-1
+--
+Pin
+AN39
+Set Voltage
+1000 mV
+
+-1
+--
+Pin
+AN45
+Set Voltage
+1000 mV
+
+-1
+--
+Pin
+AN46
+Set Voltage
+1000 mV
+
+-1
+--
+Pin
+AN47
+Set Voltage
+1000 mV
+
+-1
+--
 &
 ## ADVANCEDSCL
 
-0
+1
 &

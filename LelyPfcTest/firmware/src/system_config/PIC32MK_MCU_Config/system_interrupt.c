@@ -72,13 +72,21 @@ extern ANALOG_VOLTAGE_MONITOR_DATA analog_voltage_monitorData;
 // *****************************************************************************
 void __ISR(_CHANGE_NOTICE_C_VECTOR, ipl1AUTO) _IntHandlerChangeNotification_PortC(void)
 {
-    SYS_PRINT("Overload 12 on the RC13\r\n");
+    if( V_PFC_OL12StateGet() )
+    {
+        SYS_DEBUG_BreakPoint();
+        SYS_PRINT("Overload 12 on the RC13\r\n");
+    }
     PLIB_INT_SourceFlagClear(INT_ID_0,INT_SOURCE_CHANGE_NOTICE_C);
 }
 
 void __ISR(_CHANGE_NOTICE_D_VECTOR, ipl1AUTO) _IntHandlerChangeNotification_PortD(void)
 {
-    SYS_PRINT("Overload 34 on the RD6\r\n");    
+    if( V_PFC_OL34StateGet() )
+    {
+        SYS_DEBUG_BreakPoint();        
+        SYS_PRINT("Overload 34 on the RD6\r\n");    
+    }
     PLIB_INT_SourceFlagClear(INT_ID_0,INT_SOURCE_CHANGE_NOTICE_D);
 }
 
@@ -91,6 +99,7 @@ void __ISR(_ADC_DATA0_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA0(void)
     }
     /* Clear ADC Interrupt Flag of INT_SOURCE_ADC_1_DATA0*/
     PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA0);
+    SYS_DEBUG_BreakPoint();
 }
 
 void __ISR(_ADC_DATA1_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA1(void)
@@ -102,6 +111,7 @@ void __ISR(_ADC_DATA1_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA1(void)
     }
     /* Clear ADC Interrupt Flag of INT_SOURCE_ADC_1_DATA1*/
     PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA1);
+    SYS_DEBUG_BreakPoint();
 }
 
 void __ISR(_ADC_DATA2_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA2(void)
@@ -113,6 +123,7 @@ void __ISR(_ADC_DATA2_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA2(void)
     }
    /* Clear ADC Interrupt Flag of INT_SOURCE_ADC_1_DATA2*/
    PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA2);
+   SYS_DEBUG_BreakPoint();
 }
 
 void __ISR(_ADC_DATA4_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA4(void)
@@ -124,6 +135,7 @@ void __ISR(_ADC_DATA4_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA4(void)
     }    
     /* Clear ADC Interrupt Flag of INT_SOURCE_ADC_1_DATA4*/
     PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA4);
+    SYS_DEBUG_BreakPoint();
 }
 
 void __ISR(_ADC_DATA6_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA6(void)

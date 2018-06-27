@@ -57,6 +57,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 /*  This section Includes other configuration headers necessary to completely
     define this configuration.
 */
+//#include <stdarg.h>
+//#include <stdio.h>
 
 
 // DOM-IGNORE-BEGIN
@@ -115,7 +117,7 @@ extern "C" {
 #define SYS_PORT_C_LAT          0x0000
 #define SYS_PORT_C_ODC          0x0000
 #define SYS_PORT_C_CNPU         0x0000
-#define SYS_PORT_C_CNPD         0x0000
+#define SYS_PORT_C_CNPD         0x2000
 #define SYS_PORT_C_CNEN         0x2000
 
 #define SYS_PORT_D_ANSEL        0x8E81
@@ -123,7 +125,7 @@ extern "C" {
 #define SYS_PORT_D_LAT          0x0000
 #define SYS_PORT_D_ODC          0x0000
 #define SYS_PORT_D_CNPU         0x0000
-#define SYS_PORT_D_CNPD         0x0000
+#define SYS_PORT_D_CNPD         0x0040
 #define SYS_PORT_D_CNEN         0x0040
 
 #define SYS_PORT_E_ANSEL        0x3CFC
@@ -159,6 +161,9 @@ extern "C" {
 #define DEBUG_PRINT_BUFFER_SIZE       8192
 #define SYS_DEBUG_BUFFER_DMA_READY
 #define SYS_DEBUG_USE_CONSOLE
+
+/* Only used for simulator*/    
+//#define SYS_PRINT(format, ...)  printf((format), __VA_ARG__)    
 
 /*** Interrupt System Service Configuration ***/
 #define SYS_INT                     true
@@ -306,6 +311,12 @@ extern "C" {
 
 /*** Functions for VP1_STA3 pin ***/
 #define VP1_STA3StateGet() PLIB_PORTS_PinGet(PORTS_ID_0, PORT_CHANNEL_E, PORTS_BIT_POS_1)
+
+/*** Functions for V_PFC_OL12 pin ***/
+#define V_PFC_OL12StateGet() PLIB_PORTS_PinGet(PORTS_ID_0, PORT_CHANNEL_C, PORTS_BIT_POS_13)
+
+/*** Functions for V_PFC_OL34 pin ***/
+#define V_PFC_OL34StateGet() PLIB_PORTS_PinGet(PORTS_ID_0, PORT_CHANNEL_D, PORTS_BIT_POS_6)
 
 
 /*** Application Instance 0 Configuration ***/

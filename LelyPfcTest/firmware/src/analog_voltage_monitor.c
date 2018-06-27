@@ -175,19 +175,65 @@ void ANALOG_VOLTAGE_MONITOR_Tasks ( void )
         case ANALOG_VOLTAGE_MONITOR_STATE_INIT:
         {
             bool appInitialized = true;
-        
+     
+            
+//            ADC0CFG = DEVADC0;
+//            ADC1CFG = DEVADC1;
+//            ADC2CFG = DEVADC2;
+//            ADC3CFG = DEVADC3;
+//            ADC4CFG = DEVADC4;
+//            ADC5CFG = DEVADC5;
+//            
+//            ADC7CFG = DEVADC7;
+//            ADCCON1 = 0;
+//            ADCCON2 = 0;
+//            ADCANCON = 0;
+//            ADCCON3 = 0;
+            
+//            ADCANCONbits.WKUPCLKCNT = 5;
+//            ADCCON1bits.ON = 1;
+            
+//            while( !ADCCON2bits.BGVRRDY );
+//            while( ADCCON2bits.REFFLT) ;
+            
+//            ADCANCON |= 0xFF;   //ANEN0-7 = 1
+//            while( (ADCANCON & 0xFF00) == 0); //wait for wake ready
+            ADCCON3bits.TRGSUSP = 1;
+            ADCCON3bits.UPDRDY = 1;
+            ADCCON3bits.DIGEN0 = 1;
+            ADCCON3bits.DIGEN1 = 1;
+            ADCCON3bits.DIGEN2 = 1;
+            ADCCON3bits.DIGEN4 = 1;
+            ADCCON3bits.DIGEN5 = 1;
+            ADCCON3bits.DIGEN7 = 1;
+            Nop();
+            Nop();
+            Nop();
+            
             if (appInitialized)
             {            
                 analog_voltage_monitorData.state = ANALOG_VOLTAGE_MONITOR_STATE_SCAN;
                 /* Clear the adc data buffer in initial state. */
                 memset(analog_voltage_monitorData.adc_data.buffer, 0, sizeof(analog_voltage_monitorData.adc_data.buffer));
                 /* Start the ADC */
+                Nop();
+                Nop();
                 DRV_ADC0_Open();
+                Nop();
+                Nop();
+                ADCCON3bits.DIGEN0 = 1;
+                Nop();
+                Nop();
                 DRV_ADC1_Open();
+                Nop();
+                Nop();
                 DRV_ADC2_Open();
                 DRV_ADC4_Open();
                 DRV_ADC5_Open();
                 DRV_ADC6_Open();
+
+                ADCCON3bits.TRGSUSP = 0;
+                ADCCON3bits.UPDRDY = 0; 
                 DRV_ADC_Start();
             }
             break;
@@ -196,7 +242,7 @@ void ANALOG_VOLTAGE_MONITOR_Tasks ( void )
         /* TODO: implement your application state machine.*/
         case ANALOG_VOLTAGE_MONITOR_STATE_SCAN:
         {
-            SYS_DEBUG_BreakPoint();
+//            SYS_DEBUG_BreakPoint();
             V_LED1_GOn();
             analog_voltage_monitorData.state = ANALOG_VOLTAGE_MONITOR_STATE_SCAN_DONE;
             break;
@@ -211,12 +257,12 @@ void ANALOG_VOLTAGE_MONITOR_Tasks ( void )
                 // If the ADC data are all updated, then go to next state for data display. 
                 analog_voltage_monitorData.state = ANALOG_VOLTAGE_MONITOR_STATE_DISPLAY;
                 DRV_ADC_Stop();
-                DRV_ADC0_Close();
-                DRV_ADC1_Close();
-                DRV_ADC2_Close();
-                DRV_ADC4_Close();
-                DRV_ADC5_Close();
-                DRV_ADC6_Close();
+//                DRV_ADC0_Close();
+//                DRV_ADC1_Close();
+//                DRV_ADC2_Close();
+//                DRV_ADC4_Close();
+//                DRV_ADC5_Close();
+//                DRV_ADC6_Close();
                 V_LED1_GOff();
             }
             else
