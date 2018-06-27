@@ -198,14 +198,14 @@ void ANALOG_VOLTAGE_MONITOR_Tasks ( void )
             
 //            ADCANCON |= 0xFF;   //ANEN0-7 = 1
 //            while( (ADCANCON & 0xFF00) == 0); //wait for wake ready
-            ADCCON3bits.TRGSUSP = 1;
-            ADCCON3bits.UPDRDY = 1;
-            ADCCON3bits.DIGEN0 = 1;
-            ADCCON3bits.DIGEN1 = 1;
-            ADCCON3bits.DIGEN2 = 1;
-            ADCCON3bits.DIGEN4 = 1;
-            ADCCON3bits.DIGEN5 = 1;
-            ADCCON3bits.DIGEN7 = 1;
+//            ADCCON3bits.TRGSUSP = 1;
+//            ADCCON3bits.UPDRDY = 1;
+//            ADCCON3bits.DIGEN0 = 1;
+//            ADCCON3bits.DIGEN1 = 1;
+//            ADCCON3bits.DIGEN2 = 1;
+//            ADCCON3bits.DIGEN4 = 1;
+//            ADCCON3bits.DIGEN5 = 1;
+//            ADCCON3bits.DIGEN7 = 1;
             Nop();
             Nop();
             Nop();
@@ -219,21 +219,21 @@ void ANALOG_VOLTAGE_MONITOR_Tasks ( void )
                 Nop();
                 Nop();
                 DRV_ADC0_Open();
-                Nop();
-                Nop();
-                ADCCON3bits.DIGEN0 = 1;
-                Nop();
-                Nop();
-                DRV_ADC1_Open();
-                Nop();
-                Nop();
-                DRV_ADC2_Open();
-                DRV_ADC4_Open();
-                DRV_ADC5_Open();
-                DRV_ADC6_Open();
+//                Nop();
+//                Nop();
+//                ADCCON3bits.DIGEN0 = 1;
+//                Nop();
+//                Nop();
+//                DRV_ADC1_Open();
+//                Nop();
+//                Nop();
+//                DRV_ADC2_Open();
+//                DRV_ADC4_Open();
+//                DRV_ADC5_Open();
+//                DRV_ADC6_Open();
 
-                ADCCON3bits.TRGSUSP = 0;
-                ADCCON3bits.UPDRDY = 0; 
+//                ADCCON3bits.TRGSUSP = 0;
+//                ADCCON3bits.UPDRDY = 0; 
                 DRV_ADC_Start();
             }
             break;
@@ -243,7 +243,7 @@ void ANALOG_VOLTAGE_MONITOR_Tasks ( void )
         case ANALOG_VOLTAGE_MONITOR_STATE_SCAN:
         {
 //            SYS_DEBUG_BreakPoint();
-            V_LED1_GOn();
+//            V_LED1_GOn();
             analog_voltage_monitorData.state = ANALOG_VOLTAGE_MONITOR_STATE_SCAN_DONE;
             break;
         }        
@@ -263,7 +263,7 @@ void ANALOG_VOLTAGE_MONITOR_Tasks ( void )
 //                DRV_ADC4_Close();
 //                DRV_ADC5_Close();
 //                DRV_ADC6_Close();
-                V_LED1_GOff();
+//                V_LED1_GOff();
             }
             else
             {
@@ -275,20 +275,22 @@ void ANALOG_VOLTAGE_MONITOR_Tasks ( void )
 
         case ANALOG_VOLTAGE_MONITOR_STATE_DISPLAY:
         {
-            V_LED1_ROn();
-            SYS_PRINT("V_380V = %d V_325V = %d\n", analog_voltage_monitorData.adc_data.V380V, analog_voltage_monitorData.adc_data.V325V);
-            SYS_PRINT("V_Live = %d V_Neutral = %d\n", analog_voltage_monitorData.adc_data.VLIVE, analog_voltage_monitorData.adc_data.VNEUTRAL);
-            SYS_PRINT("IL12 = %d IL34 = %d\n", analog_voltage_monitorData.adc_data.IL12, analog_voltage_monitorData.adc_data.IL34);
+//            V_LED1_ROn();
+            SYS_DEBUG_BreakPoint();
+            SYS_PRINT("\r\nScan Result List: \r\n");
+            SYS_PRINT("\t V_380V = %d \t V_325V = %d\n", analog_voltage_monitorData.adc_data.V380V, analog_voltage_monitorData.adc_data.V325V);
+            SYS_PRINT("\t V_Live = %d \t V_Neutral = %d\n", analog_voltage_monitorData.adc_data.VLIVE, analog_voltage_monitorData.adc_data.VNEUTRAL);
+            SYS_PRINT("\t IL12 = %d \t IL34 = %d\n", analog_voltage_monitorData.adc_data.IL12, analog_voltage_monitorData.adc_data.IL34);
             
-            SYS_PRINT("T_M1 = %d T_M2 = %d\n", analog_voltage_monitorData.adc_data.TEMP_M1, analog_voltage_monitorData.adc_data.TEMP_M2);
-            SYS_PRINT("T_PFC12 = %d T_PFC34 = %d\n", analog_voltage_monitorData.adc_data.TEMP_PFC12, analog_voltage_monitorData.adc_data.TEMP_PFC34);
-            SYS_PRINT("T_ELCO = %d T_BRUG = %d T_VOED = %d\n", analog_voltage_monitorData.adc_data.TEMP_ELCO, analog_voltage_monitorData.adc_data.TEMP_BRUG, analog_voltage_monitorData.adc_data.TEMP_VOED);
+            SYS_PRINT("\t T_M1 = %d \t T_M2 = %d\n", analog_voltage_monitorData.adc_data.TEMP_M1, analog_voltage_monitorData.adc_data.TEMP_M2);
+            SYS_PRINT("\t T_PFC12 = %d \t T_PFC34 = %d\n", analog_voltage_monitorData.adc_data.TEMP_PFC12, analog_voltage_monitorData.adc_data.TEMP_PFC34);
+            SYS_PRINT("\t T_ELCO = %d \t T_BRUG = %d \t T_VOED = %d\n", analog_voltage_monitorData.adc_data.TEMP_ELCO, analog_voltage_monitorData.adc_data.TEMP_BRUG, analog_voltage_monitorData.adc_data.TEMP_VOED);
 
-            SYS_PRINT("V_18V = %d V_12V = %d V_5V = %d\n", analog_voltage_monitorData.adc_data.V18V, analog_voltage_monitorData.adc_data.V12V, analog_voltage_monitorData.adc_data.V5V);
-            SYS_PRINT("V_3V3_0 = %d V_3V3_1 = %d V_3V3_2 = %d\n", analog_voltage_monitorData.adc_data.V3V3_0, analog_voltage_monitorData.adc_data.V3V3_1, analog_voltage_monitorData.adc_data.V3V3_2);
-            SYS_PRINT("V_3V3_AN1 = %d V_3V3_AN2 = %d\n", analog_voltage_monitorData.adc_data.V3V3AN1, analog_voltage_monitorData.adc_data.V3V3AN2);
-            SYS_PRINT("V_1V8_1 = %d V_1V8_2 = %d\n", analog_voltage_monitorData.adc_data.V1V8_1, analog_voltage_monitorData.adc_data.V1V8_2);
-            V_LED1_ROff();
+            SYS_PRINT("\t V_18V = %d \t V_12V = %d \t V_5V = %d\n", analog_voltage_monitorData.adc_data.V18V, analog_voltage_monitorData.adc_data.V12V, analog_voltage_monitorData.adc_data.V5V);
+            SYS_PRINT("\t V_3V3_0 = %d \t V_3V3_1 = %d \t V_3V3_2 = %d\n", analog_voltage_monitorData.adc_data.V3V3_0, analog_voltage_monitorData.adc_data.V3V3_1, analog_voltage_monitorData.adc_data.V3V3_2);
+            SYS_PRINT("\t V_3V3_AN1 = %d \t V_3V3_AN2 = %d\n", analog_voltage_monitorData.adc_data.V3V3AN1, analog_voltage_monitorData.adc_data.V3V3AN2);
+            SYS_PRINT("\t V_1V8_1 = %d \t V_1V8_2 = %d\n\n", analog_voltage_monitorData.adc_data.V1V8_1, analog_voltage_monitorData.adc_data.V1V8_2);
+//            V_LED1_ROff();
             analog_voltage_monitorData.state = ANALOG_VOLTAGE_MONITOR_STATE_INIT;
             break;
         }

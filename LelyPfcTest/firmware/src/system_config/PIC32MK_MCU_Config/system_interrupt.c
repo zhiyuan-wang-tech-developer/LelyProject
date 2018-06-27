@@ -84,7 +84,7 @@ void __ISR(_CHANGE_NOTICE_D_VECTOR, ipl1AUTO) _IntHandlerChangeNotification_Port
 {
     if( V_PFC_OL34StateGet() )
     {
-        SYS_DEBUG_BreakPoint();        
+        SYS_DEBUG_BreakPoint();
         SYS_PRINT("Overload 34 on the RD6\r\n");    
     }
     PLIB_INT_SourceFlagClear(INT_ID_0,INT_SOURCE_CHANGE_NOTICE_D);
@@ -92,6 +92,7 @@ void __ISR(_CHANGE_NOTICE_D_VECTOR, ipl1AUTO) _IntHandlerChangeNotification_Port
 
 void __ISR(_ADC_DATA0_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA0(void)
 {
+//    SYS_DEBUG_BreakPoint();
     if( DRV_ADC_SamplesAvailable(ADCHS_AN0) == true )
     {
         analog_voltage_monitorData.adc_data.V380V = DRV_ADC_SamplesRead(ADCHS_AN0);
@@ -99,11 +100,11 @@ void __ISR(_ADC_DATA0_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA0(void)
     }
     /* Clear ADC Interrupt Flag of INT_SOURCE_ADC_1_DATA0*/
     PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA0);
-    SYS_DEBUG_BreakPoint();
 }
 
 void __ISR(_ADC_DATA1_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA1(void)
 {
+//    SYS_DEBUG_BreakPoint();
     if( DRV_ADC_SamplesAvailable(ADCHS_AN1) == true )
     {
         analog_voltage_monitorData.adc_data.TEMP_PFC34 = DRV_ADC_SamplesRead(ADCHS_AN1);
@@ -111,11 +112,11 @@ void __ISR(_ADC_DATA1_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA1(void)
     }
     /* Clear ADC Interrupt Flag of INT_SOURCE_ADC_1_DATA1*/
     PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA1);
-    SYS_DEBUG_BreakPoint();
 }
 
 void __ISR(_ADC_DATA2_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA2(void)
 {
+//    SYS_DEBUG_BreakPoint();
     if( DRV_ADC_SamplesAvailable(ADCHS_AN2) == true )
     {
         analog_voltage_monitorData.adc_data.V18V = DRV_ADC_SamplesRead(ADCHS_AN2);
@@ -123,11 +124,11 @@ void __ISR(_ADC_DATA2_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA2(void)
     }
    /* Clear ADC Interrupt Flag of INT_SOURCE_ADC_1_DATA2*/
    PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA2);
-   SYS_DEBUG_BreakPoint();
 }
 
 void __ISR(_ADC_DATA4_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA4(void)
 {
+//    SYS_DEBUG_BreakPoint();
     if( DRV_ADC_SamplesAvailable(ADCHS_AN4) == true )
     {
         analog_voltage_monitorData.adc_data.VNEUTRAL = DRV_ADC_SamplesRead(ADCHS_AN4);
@@ -135,7 +136,6 @@ void __ISR(_ADC_DATA4_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA4(void)
     }    
     /* Clear ADC Interrupt Flag of INT_SOURCE_ADC_1_DATA4*/
     PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA4);
-    SYS_DEBUG_BreakPoint();
 }
 
 void __ISR(_ADC_DATA6_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA6(void)

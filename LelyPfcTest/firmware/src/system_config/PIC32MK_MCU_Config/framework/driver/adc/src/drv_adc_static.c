@@ -65,7 +65,7 @@ void DRV_ADC_Initialize(void)
      0x0000,
      ADCHS_CLOCK_SOURCE_PBCLK,
      1,
-     ADCHS_WARMUP_CLOCK_32768
+     ADCHS_WARMUP_CLOCK_256
      );
 
 
@@ -73,8 +73,8 @@ void DRV_ADC_Initialize(void)
      DRV_ADC_ID_1,
      ADCHS_CHANNEL_0,
      ADCHS_DATA_RESOLUTION_12BIT,
-     15,
-     86,
+     125,
+     10,
      ADCHS_EARLY_INTERRUPT_PRIOR_CLOCK_4
      );
 
@@ -96,8 +96,8 @@ void DRV_ADC_Initialize(void)
                          { while(1);}
 
 
-     PLIB_ADCHS_EarlyInterruptDisable(DRV_ADC_ID_1);
-    PLIB_ADCHS_AnalogInputEarlyInterruptEnable(DRV_ADC_ID_1, ADCHS_CLASS12_AN0);
+    PLIB_ADCHS_EarlyInterruptEnable(DRV_ADC_ID_1);
+    PLIB_ADCHS_AnalogInputDataReadyInterruptEnable(DRV_ADC_ID_1, ADCHS_CLASS12_AN0);
 
      PLIB_ADCHS_AnalogInputModeSelect(
                DRV_ADC_ID_1,
@@ -123,8 +123,8 @@ void DRV_ADC_Initialize(void)
      DRV_ADC_ID_1,
      ADCHS_CHANNEL_1,
      ADCHS_DATA_RESOLUTION_12BIT,
-     15,
-     86,
+     125,
+     1,
      ADCHS_EARLY_INTERRUPT_PRIOR_CLOCK_4
      );
 
@@ -145,8 +145,8 @@ void DRV_ADC_Initialize(void)
                          ))
                          { while(1);}
 
-     PLIB_ADCHS_EarlyInterruptDisable(DRV_ADC_ID_1);
-    PLIB_ADCHS_AnalogInputEarlyInterruptEnable(DRV_ADC_ID_1, ADCHS_CLASS12_AN1);
+    PLIB_ADCHS_EarlyInterruptEnable(DRV_ADC_ID_1);
+    PLIB_ADCHS_AnalogInputDataReadyInterruptEnable(DRV_ADC_ID_1, ADCHS_CLASS12_AN1);
 
      PLIB_ADCHS_AnalogInputModeSelect(
                DRV_ADC_ID_1,
@@ -172,8 +172,8 @@ void DRV_ADC_Initialize(void)
      DRV_ADC_ID_1,
      ADCHS_CHANNEL_2,
      ADCHS_DATA_RESOLUTION_12BIT,
-     15,
-     86,
+     125,
+     10,
      ADCHS_EARLY_INTERRUPT_PRIOR_CLOCK_4
      );
 
@@ -194,8 +194,8 @@ void DRV_ADC_Initialize(void)
                          ))
                          { while(1);}
 
-     PLIB_ADCHS_EarlyInterruptDisable(DRV_ADC_ID_1);
-    PLIB_ADCHS_AnalogInputEarlyInterruptEnable(DRV_ADC_ID_1, ADCHS_CLASS12_AN2);
+    PLIB_ADCHS_EarlyInterruptEnable(DRV_ADC_ID_1);
+    PLIB_ADCHS_AnalogInputDataReadyInterruptEnable(DRV_ADC_ID_1, ADCHS_CLASS12_AN2);
 
      PLIB_ADCHS_AnalogInputModeSelect(
                DRV_ADC_ID_1,
@@ -221,8 +221,8 @@ void DRV_ADC_Initialize(void)
      DRV_ADC_ID_1,
      ADCHS_CHANNEL_4,
      ADCHS_DATA_RESOLUTION_12BIT,
-     15,
-     86,
+     125,
+     10,
      ADCHS_EARLY_INTERRUPT_PRIOR_CLOCK_4
      );
 
@@ -243,8 +243,8 @@ void DRV_ADC_Initialize(void)
                          ))
                          { while(1);}
 
-     PLIB_ADCHS_EarlyInterruptDisable(DRV_ADC_ID_1);
-    PLIB_ADCHS_AnalogInputEarlyInterruptEnable(DRV_ADC_ID_1, ADCHS_CLASS12_AN4);
+    PLIB_ADCHS_EarlyInterruptEnable(DRV_ADC_ID_1);
+    PLIB_ADCHS_AnalogInputDataReadyInterruptEnable(DRV_ADC_ID_1, ADCHS_CLASS12_AN4);
 
      PLIB_ADCHS_AnalogInputModeSelect(
                DRV_ADC_ID_1,
@@ -274,8 +274,8 @@ void DRV_ADC_Initialize(void)
                ADCHS_INPUT_MODE_SINGLE_ENDED_UNIPOLAR
                );
 
-     PLIB_ADCHS_EarlyInterruptDisable(DRV_ADC_ID_1);
-    PLIB_ADCHS_AnalogInputEarlyInterruptEnable(DRV_ADC_ID_1, ADCHS_CLASS2_AN6);
+    PLIB_ADCHS_EarlyInterruptEnable(DRV_ADC_ID_1);
+    PLIB_ADCHS_AnalogInputDataReadyInterruptEnable(DRV_ADC_ID_1, ADCHS_CLASS2_AN6);
 
      PLIB_ADCHS_AnalogInputEdgeTriggerSet( DRV_ADC_ID_1, (ADCHS_CLASS12_AN_INPUT_ID)ADCHS_CLASS2_AN6 );
 
@@ -296,8 +296,8 @@ void DRV_ADC_Initialize(void)
                ADCHS_INPUT_MODE_SINGLE_ENDED_UNIPOLAR
                );
 
-     PLIB_ADCHS_EarlyInterruptDisable(DRV_ADC_ID_1);
-    PLIB_ADCHS_AnalogInputEarlyInterruptEnable(DRV_ADC_ID_1, ADCHS_CLASS2_AN7);
+    PLIB_ADCHS_EarlyInterruptEnable(DRV_ADC_ID_1);
+    PLIB_ADCHS_AnalogInputDataReadyInterruptEnable(DRV_ADC_ID_1, ADCHS_CLASS2_AN7);
 
      PLIB_ADCHS_AnalogInputEdgeTriggerSet( DRV_ADC_ID_1, (ADCHS_CLASS12_AN_INPUT_ID)ADCHS_CLASS2_AN7 );
 
@@ -318,8 +318,8 @@ void DRV_ADC_Initialize(void)
                ADCHS_INPUT_MODE_SINGLE_ENDED_UNIPOLAR
                );
 
-     PLIB_ADCHS_EarlyInterruptDisable(DRV_ADC_ID_1);
-    PLIB_ADCHS_AnalogInputEarlyInterruptEnable(DRV_ADC_ID_1, ADCHS_CLASS2_AN8);
+    PLIB_ADCHS_EarlyInterruptEnable(DRV_ADC_ID_1);
+    PLIB_ADCHS_AnalogInputDataReadyInterruptEnable(DRV_ADC_ID_1, ADCHS_CLASS2_AN8);
 
      PLIB_ADCHS_AnalogInputEdgeTriggerSet( DRV_ADC_ID_1, (ADCHS_CLASS12_AN_INPUT_ID)ADCHS_CLASS2_AN8 );
 
@@ -340,8 +340,8 @@ void DRV_ADC_Initialize(void)
                ADCHS_INPUT_MODE_SINGLE_ENDED_UNIPOLAR
                );
 
-     PLIB_ADCHS_EarlyInterruptDisable(DRV_ADC_ID_1);
-    PLIB_ADCHS_AnalogInputEarlyInterruptEnable(DRV_ADC_ID_1, ADCHS_CLASS2_AN9);
+    PLIB_ADCHS_EarlyInterruptEnable(DRV_ADC_ID_1);
+    PLIB_ADCHS_AnalogInputDataReadyInterruptEnable(DRV_ADC_ID_1, ADCHS_CLASS2_AN9);
 
      PLIB_ADCHS_AnalogInputEdgeTriggerSet( DRV_ADC_ID_1, (ADCHS_CLASS12_AN_INPUT_ID)ADCHS_CLASS2_AN9 );
 
@@ -362,8 +362,8 @@ void DRV_ADC_Initialize(void)
                ADCHS_INPUT_MODE_SINGLE_ENDED_UNIPOLAR
                );
 
-     PLIB_ADCHS_EarlyInterruptDisable(DRV_ADC_ID_1);
-    PLIB_ADCHS_AnalogInputEarlyInterruptEnable(DRV_ADC_ID_1, ADCHS_CLASS2_AN10);
+    PLIB_ADCHS_EarlyInterruptEnable(DRV_ADC_ID_1);
+    PLIB_ADCHS_AnalogInputDataReadyInterruptEnable(DRV_ADC_ID_1, ADCHS_CLASS2_AN10);
 
      PLIB_ADCHS_AnalogInputEdgeTriggerSet( DRV_ADC_ID_1, (ADCHS_CLASS12_AN_INPUT_ID)ADCHS_CLASS2_AN10 );
 
@@ -384,8 +384,8 @@ void DRV_ADC_Initialize(void)
                ADCHS_INPUT_MODE_SINGLE_ENDED_UNIPOLAR
                );
 
-     PLIB_ADCHS_EarlyInterruptDisable(DRV_ADC_ID_1);
-    PLIB_ADCHS_AnalogInputEarlyInterruptEnable(DRV_ADC_ID_1, ADCHS_CLASS2_AN11);
+    PLIB_ADCHS_EarlyInterruptEnable(DRV_ADC_ID_1);
+    PLIB_ADCHS_AnalogInputDataReadyInterruptEnable(DRV_ADC_ID_1, ADCHS_CLASS2_AN11);
 
      PLIB_ADCHS_AnalogInputEdgeTriggerSet( DRV_ADC_ID_1, (ADCHS_CLASS12_AN_INPUT_ID)ADCHS_CLASS2_AN11 );
 
@@ -406,8 +406,8 @@ void DRV_ADC_Initialize(void)
                ADCHS_INPUT_MODE_SINGLE_ENDED_UNIPOLAR
                );
 
-     PLIB_ADCHS_EarlyInterruptDisable(DRV_ADC_ID_1);
-    PLIB_ADCHS_AnalogInputEarlyInterruptEnable(DRV_ADC_ID_1, ADCHS_CLASS2_AN12);
+    PLIB_ADCHS_EarlyInterruptEnable(DRV_ADC_ID_1);
+    PLIB_ADCHS_AnalogInputDataReadyInterruptEnable(DRV_ADC_ID_1, ADCHS_CLASS2_AN12);
 
      PLIB_ADCHS_AnalogInputEdgeTriggerSet( DRV_ADC_ID_1, (ADCHS_CLASS12_AN_INPUT_ID)ADCHS_CLASS2_AN12 );
 
@@ -437,7 +437,7 @@ void DRV_ADC_Initialize(void)
                ADCHS_INPUT_MODE_SINGLE_ENDED_UNIPOLAR
                );               
 
-    PLIB_ADCHS_AnalogInputEarlyInterruptEnable(DRV_ADC_ID_1, ADCHS_AN6);
+    PLIB_ADCHS_AnalogInputDataReadyInterruptEnable(DRV_ADC_ID_1, ADCHS_AN6);
      PLIB_ADCHS_AnalogInputScanSetup
      (
           DRV_ADC_ID_1, 
@@ -445,7 +445,7 @@ void DRV_ADC_Initialize(void)
           ADCHS_SCAN_TRIGGER_SENSITIVE_EDGE,
           ADCHS_SCAN_TRIGGER_SOURCE_GLOBAL_SOFTWARE_EDGE
      );
-     PLIB_ADCHS_EarlyInterruptDisable(DRV_ADC_ID_1);
+     PLIB_ADCHS_EarlyInterruptEnable(DRV_ADC_ID_1);
 
      /* Include Analog input to Scan list */
      PLIB_ADCHS_AnalogInputScanSelect
@@ -460,7 +460,7 @@ void DRV_ADC_Initialize(void)
                ADCHS_INPUT_MODE_SINGLE_ENDED_UNIPOLAR
                );               
 
-    PLIB_ADCHS_AnalogInputEarlyInterruptEnable(DRV_ADC_ID_1, ADCHS_AN7);
+    PLIB_ADCHS_AnalogInputDataReadyInterruptEnable(DRV_ADC_ID_1, ADCHS_AN7);
      PLIB_ADCHS_AnalogInputScanSetup
      (
           DRV_ADC_ID_1, 
@@ -468,7 +468,7 @@ void DRV_ADC_Initialize(void)
           ADCHS_SCAN_TRIGGER_SENSITIVE_EDGE,
           ADCHS_SCAN_TRIGGER_SOURCE_GLOBAL_SOFTWARE_EDGE
      );
-     PLIB_ADCHS_EarlyInterruptDisable(DRV_ADC_ID_1);
+     PLIB_ADCHS_EarlyInterruptEnable(DRV_ADC_ID_1);
 
      /* Include Analog input to Scan list */
      PLIB_ADCHS_AnalogInputScanSelect
@@ -483,7 +483,7 @@ void DRV_ADC_Initialize(void)
                ADCHS_INPUT_MODE_SINGLE_ENDED_UNIPOLAR
                );               
 
-    PLIB_ADCHS_AnalogInputEarlyInterruptEnable(DRV_ADC_ID_1, ADCHS_AN8);
+    PLIB_ADCHS_AnalogInputDataReadyInterruptEnable(DRV_ADC_ID_1, ADCHS_AN8);
      PLIB_ADCHS_AnalogInputScanSetup
      (
           DRV_ADC_ID_1, 
@@ -491,7 +491,7 @@ void DRV_ADC_Initialize(void)
           ADCHS_SCAN_TRIGGER_SENSITIVE_EDGE,
           ADCHS_SCAN_TRIGGER_SOURCE_GLOBAL_SOFTWARE_EDGE
      );
-     PLIB_ADCHS_EarlyInterruptDisable(DRV_ADC_ID_1);
+     PLIB_ADCHS_EarlyInterruptEnable(DRV_ADC_ID_1);
 
      /* Include Analog input to Scan list */
      PLIB_ADCHS_AnalogInputScanSelect
@@ -506,7 +506,7 @@ void DRV_ADC_Initialize(void)
                ADCHS_INPUT_MODE_SINGLE_ENDED_UNIPOLAR
                );               
 
-    PLIB_ADCHS_AnalogInputEarlyInterruptEnable(DRV_ADC_ID_1, ADCHS_AN9);
+    PLIB_ADCHS_AnalogInputDataReadyInterruptEnable(DRV_ADC_ID_1, ADCHS_AN9);
      PLIB_ADCHS_AnalogInputScanSetup
      (
           DRV_ADC_ID_1, 
@@ -514,7 +514,7 @@ void DRV_ADC_Initialize(void)
           ADCHS_SCAN_TRIGGER_SENSITIVE_EDGE,
           ADCHS_SCAN_TRIGGER_SOURCE_GLOBAL_SOFTWARE_EDGE
      );
-     PLIB_ADCHS_EarlyInterruptDisable(DRV_ADC_ID_1);
+     PLIB_ADCHS_EarlyInterruptEnable(DRV_ADC_ID_1);
 
      /* Include Analog input to Scan list */
      PLIB_ADCHS_AnalogInputScanSelect
@@ -529,7 +529,7 @@ void DRV_ADC_Initialize(void)
                ADCHS_INPUT_MODE_SINGLE_ENDED_UNIPOLAR
                );               
 
-    PLIB_ADCHS_AnalogInputEarlyInterruptEnable(DRV_ADC_ID_1, ADCHS_AN10);
+    PLIB_ADCHS_AnalogInputDataReadyInterruptEnable(DRV_ADC_ID_1, ADCHS_AN10);
      PLIB_ADCHS_AnalogInputScanSetup
      (
           DRV_ADC_ID_1, 
@@ -537,7 +537,7 @@ void DRV_ADC_Initialize(void)
           ADCHS_SCAN_TRIGGER_SENSITIVE_EDGE,
           ADCHS_SCAN_TRIGGER_SOURCE_GLOBAL_SOFTWARE_EDGE
      );
-     PLIB_ADCHS_EarlyInterruptDisable(DRV_ADC_ID_1);
+     PLIB_ADCHS_EarlyInterruptEnable(DRV_ADC_ID_1);
 
      /* Include Analog input to Scan list */
      PLIB_ADCHS_AnalogInputScanSelect
@@ -552,7 +552,7 @@ void DRV_ADC_Initialize(void)
                ADCHS_INPUT_MODE_SINGLE_ENDED_UNIPOLAR
                );               
 
-    PLIB_ADCHS_AnalogInputEarlyInterruptEnable(DRV_ADC_ID_1, ADCHS_AN11);
+    PLIB_ADCHS_AnalogInputDataReadyInterruptEnable(DRV_ADC_ID_1, ADCHS_AN11);
      PLIB_ADCHS_AnalogInputScanSetup
      (
           DRV_ADC_ID_1, 
@@ -560,7 +560,7 @@ void DRV_ADC_Initialize(void)
           ADCHS_SCAN_TRIGGER_SENSITIVE_EDGE,
           ADCHS_SCAN_TRIGGER_SOURCE_GLOBAL_SOFTWARE_EDGE
      );
-     PLIB_ADCHS_EarlyInterruptDisable(DRV_ADC_ID_1);
+     PLIB_ADCHS_EarlyInterruptEnable(DRV_ADC_ID_1);
 
      /* Include Analog input to Scan list */
      PLIB_ADCHS_AnalogInputScanSelect
@@ -575,7 +575,7 @@ void DRV_ADC_Initialize(void)
                ADCHS_INPUT_MODE_SINGLE_ENDED_UNIPOLAR
                );               
 
-    PLIB_ADCHS_AnalogInputEarlyInterruptEnable(DRV_ADC_ID_1, ADCHS_AN12);
+    PLIB_ADCHS_AnalogInputDataReadyInterruptEnable(DRV_ADC_ID_1, ADCHS_AN12);
      PLIB_ADCHS_AnalogInputScanSetup
      (
           DRV_ADC_ID_1, 
@@ -583,7 +583,7 @@ void DRV_ADC_Initialize(void)
           ADCHS_SCAN_TRIGGER_SENSITIVE_EDGE,
           ADCHS_SCAN_TRIGGER_SOURCE_GLOBAL_SOFTWARE_EDGE
      );
-     PLIB_ADCHS_EarlyInterruptDisable(DRV_ADC_ID_1);
+     PLIB_ADCHS_EarlyInterruptEnable(DRV_ADC_ID_1);
     /* Initialize ADC Data Interrupt */
     PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA12);
     PLIB_INT_SourceEnable(INT_ID_0, INT_SOURCE_ADC_1_DATA12);
@@ -603,7 +603,7 @@ void DRV_ADC_Initialize(void)
                ADCHS_INPUT_MODE_SINGLE_ENDED_UNIPOLAR
                );               
 
-    PLIB_ADCHS_AnalogInputEarlyInterruptEnable(DRV_ADC_ID_1, ADCHS_AN13);
+    PLIB_ADCHS_AnalogInputDataReadyInterruptEnable(DRV_ADC_ID_1, ADCHS_AN13);
      PLIB_ADCHS_AnalogInputScanSetup
      (
           DRV_ADC_ID_1, 
@@ -611,7 +611,7 @@ void DRV_ADC_Initialize(void)
           ADCHS_SCAN_TRIGGER_SENSITIVE_EDGE,
           ADCHS_SCAN_TRIGGER_SOURCE_GLOBAL_SOFTWARE_EDGE
      );
-     PLIB_ADCHS_EarlyInterruptDisable(DRV_ADC_ID_1);
+     PLIB_ADCHS_EarlyInterruptEnable(DRV_ADC_ID_1);
     /* Initialize ADC Data Interrupt */
     PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA13);
     PLIB_INT_SourceEnable(INT_ID_0, INT_SOURCE_ADC_1_DATA13);
@@ -631,7 +631,7 @@ void DRV_ADC_Initialize(void)
                ADCHS_INPUT_MODE_SINGLE_ENDED_UNIPOLAR
                );               
 
-    PLIB_ADCHS_AnalogInputEarlyInterruptEnable(DRV_ADC_ID_1, ADCHS_AN17);
+    PLIB_ADCHS_AnalogInputDataReadyInterruptEnable(DRV_ADC_ID_1, ADCHS_AN17);
      PLIB_ADCHS_AnalogInputScanSetup
      (
           DRV_ADC_ID_1, 
@@ -639,7 +639,7 @@ void DRV_ADC_Initialize(void)
           ADCHS_SCAN_TRIGGER_SENSITIVE_EDGE,
           ADCHS_SCAN_TRIGGER_SOURCE_GLOBAL_SOFTWARE_EDGE
      );
-     PLIB_ADCHS_EarlyInterruptDisable(DRV_ADC_ID_1);
+     PLIB_ADCHS_EarlyInterruptEnable(DRV_ADC_ID_1);
     /* Initialize ADC Data Interrupt */
     PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA17);
     PLIB_INT_SourceEnable(INT_ID_0, INT_SOURCE_ADC_1_DATA17);
@@ -659,7 +659,7 @@ void DRV_ADC_Initialize(void)
                ADCHS_INPUT_MODE_SINGLE_ENDED_UNIPOLAR
                );               
 
-    PLIB_ADCHS_AnalogInputEarlyInterruptEnable(DRV_ADC_ID_1, ADCHS_AN23);
+    PLIB_ADCHS_AnalogInputDataReadyInterruptEnable(DRV_ADC_ID_1, ADCHS_AN23);
      PLIB_ADCHS_AnalogInputScanSetup
      (
           DRV_ADC_ID_1, 
@@ -667,7 +667,7 @@ void DRV_ADC_Initialize(void)
           ADCHS_SCAN_TRIGGER_SENSITIVE_EDGE,
           ADCHS_SCAN_TRIGGER_SOURCE_GLOBAL_SOFTWARE_EDGE
      );
-     PLIB_ADCHS_EarlyInterruptDisable(DRV_ADC_ID_1);
+     PLIB_ADCHS_EarlyInterruptEnable(DRV_ADC_ID_1);
     /* Initialize ADC Data Interrupt */
     PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA23);
     PLIB_INT_SourceEnable(INT_ID_0, INT_SOURCE_ADC_1_DATA23);
@@ -687,7 +687,7 @@ void DRV_ADC_Initialize(void)
                ADCHS_INPUT_MODE_SINGLE_ENDED_UNIPOLAR
                );               
 
-    PLIB_ADCHS_AnalogInputEarlyInterruptEnable(DRV_ADC_ID_1, ADCHS_AN27);
+    PLIB_ADCHS_AnalogInputDataReadyInterruptEnable(DRV_ADC_ID_1, ADCHS_AN27);
      PLIB_ADCHS_AnalogInputScanSetup
      (
           DRV_ADC_ID_1, 
@@ -695,7 +695,7 @@ void DRV_ADC_Initialize(void)
           ADCHS_SCAN_TRIGGER_SENSITIVE_EDGE,
           ADCHS_SCAN_TRIGGER_SOURCE_GLOBAL_SOFTWARE_EDGE
      );
-     PLIB_ADCHS_EarlyInterruptDisable(DRV_ADC_ID_1);
+     PLIB_ADCHS_EarlyInterruptEnable(DRV_ADC_ID_1);
     /* Initialize ADC Data Interrupt */
     PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA27);
     PLIB_INT_SourceEnable(INT_ID_0, INT_SOURCE_ADC_1_DATA27);
@@ -716,7 +716,7 @@ void DRV_ADC_Initialize(void)
                ADCHS_INPUT_MODE_SINGLE_ENDED_UNIPOLAR
                );               
 
-    PLIB_ADCHS_AnalogInputEarlyInterruptEnable(DRV_ADC_ID_1, ADCHS_AN35);
+    PLIB_ADCHS_AnalogInputDataReadyInterruptEnable(DRV_ADC_ID_1, ADCHS_AN35);
      PLIB_ADCHS_AnalogInputScanSetup
      (
           DRV_ADC_ID_1, 
@@ -724,7 +724,7 @@ void DRV_ADC_Initialize(void)
           ADCHS_SCAN_TRIGGER_SENSITIVE_EDGE,
           ADCHS_SCAN_TRIGGER_SOURCE_GLOBAL_SOFTWARE_EDGE
      );
-     PLIB_ADCHS_EarlyInterruptDisable(DRV_ADC_ID_1);
+     PLIB_ADCHS_EarlyInterruptEnable(DRV_ADC_ID_1);
     /* Initialize ADC Data Interrupt */
     PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA35);
     PLIB_INT_SourceEnable(INT_ID_0, INT_SOURCE_ADC_1_DATA35);
@@ -744,7 +744,7 @@ void DRV_ADC_Initialize(void)
                ADCHS_INPUT_MODE_SINGLE_ENDED_UNIPOLAR
                );               
 
-    PLIB_ADCHS_AnalogInputEarlyInterruptEnable(DRV_ADC_ID_1, ADCHS_AN36);
+    PLIB_ADCHS_AnalogInputDataReadyInterruptEnable(DRV_ADC_ID_1, ADCHS_AN36);
      PLIB_ADCHS_AnalogInputScanSetup
      (
           DRV_ADC_ID_1, 
@@ -752,7 +752,7 @@ void DRV_ADC_Initialize(void)
           ADCHS_SCAN_TRIGGER_SENSITIVE_EDGE,
           ADCHS_SCAN_TRIGGER_SOURCE_GLOBAL_SOFTWARE_EDGE
      );
-     PLIB_ADCHS_EarlyInterruptDisable(DRV_ADC_ID_1);
+     PLIB_ADCHS_EarlyInterruptEnable(DRV_ADC_ID_1);
     /* Initialize ADC Data Interrupt */
     PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA36);
     PLIB_INT_SourceEnable(INT_ID_0, INT_SOURCE_ADC_1_DATA36);
@@ -772,7 +772,7 @@ void DRV_ADC_Initialize(void)
                ADCHS_INPUT_MODE_SINGLE_ENDED_UNIPOLAR
                );               
 
-    PLIB_ADCHS_AnalogInputEarlyInterruptEnable(DRV_ADC_ID_1, ADCHS_AN37);
+    PLIB_ADCHS_AnalogInputDataReadyInterruptEnable(DRV_ADC_ID_1, ADCHS_AN37);
      PLIB_ADCHS_AnalogInputScanSetup
      (
           DRV_ADC_ID_1, 
@@ -780,7 +780,7 @@ void DRV_ADC_Initialize(void)
           ADCHS_SCAN_TRIGGER_SENSITIVE_EDGE,
           ADCHS_SCAN_TRIGGER_SOURCE_GLOBAL_SOFTWARE_EDGE
      );
-     PLIB_ADCHS_EarlyInterruptDisable(DRV_ADC_ID_1);
+     PLIB_ADCHS_EarlyInterruptEnable(DRV_ADC_ID_1);
     /* Initialize ADC Data Interrupt */
     PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA37);
     PLIB_INT_SourceEnable(INT_ID_0, INT_SOURCE_ADC_1_DATA37);
@@ -800,7 +800,7 @@ void DRV_ADC_Initialize(void)
                ADCHS_INPUT_MODE_SINGLE_ENDED_UNIPOLAR
                );               
 
-    PLIB_ADCHS_AnalogInputEarlyInterruptEnable(DRV_ADC_ID_1, ADCHS_AN39);
+    PLIB_ADCHS_AnalogInputDataReadyInterruptEnable(DRV_ADC_ID_1, ADCHS_AN39);
      PLIB_ADCHS_AnalogInputScanSetup
      (
           DRV_ADC_ID_1, 
@@ -808,7 +808,7 @@ void DRV_ADC_Initialize(void)
           ADCHS_SCAN_TRIGGER_SENSITIVE_EDGE,
           ADCHS_SCAN_TRIGGER_SOURCE_GLOBAL_SOFTWARE_EDGE
      );
-     PLIB_ADCHS_EarlyInterruptDisable(DRV_ADC_ID_1);
+     PLIB_ADCHS_EarlyInterruptEnable(DRV_ADC_ID_1);
     /* Initialize ADC Data Interrupt */
     PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA39);
     PLIB_INT_SourceEnable(INT_ID_0, INT_SOURCE_ADC_1_DATA39);
@@ -828,7 +828,7 @@ void DRV_ADC_Initialize(void)
                ADCHS_INPUT_MODE_SINGLE_ENDED_UNIPOLAR
                );               
 
-    PLIB_ADCHS_AnalogInputEarlyInterruptEnable(DRV_ADC_ID_1, ADCHS_AN45);
+    PLIB_ADCHS_AnalogInputDataReadyInterruptEnable(DRV_ADC_ID_1, ADCHS_AN45);
      PLIB_ADCHS_AnalogInputScanSetup
      (
           DRV_ADC_ID_1, 
@@ -836,7 +836,7 @@ void DRV_ADC_Initialize(void)
           ADCHS_SCAN_TRIGGER_SENSITIVE_EDGE,
           ADCHS_SCAN_TRIGGER_SOURCE_GLOBAL_SOFTWARE_EDGE
      );
-     PLIB_ADCHS_EarlyInterruptDisable(DRV_ADC_ID_1);
+     PLIB_ADCHS_EarlyInterruptEnable(DRV_ADC_ID_1);
     /* Initialize ADC Data Interrupt */
     PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA45);
     PLIB_INT_SourceEnable(INT_ID_0, INT_SOURCE_ADC_1_DATA45);
@@ -856,7 +856,7 @@ void DRV_ADC_Initialize(void)
                ADCHS_INPUT_MODE_SINGLE_ENDED_UNIPOLAR
                );               
 
-    PLIB_ADCHS_AnalogInputEarlyInterruptEnable(DRV_ADC_ID_1, ADCHS_AN46);
+    PLIB_ADCHS_AnalogInputDataReadyInterruptEnable(DRV_ADC_ID_1, ADCHS_AN46);
      PLIB_ADCHS_AnalogInputScanSetup
      (
           DRV_ADC_ID_1, 
@@ -864,7 +864,7 @@ void DRV_ADC_Initialize(void)
           ADCHS_SCAN_TRIGGER_SENSITIVE_EDGE,
           ADCHS_SCAN_TRIGGER_SOURCE_GLOBAL_SOFTWARE_EDGE
      );
-     PLIB_ADCHS_EarlyInterruptDisable(DRV_ADC_ID_1);
+     PLIB_ADCHS_EarlyInterruptEnable(DRV_ADC_ID_1);
     /* Initialize ADC Data Interrupt */
     PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA46);
     PLIB_INT_SourceEnable(INT_ID_0, INT_SOURCE_ADC_1_DATA46);
@@ -884,7 +884,7 @@ void DRV_ADC_Initialize(void)
                ADCHS_INPUT_MODE_SINGLE_ENDED_UNIPOLAR
                );               
 
-    PLIB_ADCHS_AnalogInputEarlyInterruptEnable(DRV_ADC_ID_1, ADCHS_AN47);
+    PLIB_ADCHS_AnalogInputDataReadyInterruptEnable(DRV_ADC_ID_1, ADCHS_AN47);
      PLIB_ADCHS_AnalogInputScanSetup
      (
           DRV_ADC_ID_1, 
@@ -892,7 +892,7 @@ void DRV_ADC_Initialize(void)
           ADCHS_SCAN_TRIGGER_SENSITIVE_EDGE,
           ADCHS_SCAN_TRIGGER_SOURCE_GLOBAL_SOFTWARE_EDGE
      );
-     PLIB_ADCHS_EarlyInterruptDisable(DRV_ADC_ID_1);
+     PLIB_ADCHS_EarlyInterruptEnable(DRV_ADC_ID_1);
     /* Initialize ADC Data Interrupt */
     PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA47);
     PLIB_INT_SourceEnable(INT_ID_0, INT_SOURCE_ADC_1_DATA47);

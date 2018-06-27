@@ -222,7 +222,7 @@
       <Template dnOrder="18">
         <Name dnOrder="0">drv_adc_static.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/PIC32MK_MCU_Config/framework/driver/adc/src</Path>
-        <Checksum dnOrder="2">BEF9652F96364A84FF1D93E6DC079856</Checksum>
+        <Checksum dnOrder="2">6F008F0C78C66621D491DD8CB42A320C</Checksum>
       </Template>
       <Template dnOrder="19">
         <Name dnOrder="0">drv_usart_static.h</Name>
