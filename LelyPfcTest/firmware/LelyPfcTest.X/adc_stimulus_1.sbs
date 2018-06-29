@@ -1384,15 +1384,6 @@ Any
 cyc
 
 --
-COND2
-Bit
-ADCCON2.BGVRRDY
-=
-0
-1
-cyc
-
---
 &
 ## CLOCK
 
@@ -1853,5 +1844,5 @@ Set Voltage
 &
 ## ADVANCEDSCL
 
-1
+0
 &

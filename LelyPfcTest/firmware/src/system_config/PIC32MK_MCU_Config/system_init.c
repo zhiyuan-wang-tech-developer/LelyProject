@@ -212,6 +212,8 @@ void SYS_Initialize ( void* data )
 
     /* Initialize the Application */
     ANALOG_VOLTAGE_MONITOR_Initialize();
+    
+    SYS_PRINT("\n System is initialized!\r\n");
 }
 
 

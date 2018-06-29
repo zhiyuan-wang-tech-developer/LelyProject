@@ -56,12 +56,62 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "analog_voltage_monitor.h"
 #include "system/debug/sys_debug.h"
 #include <string.h>
+#include <stdlib.h>
 
 // *****************************************************************************
 // *****************************************************************************
 // Section: Global Data Definitions
 // *****************************************************************************
 // *****************************************************************************
+
+/*
+ * NTC (Negative Temperature Coefficient) Thermal Resistor
+ * Temperature Characteristics Table
+ * 
+ * Thermistor Type: NC P 18 XH 103 J 03 RB
+ * Resistance:  10K ohm @ 25?
+ * B-Constant:  3380K           
+ * Ref. Part Number: NCU  XH103
+ *                      U --- High Reliability Series
+ *                     XH --- Nominal B-Constant 3350-3399K
+ *                    103 --- 10K ohm Resistance  
+ */
+const NTC_LOOKUP_TABLE_TYPE   NTC_LookupTable[NTC_LOOKUP_TABLE_SIZE] = {
+    { .resistance = 195652, .temperature = -40 },  //#1
+    { .resistance = 148171, .temperature = -35 },  //#2
+    { .resistance = 113347, .temperature = -30 },  //#3
+    { .resistance =  87559, .temperature = -25 },  //#4
+    { .resistance =  68237, .temperature = -20 },  //#5
+    { .resistance =  53650, .temperature = -15 },  //#6
+    { .resistance =  42506, .temperature = -10 },  //#7
+    { .resistance =  33892, .temperature =  -5 },  //#8
+    { .resistance =  27219, .temperature =   0 },  //#9
+    { .resistance =  22021, .temperature =   5 },  //#10
+    { .resistance =  17926, .temperature =  10 },  //#11
+    { .resistance =  14674, .temperature =  15 },  //#12
+    { .resistance =  12081, .temperature =  20 },  //#13
+    { .resistance =  10000, .temperature =  25 },  //#14
+    { .resistance =   8315, .temperature =  30 },  //#15
+    { .resistance =   6948, .temperature =  35 },  //#16
+    { .resistance =   5834, .temperature =  40 },  //#17
+    { .resistance =   4917, .temperature =  45 },  //#18
+    { .resistance =   4161, .temperature =  50 },  //#19
+    { .resistance =   3535, .temperature =  55 },  //#20
+    { .resistance =   3014, .temperature =  60 },  //#21
+    { .resistance =   2586, .temperature =  65 },  //#22
+    { .resistance =   2228, .temperature =  70 },  //#23
+    { .resistance =   1925, .temperature =  75 },  //#24
+    { .resistance =   1669, .temperature =  80 },  //#25
+    { .resistance =   1452, .temperature =  85 },  //#26
+    { .resistance =   1268, .temperature =  90 },  //#27
+    { .resistance =   1110, .temperature =  95 },  //#28
+    { .resistance =    974, .temperature = 100 },  //#29
+    { .resistance =    858, .temperature = 105 },  //#30
+    { .resistance =    758, .temperature = 110 },  //#31
+    { .resistance =    672, .temperature = 115 },  //#32
+    { .resistance =    596, .temperature = 120 },  //#33
+    { .resistance =    531, .temperature = 125 }   //#34
+};
 
 // *****************************************************************************
 /* Application Data
@@ -126,6 +176,104 @@ void DisableDCPower(void)
     V_EN_1V8_2Off();
 }
 
+/*
+ * Print all ADC samples via UART communication port
+ */
+void ADCScanResultPrint(void)
+{
+    /* Critical section begins. */
+    /* Disable all the interrupts so that ADC scan results can be printed without interruption! */
+    PLIB_INT_Disable(INT_ID_0);
+    SYS_PRINT("\n\t           ADC SCAN RESULT LIST         \n");
+    SYS_PRINT("\t ----------------------------------------------- \n");
+    SYS_PRINT("\t INPUT     \t  RAW (DEC)  \t  CONVERTED  \n");
+    SYS_PRINT("\t ----------------------------------------------- \n");
+    SYS_PRINT("\t V_380V    \t  %d  \t  %f mV  \n", analog_voltage_monitorData.adc_raw_data.samples.V380V, analog_voltage_monitorData.adc_converted_data.samples.V380V);
+    SYS_PRINT("\t V_325V    \t  %d  \t  %f mV  \n", analog_voltage_monitorData.adc_raw_data.samples.V325V, analog_voltage_monitorData.adc_converted_data.samples.V325V);
+    SYS_PRINT("\t V_Live    \t  %d  \t  %f mV  \n", analog_voltage_monitorData.adc_raw_data.samples.VLIVE, analog_voltage_monitorData.adc_converted_data.samples.VLIVE);
+    SYS_PRINT("\t V_Neutral \t  %d  \t  %f mV  \n", analog_voltage_monitorData.adc_raw_data.samples.VNEUTRAL, analog_voltage_monitorData.adc_converted_data.samples.VNEUTRAL);
+    SYS_PRINT("\t V_18V     \t  %d  \t  %f mV  \n", analog_voltage_monitorData.adc_raw_data.samples.V18V, analog_voltage_monitorData.adc_converted_data.samples.V18V);
+    SYS_PRINT("\t V_12V     \t  %d  \t  %f mV  \n", analog_voltage_monitorData.adc_raw_data.samples.V12V, analog_voltage_monitorData.adc_converted_data.samples.V12V);
+    SYS_PRINT("\t V_5V      \t  %d  \t  %f mV  \n", analog_voltage_monitorData.adc_raw_data.samples.V5V, analog_voltage_monitorData.adc_converted_data.samples.V5V);
+    SYS_PRINT("\t V_3V3_0   \t  %d  \t  %f mV  \n", analog_voltage_monitorData.adc_raw_data.samples.V3V3_0, analog_voltage_monitorData.adc_converted_data.samples.V3V3_0);
+    SYS_PRINT("\t V_3V3_1   \t  %d  \t  %f mV  \n", analog_voltage_monitorData.adc_raw_data.samples.V3V3_1, analog_voltage_monitorData.adc_converted_data.samples.V3V3_1);
+    SYS_PRINT("\t V_3V3_2   \t  %d  \t  %f mV  \n", analog_voltage_monitorData.adc_raw_data.samples.V3V3_2, analog_voltage_monitorData.adc_converted_data.samples.V3V3_2);
+    SYS_PRINT("\t V_3V3_AN1 \t  %d  \t  %f mV  \n", analog_voltage_monitorData.adc_raw_data.samples.V3V3AN1, analog_voltage_monitorData.adc_converted_data.samples.V3V3AN1);
+    SYS_PRINT("\t V_3V3_AN2 \t  %d  \t  %f mV  \n", analog_voltage_monitorData.adc_raw_data.samples.V3V3AN2, analog_voltage_monitorData.adc_converted_data.samples.V3V3AN2);
+    SYS_PRINT("\t V_1V8_1   \t  %d  \t  %f mV  \n", analog_voltage_monitorData.adc_raw_data.samples.V1V8_1, analog_voltage_monitorData.adc_converted_data.samples.V1V8_1);
+    SYS_PRINT("\t V_1V8_2   \t  %d  \t  %f mV  \n", analog_voltage_monitorData.adc_raw_data.samples.V1V8_2, analog_voltage_monitorData.adc_converted_data.samples.V1V8_2);
+    SYS_PRINT("\t ----------------------------------------------- \n");
+    SYS_PRINT("\t IL12      \t  %d  \t  %f mV  \n", analog_voltage_monitorData.adc_raw_data.samples.IL12, analog_voltage_monitorData.adc_converted_data.samples.IL12);
+    SYS_PRINT("\t IL34      \t  %d  \t  %f mV  \n", analog_voltage_monitorData.adc_raw_data.samples.IL34, analog_voltage_monitorData.adc_converted_data.samples.IL34);
+    SYS_PRINT("\t ----------------------------------------------- \n");
+    SYS_PRINT("\t T_M1      \t  %d  \t  %f mV  \n", analog_voltage_monitorData.adc_raw_data.samples.TEMP_M1, analog_voltage_monitorData.adc_converted_data.samples.TEMP_M1);
+    SYS_PRINT("\t T_M2      \t  %d  \t  %f mV  \n", analog_voltage_monitorData.adc_raw_data.samples.TEMP_M2, analog_voltage_monitorData.adc_converted_data.samples.TEMP_M2);
+    SYS_PRINT("\t T_PFC12   \t  %d  \t  %f mV  \n", analog_voltage_monitorData.adc_raw_data.samples.TEMP_PFC12, analog_voltage_monitorData.adc_converted_data.samples.TEMP_PFC12);
+    SYS_PRINT("\t T_PFC34   \t  %d  \t  %f mV  \n", analog_voltage_monitorData.adc_raw_data.samples.TEMP_PFC34, analog_voltage_monitorData.adc_converted_data.samples.TEMP_PFC34);
+    SYS_PRINT("\t T_ELCO    \t  %d  \t  %f mV  \n", analog_voltage_monitorData.adc_raw_data.samples.TEMP_ELCO, analog_voltage_monitorData.adc_converted_data.samples.TEMP_ELCO);
+    SYS_PRINT("\t T_BRUG    \t  %d  \t  %f mV  \n", analog_voltage_monitorData.adc_raw_data.samples.TEMP_BRUG, analog_voltage_monitorData.adc_converted_data.samples.TEMP_BRUG);
+    SYS_PRINT("\t T_VOED    \t  %d  \t  %f mV  \n", analog_voltage_monitorData.adc_raw_data.samples.TEMP_VOED, analog_voltage_monitorData.adc_converted_data.samples.TEMP_VOED);
+    SYS_PRINT("\t ----------------------------------------------- \n");
+    /* Critical section ends. */
+    PLIB_INT_Enable(INT_ID_0);
+}
+
+/*
+ * It converts the ADC raw sample value (0 ~ 4095) to the corresponding voltage in mV.
+ * 
+ * Parameter:
+ *      ADC_Raw_Value: ADC raw value read out of the ADC data buffer
+ * 
+ * Return:
+ *      The voltage in mV that corresponds to the ADC raw value       
+ */
+float ConvertADCRawSampleToVoltage(uint32_t ADC_Raw_Value)
+{
+    return (float)( ADC_LSB_VOLTAGE_mV * ADC_Raw_Value );
+}
+
+/*
+ * It converts all ADC raw samples in ADC raw data structure into corresponding voltages. 
+ */
+void ConvertAllADCRawSamplesToVoltages(void)
+{
+//    SYS_DEBUG_BreakPoint();
+    uint8_t i = 0;
+    for( i = 0; i < 23; i++ )
+    {
+        analog_voltage_monitorData.adc_converted_data.buffer[i] = ConvertADCRawSampleToVoltage(analog_voltage_monitorData.adc_raw_data.buffer[i]);
+    }
+}
+
+/*
+ * It converts ADC raw sample into corresponding thermal resistance value.
+ * 
+ * Parameter:
+ *      ADC_Raw_Value: ADC raw value read out of the ADC data buffer
+ * 
+ * Return:
+ *      The thermal resistance value in ohm that corresponds to the ADC raw value 
+ */
+float ConvertADCRawSampleToThermalResistance(uint32_t ADC_Raw_Value)
+{
+    float Rt = 0;   // Thermal Resistance Value
+    Rt = (float) (ADC_Raw_Value / (ADC_MAX_VALUE - ADC_Raw_Value)) * REF_RESISTANCE_Ohm;
+    return Rt;
+}
+
+int compareThermalResistanceInLookupTable(const void * pSearchKey, const void * pTableItem)
+{
+    if( (*(float *)pSearchKey <= *(float *)pTableItem) && \\
+        (*(float *)pSearchKey) > (float *)pTableItem )
+    {
+        
+    }
+}
+
+float ConvertThermalResistanceToTemperature(float Rt)
+{
+    
+}
 // *****************************************************************************
 // *****************************************************************************
 // Section: Application Initialization and State Machine Functions
@@ -149,11 +297,10 @@ void ANALOG_VOLTAGE_MONITOR_Initialize ( void )
     /* TODO: Initialize your application's state machine and other
      * parameters.
      */
-    /* Clear the adc data buffer in initial state. */
-    memset(analog_voltage_monitorData.adc_data.buffer, 0, sizeof(analog_voltage_monitorData.adc_data.buffer));
+    /* Clear the ADC data buffer in initial state. */
+    memset(analog_voltage_monitorData.adc_raw_data.buffer, 0, sizeof(analog_voltage_monitorData.adc_raw_data.buffer));
     /* Open all DC powers */
     EnableDCPower();
-    SYS_PRINT("System is initialized!\r\n");
 }
 
 
@@ -175,65 +322,24 @@ void ANALOG_VOLTAGE_MONITOR_Tasks ( void )
         case ANALOG_VOLTAGE_MONITOR_STATE_INIT:
         {
             bool appInitialized = true;
-     
-            
-//            ADC0CFG = DEVADC0;
-//            ADC1CFG = DEVADC1;
-//            ADC2CFG = DEVADC2;
-//            ADC3CFG = DEVADC3;
-//            ADC4CFG = DEVADC4;
-//            ADC5CFG = DEVADC5;
-//            
-//            ADC7CFG = DEVADC7;
-//            ADCCON1 = 0;
-//            ADCCON2 = 0;
-//            ADCANCON = 0;
-//            ADCCON3 = 0;
-            
-//            ADCANCONbits.WKUPCLKCNT = 5;
-//            ADCCON1bits.ON = 1;
-            
-//            while( !ADCCON2bits.BGVRRDY );
-//            while( ADCCON2bits.REFFLT) ;
-            
-//            ADCANCON |= 0xFF;   //ANEN0-7 = 1
-//            while( (ADCANCON & 0xFF00) == 0); //wait for wake ready
-//            ADCCON3bits.TRGSUSP = 1;
-//            ADCCON3bits.UPDRDY = 1;
-//            ADCCON3bits.DIGEN0 = 1;
-//            ADCCON3bits.DIGEN1 = 1;
-//            ADCCON3bits.DIGEN2 = 1;
-//            ADCCON3bits.DIGEN4 = 1;
-//            ADCCON3bits.DIGEN5 = 1;
-//            ADCCON3bits.DIGEN7 = 1;
-            Nop();
-            Nop();
-            Nop();
-            
+//            SYS_DEBUG_BreakPoint();           
             if (appInitialized)
             {            
                 analog_voltage_monitorData.state = ANALOG_VOLTAGE_MONITOR_STATE_SCAN;
-                /* Clear the adc data buffer in initial state. */
-                memset(analog_voltage_monitorData.adc_data.buffer, 0, sizeof(analog_voltage_monitorData.adc_data.buffer));
+                /* Clear the ADC data buffer in initial state. */
+                memset(analog_voltage_monitorData.adc_raw_data.buffer, 0, sizeof(analog_voltage_monitorData.adc_raw_data.buffer));
+                memset(analog_voltage_monitorData.adc_converted_data.buffer, 0, sizeof(analog_voltage_monitorData.adc_converted_data.buffer));
                 /* Start the ADC */
-                Nop();
-                Nop();
-                DRV_ADC0_Open();
-//                Nop();
-//                Nop();
 //                ADCCON3bits.DIGEN0 = 1;
-//                Nop();
-//                Nop();
-//                DRV_ADC1_Open();
-//                Nop();
-//                Nop();
-//                DRV_ADC2_Open();
-//                DRV_ADC4_Open();
-//                DRV_ADC5_Open();
-//                DRV_ADC6_Open();
-
-//                ADCCON3bits.TRGSUSP = 0;
-//                ADCCON3bits.UPDRDY = 0; 
+                /* Enable the channel digital features. */
+                DRV_ADC0_Open();
+                DRV_ADC1_Open();
+                DRV_ADC2_Open();
+                DRV_ADC4_Open();
+                DRV_ADC5_Open();
+                DRV_ADC6_Open();
+                /* Enable the global software EDGE trigger for analog input scanning. */
+                /* The global software trigger bit is cleared automatically in the next ADC clock cycle. */
                 DRV_ADC_Start();
             }
             break;
@@ -242,8 +348,8 @@ void ANALOG_VOLTAGE_MONITOR_Tasks ( void )
         /* TODO: implement your application state machine.*/
         case ANALOG_VOLTAGE_MONITOR_STATE_SCAN:
         {
-//            SYS_DEBUG_BreakPoint();
 //            V_LED1_GOn();
+//            SYS_DEBUG_BreakPoint();
             analog_voltage_monitorData.state = ANALOG_VOLTAGE_MONITOR_STATE_SCAN_DONE;
             break;
         }        
@@ -251,19 +357,13 @@ void ANALOG_VOLTAGE_MONITOR_Tasks ( void )
         case ANALOG_VOLTAGE_MONITOR_STATE_SCAN_DONE:
         {
             /* Check if every ADC data is updated in the ADC buffer */
-            // AN5 can not be read out right now so its status flag is left ZERO. 
-            if(analog_voltage_monitorData.adc_data.update.status == 0b00000000011111111111111111011111)
+            // AN5 can not be read out right now so its status flag is left ZERO.
+            // Note: 0x007F7FFF == 0b00000000011111110111111111111111
+            if (analog_voltage_monitorData.adc_raw_data.samples.update.status == 0x007F7FFF)
             {
-                // If the ADC data are all updated, then go to next state for data display. 
-                analog_voltage_monitorData.state = ANALOG_VOLTAGE_MONITOR_STATE_DISPLAY;
-                DRV_ADC_Stop();
-//                DRV_ADC0_Close();
-//                DRV_ADC1_Close();
-//                DRV_ADC2_Close();
-//                DRV_ADC4_Close();
-//                DRV_ADC5_Close();
-//                DRV_ADC6_Close();
 //                V_LED1_GOff();
+                // If the ADC data are all updated, then go to next state for data conversion. 
+                analog_voltage_monitorData.state = ANALOG_VOLTAGE_MONITOR_STATE_CONVERT;
             }
             else
             {
@@ -273,23 +373,18 @@ void ANALOG_VOLTAGE_MONITOR_Tasks ( void )
             break;
         }
 
+        case ANALOG_VOLTAGE_MONITOR_STATE_CONVERT:
+        {
+            ConvertAllADCRawSamplesToVoltages();
+            analog_voltage_monitorData.state = ANALOG_VOLTAGE_MONITOR_STATE_DISPLAY;
+            break;
+        }
+        
         case ANALOG_VOLTAGE_MONITOR_STATE_DISPLAY:
         {
 //            V_LED1_ROn();
-            SYS_DEBUG_BreakPoint();
-            SYS_PRINT("\r\nScan Result List: \r\n");
-            SYS_PRINT("\t V_380V = %d \t V_325V = %d\n", analog_voltage_monitorData.adc_data.V380V, analog_voltage_monitorData.adc_data.V325V);
-            SYS_PRINT("\t V_Live = %d \t V_Neutral = %d\n", analog_voltage_monitorData.adc_data.VLIVE, analog_voltage_monitorData.adc_data.VNEUTRAL);
-            SYS_PRINT("\t IL12 = %d \t IL34 = %d\n", analog_voltage_monitorData.adc_data.IL12, analog_voltage_monitorData.adc_data.IL34);
-            
-            SYS_PRINT("\t T_M1 = %d \t T_M2 = %d\n", analog_voltage_monitorData.adc_data.TEMP_M1, analog_voltage_monitorData.adc_data.TEMP_M2);
-            SYS_PRINT("\t T_PFC12 = %d \t T_PFC34 = %d\n", analog_voltage_monitorData.adc_data.TEMP_PFC12, analog_voltage_monitorData.adc_data.TEMP_PFC34);
-            SYS_PRINT("\t T_ELCO = %d \t T_BRUG = %d \t T_VOED = %d\n", analog_voltage_monitorData.adc_data.TEMP_ELCO, analog_voltage_monitorData.adc_data.TEMP_BRUG, analog_voltage_monitorData.adc_data.TEMP_VOED);
-
-            SYS_PRINT("\t V_18V = %d \t V_12V = %d \t V_5V = %d\n", analog_voltage_monitorData.adc_data.V18V, analog_voltage_monitorData.adc_data.V12V, analog_voltage_monitorData.adc_data.V5V);
-            SYS_PRINT("\t V_3V3_0 = %d \t V_3V3_1 = %d \t V_3V3_2 = %d\n", analog_voltage_monitorData.adc_data.V3V3_0, analog_voltage_monitorData.adc_data.V3V3_1, analog_voltage_monitorData.adc_data.V3V3_2);
-            SYS_PRINT("\t V_3V3_AN1 = %d \t V_3V3_AN2 = %d\n", analog_voltage_monitorData.adc_data.V3V3AN1, analog_voltage_monitorData.adc_data.V3V3AN2);
-            SYS_PRINT("\t V_1V8_1 = %d \t V_1V8_2 = %d\n\n", analog_voltage_monitorData.adc_data.V1V8_1, analog_voltage_monitorData.adc_data.V1V8_2);
+//            SYS_DEBUG_BreakPoint();
+            ADCScanResultPrint();
 //            V_LED1_ROff();
             analog_voltage_monitorData.state = ANALOG_VOLTAGE_MONITOR_STATE_INIT;
             break;
@@ -299,7 +394,7 @@ void ANALOG_VOLTAGE_MONITOR_Tasks ( void )
         default:
         {
             /* TODO: Handle error in application's state machine. */
-            SYS_PRINT("Analog voltage monitor in wrong state!\r\n");
+            SYS_PRINT("\n Warning: Analog voltage monitor in WRONG state!\r\n");
             /* Return to the initial state. */
             analog_voltage_monitorData.state = ANALOG_VOLTAGE_MONITOR_STATE_INIT;            
             break;

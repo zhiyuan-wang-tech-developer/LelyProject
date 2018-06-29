@@ -75,8 +75,16 @@ extern "C" {
 #define YES     1
 #define NO      0
 
+// 12-bits ADC output maximum value == 4095 or 0xFFF      
+#define ADC_MAX_VALUE               4095
+// ADC reference voltage in mV
+#define ADC_VREF_mV                 3300
+// The minimal voltage that can be distinguished by one LSB (Least Significant Bit)
+// ADC_LSB_VOLTAGE_mV == ((ADC_VREF_mV) / (ADC_MAX_VALUE)) == 3300/4095 == 0.805860
+#define ADC_LSB_VOLTAGE_mV          0.805860
+    
 /*
- *  ADC update status structure
+ *  ADC scan data update status structure
  *  It holds the update status of ADC scan data in the ADC data buffer.
  */
 typedef union
@@ -92,15 +100,6 @@ typedef union
         uint32_t V325V: 1;
         uint32_t VLIVE: 1;
         uint32_t VNEUTRAL: 1;
-        uint32_t IL12: 1;
-        uint32_t IL34: 1;   // --> AN5
-        uint32_t TEMP_M1: 1;
-        uint32_t TEMP_M2: 1;
-        uint32_t TEMP_PFC12: 1;
-        uint32_t TEMP_PFC34: 1;
-        uint32_t TEMP_ELCO: 1;
-        uint32_t TEMP_BRUG: 1;
-        uint32_t TEMP_VOED: 1;
         uint32_t V18V: 1;
         uint32_t V12V: 1;
         uint32_t V5V: 1;
@@ -111,49 +110,111 @@ typedef union
         uint32_t V3V3AN2: 1;
         uint32_t V1V8_1: 1;
         uint32_t V1V8_2: 1;
+        uint32_t IL12: 1;
+        uint32_t IL34: 1;   // --> AN5
+        uint32_t TEMP_M1: 1;
+        uint32_t TEMP_M2: 1;
+        uint32_t TEMP_PFC12: 1;
+        uint32_t TEMP_PFC34: 1;
+        uint32_t TEMP_ELCO: 1;
+        uint32_t TEMP_BRUG: 1;
+        uint32_t TEMP_VOED: 1;
         uint32_t UNUSED: 9;
-    };
+    } status_bits;
 } ADC_SCAN_UPDATE_STATUS;
         
 /* 
- * ADC data structure
- * It holds the ADC scan data for all 23 analog inputs. 
+ *  ADC sample data structure
+ *  It holds the ADC scan data samples for all 23 analog inputs. 
  */    
 typedef union
 {
     uint32_t buffer[24];
     struct
     {
-        /* AC power */
+        /* Voltage */
         uint32_t V380V;
         uint32_t V325V;
-        uint32_t VLIVE;     // AC live line
-        uint32_t VNEUTRAL;  // AC neutral line
-        uint32_t IL12;  // current load
-        uint32_t IL34;
-        /* Temperature */
-        uint32_t TEMP_M1;   // Temperature for motor 1
-        uint32_t TEMP_M2;
-        uint32_t TEMP_PFC12; // Temperature for power factor corrector
-        uint32_t TEMP_PFC34;
-        uint32_t TEMP_ELCO;
-        uint32_t TEMP_BRUG;
-        uint32_t TEMP_VOED;
-        /* DC power */
+        uint32_t VLIVE;         // AC live line
+        uint32_t VNEUTRAL;      // AC neutral line
         uint32_t V18V;
         uint32_t V12V;
         uint32_t V5V;
-        uint32_t V3V3_0;    // DC 3.3V
+        uint32_t V3V3_0;        // DC 3.3V
         uint32_t V3V3_1;
         uint32_t V3V3_2;
         uint32_t V3V3AN1;
         uint32_t V3V3AN2;
-        uint32_t V1V8_1;    // DC 1.8V
+        uint32_t V1V8_1;        // DC 1.8V
         uint32_t V1V8_2;
+        /* Current Load */
+        uint32_t IL12; 
+        uint32_t IL34;
+        /* Temperature */
+        uint32_t TEMP_M1;       // Temperature for motor 1
+        uint32_t TEMP_M2;
+        uint32_t TEMP_PFC12;    // Temperature for power factor corrector
+        uint32_t TEMP_PFC34;
+        uint32_t TEMP_ELCO;
+        uint32_t TEMP_BRUG;
+        uint32_t TEMP_VOED;
         /* Update flags */
         ADC_SCAN_UPDATE_STATUS update;
-    };
+    } samples;
 } ADC_SCAN_DATA_TYPE;
+
+/* 
+ *  ADC conversion data structure
+ *  It holds the converted ADC scan data samples for all 23 analog inputs. 
+ */    
+typedef union
+{
+    float buffer[23];
+    struct
+    {
+        /* Voltage */
+        float V380V;
+        float V325V;
+        float VLIVE;        // AC live line
+        float VNEUTRAL;     // AC neutral line
+        float V18V;
+        float V12V;
+        float V5V;
+        float V3V3_0;       // DC 3.3V
+        float V3V3_1;
+        float V3V3_2;
+        float V3V3AN1;
+        float V3V3AN2;
+        float V1V8_1;       // DC 1.8V
+        float V1V8_2;
+        /* Current Load */
+        float IL12;
+        float IL34;
+        /* Temperature */
+        float TEMP_M1;      // Temperature for motor 1
+        float TEMP_M2;
+        float TEMP_PFC12;   // Temperature for power factor corrector
+        float TEMP_PFC34;
+        float TEMP_ELCO;
+        float TEMP_BRUG;
+        float TEMP_VOED;
+    } samples;
+} ADC_CONVERTED_DATA_TYPE;
+
+/* NTC (Negative Temperature Coefficient) Lookup Table Size */
+#define NTC_LOOKUP_TABLE_SIZE  34
+/* The value of the reference resistance which is connected in series with the thermistor */
+#define REF_RESISTANCE_Ohm     3300 
+
+/*
+ *  NTC (Negative Temperature Coefficient) Thermistor
+ *  Temperature Characteristics Lookup Table Type
+ */
+typedef struct
+{
+    float resistance;       // Ohm
+    float temperature;      // ?   
+} NTC_LOOKUP_TABLE_TYPE;
 
 // *****************************************************************************
 /* Application states
@@ -174,6 +235,7 @@ typedef enum
 	/* TODO: Define states used by the application state machine. */
 	ANALOG_VOLTAGE_MONITOR_STATE_SCAN,
     ANALOG_VOLTAGE_MONITOR_STATE_SCAN_DONE,
+    ANALOG_VOLTAGE_MONITOR_STATE_CONVERT,
     ANALOG_VOLTAGE_MONITOR_STATE_DISPLAY
 
 } ANALOG_VOLTAGE_MONITOR_STATES;
@@ -195,10 +257,11 @@ typedef enum
 typedef struct
 {
     /* The application's current state */
-    ANALOG_VOLTAGE_MONITOR_STATES state;
+    ANALOG_VOLTAGE_MONITOR_STATES   state;
 
     /* TODO: Define any additional data used by the application. */
-    ADC_SCAN_DATA_TYPE adc_data;
+    ADC_SCAN_DATA_TYPE              adc_raw_data;
+    ADC_CONVERTED_DATA_TYPE         adc_converted_data;
 
 } ANALOG_VOLTAGE_MONITOR_DATA;
 
