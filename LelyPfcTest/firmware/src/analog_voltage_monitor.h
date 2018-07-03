@@ -82,6 +82,11 @@ extern "C" {
 // The minimal voltage that can be distinguished by one LSB (Least Significant Bit)
 // ADC_LSB_VOLTAGE_mV == ((ADC_VREF_mV) / (ADC_MAX_VALUE)) == 3300/4095 == 0.805860
 #define ADC_LSB_VOLTAGE_mV          0.805860
+
+// For ADC scan result fault check 
+// If the temperature converted from the ADC raw sample goes beyond this threshold,
+// the overheat alarm will be issued.   
+#define TEMPERATURE_THRESHOLD       70
     
 /*
  *  ADC scan data update status structure
@@ -213,7 +218,7 @@ typedef union
 typedef struct
 {
     float resistance;       // Ohm
-    float temperature;      // ?   
+    float temperature;      // celsius degree   
 } NTC_LOOKUP_TABLE_TYPE;
 
 // *****************************************************************************
@@ -236,6 +241,7 @@ typedef enum
 	ANALOG_VOLTAGE_MONITOR_STATE_SCAN,
     ANALOG_VOLTAGE_MONITOR_STATE_SCAN_DONE,
     ANALOG_VOLTAGE_MONITOR_STATE_CONVERT,
+    ANALOG_VOLTAGE_MONITOR_STATE_FAULT_CHECK,
     ANALOG_VOLTAGE_MONITOR_STATE_DISPLAY
 
 } ANALOG_VOLTAGE_MONITOR_STATES;
