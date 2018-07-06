@@ -212,8 +212,10 @@ void SYS_Initialize ( void* data )
 
     /* Initialize the Application */
     ANALOG_VOLTAGE_MONITOR_Initialize();
+    ERROR_HANDLER_Initialize();
     
-    SYS_PRINT("\n System is initialized!\r\n");
+    /* Prompt the successful system initialization */
+    SYS_PRINT("\nSystem is initialized!\r\n");
 }
 
 

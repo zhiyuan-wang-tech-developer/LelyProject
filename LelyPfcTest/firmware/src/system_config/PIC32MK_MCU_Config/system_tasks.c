@@ -83,6 +83,7 @@ void SYS_Tasks ( void )
 
     /* Maintain the application's state machine. */
     ANALOG_VOLTAGE_MONITOR_Tasks();
+    ERROR_HANDLER_Tasks();
 }
 
 

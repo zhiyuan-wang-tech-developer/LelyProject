@@ -61,9 +61,11 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 #include "system/common/sys_common.h"
 #include "analog_voltage_monitor.h"
+#include "error_handler.h"
 #include "system_definitions.h"
 
 extern ANALOG_VOLTAGE_MONITOR_DATA analog_voltage_monitorData;
+extern ERROR_HANDLER_DATA error_handlerData;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -75,7 +77,8 @@ void __ISR(_CHANGE_NOTICE_C_VECTOR, ipl1AUTO) _IntHandlerChangeNotification_Port
     if( V_PFC_OL12StateGet() )
     {
 //        SYS_DEBUG_BreakPoint();
-        SYS_PRINT("\n Overload 12 on the RC13 \r\n");
+//        SYS_PRINT("\nFault: Overcurrent for IL12 on the RC13 pin\r\n");
+        error_handlerData.currentError.status_flags.OVERCURRENT_FAULT_IL12 = YES;
     }
     PLIB_INT_SourceFlagClear(INT_ID_0,INT_SOURCE_CHANGE_NOTICE_C);
 }
@@ -85,7 +88,8 @@ void __ISR(_CHANGE_NOTICE_D_VECTOR, ipl1AUTO) _IntHandlerChangeNotification_Port
     if( V_PFC_OL34StateGet() )
     {
 //        SYS_DEBUG_BreakPoint();
-        SYS_PRINT("\n Overload 34 on the RD6 \r\n");    
+//        SYS_PRINT("\nFault: Overcurrent for IL34 on the RD6 pin\r\n");
+        error_handlerData.currentError.status_flags.OVERCURRENT_FAULT_IL34 = YES;
     }
     PLIB_INT_SourceFlagClear(INT_ID_0,INT_SOURCE_CHANGE_NOTICE_D);
 }

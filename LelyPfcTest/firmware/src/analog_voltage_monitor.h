@@ -69,12 +69,17 @@ extern "C" {
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: Type Definitions
+// Section: Macro Definitions
 // *****************************************************************************
 // *****************************************************************************
 #define YES     1
 #define NO      0
 
+/*******************************************************************************
+ *
+ *  Macro Definitions for ADC
+ * 
+ ******************************************************************************/    
 // 12-bits ADC output maximum value == 4095 or 0xFFF      
 #define ADC_MAX_VALUE               4095
 // ADC reference voltage in mV
@@ -83,10 +88,128 @@ extern "C" {
 // ADC_LSB_VOLTAGE_mV == ((ADC_VREF_mV) / (ADC_MAX_VALUE)) == 3300/4095 == 0.805860
 #define ADC_LSB_VOLTAGE_mV          0.805860
 
-// For ADC scan result fault check 
-// If the temperature converted from the ADC raw sample goes beyond this threshold,
-// the overheat alarm will be issued.   
-#define TEMPERATURE_THRESHOLD       70
+/*******************************************************************************
+ * 
+ * Macro Definitions for ADC scan result fault check
+ * 
+ * If voltages, currents and temperatures converted from the ADC raw samples 
+ * go beyond these thresholds, the WARNING or FAULT messages will be issued.
+ *
+ * Target Rating Voltage (mV):
+ * V-AN-380V = (4.7K / (4.7K + 1000K + 47K)) * 380000 = 1698.202909 mV
+ * V-AN-325V = (4.7K / (4.7K + 1000K + 47K)) * 325000 = 1452.425 mV
+ * V-AN-18V = (4.7K / (4.7K + 47K)) * 18000 = 1636.362 mV
+ * V-AN-12V = (4.7K / (4.7K + 47K)) * 12000 = 1090.908 mV
+ * V-AN-5V = (10K / (10K + 10K)) * 5000 = 2500 mV
+ * V-AN-3V3-X (X = 0, 1, 2) = (10K / (10K + 4.7K)) * 3300 = 2244.898 mV
+ * V-AN-3V3ANX (X = 1, 2) = (10K / (10K + 1K)) * 3300 = 3000.0 mV
+ * V-AN-1V8-X (X = 1, 2) = 1800 mV 
+ *   
+ ******************************************************************************/   
+// DC Power Undervoltage Threshold (mV)
+// Undervoltage Warning Threshold = 0.95 * Target Rating Voltage
+#define V380V_UNDERVOLTAGE_WARNING_THRESHOLD         1613.1   
+#define V325V_UNDERVOLTAGE_WARNING_THRESHOLD         1379.8   
+#define V18V_UNDERVOLTAGE_WARNING_THRESHOLD          1554.5   
+#define V12V_UNDERVOLTAGE_WARNING_THRESHOLD          1036.3    
+#define V5V_UNDERVOLTAGE_WARNING_THRESHOLD           2375.0
+#define V3V3_0_UNDERVOLTAGE_WARNING_THRESHOLD        2132.6
+#define V3V3_1_UNDERVOLTAGE_WARNING_THRESHOLD        2132.6
+#define V3V3_2_UNDERVOLTAGE_WARNING_THRESHOLD        2132.6
+#define V3V3AN1_UNDERVOLTAGE_WARNING_THRESHOLD       2850.0
+#define V3V3AN2_UNDERVOLTAGE_WARNING_THRESHOLD       2850.0      
+#define V1V8_1_UNDERVOLTAGE_WARNING_THRESHOLD        1710.0
+#define V1V8_2_UNDERVOLTAGE_WARNING_THRESHOLD        1710.0   
+// Undervoltage Fault Threshold = 0.90 * Target Rating Voltage
+#define V380V_UNDERVOLTAGE_FAULT_THRESHOLD          1528.2
+#define V325V_UNDERVOLTAGE_FAULT_THRESHOLD          1307.1
+#define V18V_UNDERVOLTAGE_FAULT_THRESHOLD           1472.7
+#define V12V_UNDERVOLTAGE_FAULT_THRESHOLD            981.8                
+#define V5V_UNDERVOLTAGE_FAULT_THRESHOLD            2250.0
+#define V3V3_0_UNDERVOLTAGE_FAULT_THRESHOLD         2020.4
+#define V3V3_1_UNDERVOLTAGE_FAULT_THRESHOLD         2020.4
+#define V3V3_2_UNDERVOLTAGE_FAULT_THRESHOLD         2020.4
+#define V3V3AN1_UNDERVOLTAGE_FAULT_THRESHOLD        2700.0
+#define V3V3AN2_UNDERVOLTAGE_FAULT_THRESHOLD        2700.0
+#define V1V8_1_UNDERVOLTAGE_FAULT_THRESHOLD         1620.0
+#define V1V8_2_UNDERVOLTAGE_FAULT_THRESHOLD         1620.0    
+    
+// DC Power Overvoltage Threshold (mV)
+// Overvoltage Warning Threshold = 1.05 * Target Rating Voltage
+#define V380V_OVERVOLTAGE_WARNING_THRESHOLD         1782.9
+#define V325V_OVERVOLTAGE_WARNING_THRESHOLD         1525.0
+#define V18V_OVERVOLTAGE_WARNING_THRESHOLD          1718.1
+#define V12V_OVERVOLTAGE_WARNING_THRESHOLD          1145.4    
+#define V5V_OVERVOLTAGE_WARNING_THRESHOLD           2625.0
+#define V3V3_0_OVERVOLTAGE_WARNING_THRESHOLD        2357.1
+#define V3V3_1_OVERVOLTAGE_WARNING_THRESHOLD        2357.1
+#define V3V3_2_OVERVOLTAGE_WARNING_THRESHOLD        2357.1
+#define V3V3AN1_OVERVOLTAGE_WARNING_THRESHOLD       3150.0
+#define V3V3AN2_OVERVOLTAGE_WARNING_THRESHOLD       3150.0
+#define V1V8_1_OVERVOLTAGE_WARNING_THRESHOLD        1890.0
+#define V1V8_2_OVERVOLTAGE_WARNING_THRESHOLD        1890.0
+// Overvoltage Fault Threshold = 1.10 * Target Rating Voltage
+#define V380V_OVERVOLTAGE_FAULT_THRESHOLD           1867.8
+#define V325V_OVERVOLTAGE_FAULT_THRESHOLD           1597.6
+#define V18V_OVERVOLTAGE_FAULT_THRESHOLD            1799.9
+#define V12V_OVERVOLTAGE_FAULT_THRESHOLD            1199.9    
+#define V5V_OVERVOLTAGE_FAULT_THRESHOLD             2750.0
+#define V3V3_0_OVERVOLTAGE_FAULT_THRESHOLD          2469.3
+#define V3V3_1_OVERVOLTAGE_FAULT_THRESHOLD          2469.3
+#define V3V3_2_OVERVOLTAGE_FAULT_THRESHOLD          2469.3
+#define V3V3AN1_OVERVOLTAGE_FAULT_THRESHOLD         3300.0
+#define V3V3AN2_OVERVOLTAGE_FAULT_THRESHOLD         3300.0
+#define V1V8_1_OVERVOLTAGE_FAULT_THRESHOLD          1980.0
+#define V1V8_2_OVERVOLTAGE_FAULT_THRESHOLD          1980.0
+        
+// Motor Overheat Threshold (Celsius Degrees)  
+#define MOTOR_OVERHEAT_WARNING_THRESHOLD         60
+#define MOTOR_OVERHEAT_FAULT_THRESHOLD           70
+// PFC (Power Factor Correction) Overheat Threshold (Celsius Degrees)
+#define PFC_OVERHEAT_WARNING_THRESHOLD           70
+#define PFC_OVERHEAT_FAULT_THRESHOLD             90
+// BRUG Overheat Threshold (Celsius Degrees)   
+#define BRUG_OVERHEAT_WARNING_THRESHOLD          70
+#define BRUG_OVERHEAT_FAULT_THRESHOLD            90
+// VOED Overheat Threshold (Celsius Degrees)   
+#define VOED_OVERHEAT_WARNING_THRESHOLD          70
+#define VOED_OVERHEAT_FAULT_THRESHOLD            90
+// ELCO Overheat Threshold (Celsius Degrees)   
+#define ELCO_OVERHEAT_WARNING_THRESHOLD          70
+#define ELCO_OVERHEAT_FAULT_THRESHOLD            80    
+
+/*******************************************************************************
+ *
+ *  Macro Definitions for current sensor
+ * 
+ *  Sensor Type: ACS733KLATR-20AB
+ *  The performance characteristics come from its data sheet. 
+ ******************************************************************************/
+// The current sensitivity = 66 mV/A    
+#define CURRENT_SENSITIVIY                              66.0
+// The output voltage VIOUT = 0.5 * VCC = 0.5 * 3300 = 1650 mV 
+// in case of zero input current    
+#define ZERO_CURRENT_OUTPUT_VOLTAGE                     1650.0    
+// Overcurrent Threshold (A) for IL12 or IL34
+/*
+ * Overcurrent warning threshold < Overcurrent fault threshold
+ * so that the early warning message can be issued. 
+ */    
+#define OVERCURRENT_WARNING_THRESHOLD                   9
+/*
+ * The max PRIMARY input current Ipr(max) = 20 A
+ * The overcurrent fault threshold:
+ * Ifault = Ipr(max) * 5 * (Voc / Vcc)
+ *        = 20 * 5 * (1.5K / 11.5K)
+ *        = 13 A      
+ */
+#define OVERCURRENT_FAULT_THRESHOLD                     13    
+    
+// *****************************************************************************
+// *****************************************************************************
+// Section: Type Definitions
+// *****************************************************************************
+// *****************************************************************************
     
 /*
  *  ADC scan data update status structure
@@ -241,7 +364,7 @@ typedef enum
 	ANALOG_VOLTAGE_MONITOR_STATE_SCAN,
     ANALOG_VOLTAGE_MONITOR_STATE_SCAN_DONE,
     ANALOG_VOLTAGE_MONITOR_STATE_CONVERT,
-    ANALOG_VOLTAGE_MONITOR_STATE_FAULT_CHECK,
+    ANALOG_VOLTAGE_MONITOR_STATE_ERROR_CHECK,
     ANALOG_VOLTAGE_MONITOR_STATE_DISPLAY
 
 } ANALOG_VOLTAGE_MONITOR_STATES;

@@ -58,6 +58,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "system/ports/sys_ports.h"
 #include "system/debug/sys_debug.h"
 #include "analog_voltage_monitor.h"
+#include "error_handler.h"
 
 
 // DOM-IGNORE-BEGIN

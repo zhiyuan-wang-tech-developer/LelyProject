@@ -55,6 +55,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 #include "analog_voltage_monitor.h"
 #include "system/debug/sys_debug.h"
+#include "peripheral/nvm/processor/nvm_p32mk0512mcf100.h"
 #include <string.h>
 #include <stdlib.h>
 
@@ -63,6 +64,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // Section: Global Data Definitions
 // *****************************************************************************
 // *****************************************************************************
+extern ERROR_HANDLER_DATA error_handlerData;
 
 /*
  * NTC (Negative Temperature Coefficient) Thermal Resistor
@@ -147,7 +149,7 @@ ANALOG_VOLTAGE_MONITOR_DATA analog_voltage_monitorData;
 
 
 /* TODO:  Add any necessary local functions.
-*/
+ */
 /* Enable/Disable all DC-DC powers:
  * 12V
  * 3V3-1    3V3-2
@@ -176,6 +178,7 @@ void DisableDCPower(void)
     V_EN_1V8_2Off();
 }
 
+
 /*
  * Print all ADC samples via UART communication port
  */
@@ -203,8 +206,8 @@ void ADCScanResultPrint(void)
     SYS_PRINT("\t V_1V8_1   \t  %d  \t  %.1f mV  \n", analog_voltage_monitorData.adc_raw_data.samples.V1V8_1, analog_voltage_monitorData.adc_converted_data.samples.V1V8_1);
     SYS_PRINT("\t V_1V8_2   \t  %d  \t  %.1f mV  \n", analog_voltage_monitorData.adc_raw_data.samples.V1V8_2, analog_voltage_monitorData.adc_converted_data.samples.V1V8_2);
     SYS_PRINT("\t -------------------------------------------------- \n");
-    SYS_PRINT("\t IL12      \t  %d  \t  %.1f mV  \n", analog_voltage_monitorData.adc_raw_data.samples.IL12, analog_voltage_monitorData.adc_converted_data.samples.IL12);
-    SYS_PRINT("\t IL34      \t  %d  \t  %.1f mV  \n", analog_voltage_monitorData.adc_raw_data.samples.IL34, analog_voltage_monitorData.adc_converted_data.samples.IL34);
+    SYS_PRINT("\t IL12      \t  %d  \t  %.1f mA  \n", analog_voltage_monitorData.adc_raw_data.samples.IL12, analog_voltage_monitorData.adc_converted_data.samples.IL12);
+    SYS_PRINT("\t IL34      \t  %d  \t  %.1f mA  \n", analog_voltage_monitorData.adc_raw_data.samples.IL34, analog_voltage_monitorData.adc_converted_data.samples.IL34);
     SYS_PRINT("\t -------------------------------------------------- \n");
     SYS_PRINT("\t T_M1      \t  %d  \t  %.1f DegC  \n", analog_voltage_monitorData.adc_raw_data.samples.TEMP_M1, analog_voltage_monitorData.adc_converted_data.samples.TEMP_M1);
     SYS_PRINT("\t T_M2      \t  %d  \t  %.1f DegC  \n", analog_voltage_monitorData.adc_raw_data.samples.TEMP_M2, analog_voltage_monitorData.adc_converted_data.samples.TEMP_M2);
@@ -218,6 +221,12 @@ void ADCScanResultPrint(void)
     PLIB_INT_Enable(INT_ID_0);
 }
 
+
+/*******************************************************************************
+ * 
+ * The following functions used for ADC raw value to Voltage (mV) 
+ * 
+ *******************************************************************************/
 /*
  * It converts the ADC raw sample value (0 ~ 4095) to the corresponding voltage in mV.
  * 
@@ -245,6 +254,47 @@ void ConvertAllADCRawSamplesToVoltages(void)
     }
 }
 
+
+/*******************************************************************************
+ * 
+ * The following function used for ADC raw value to Current (mA) 
+ * 
+ *******************************************************************************/
+/*
+ * It converts the ADC raw sample value (0 ~ 4095) to the corresponding current in mA.
+ * 
+ * The current sensor IC type is ACS733KLATR-20AB-T, whose output voltage is
+ * linearly proportional to input AC/DC current. 
+ * 
+ * Parameter:
+ *      ADC_Raw_Value: ADC raw value read out of the ADC data buffer
+ * 
+ * Return:
+ *      The current in mA that corresponds to the ADC raw value       
+ */
+float ConvertADCRawSampleToCurrent(uint32_t ADC_Raw_Value)
+{
+    // The current sensor voltage output in mV
+    float viout = 0;
+    // The primary input current in mA
+    float ipr = 0;
+    viout = ConvertADCRawSampleToVoltage(ADC_Raw_Value);
+    if( viout >= ZERO_CURRENT_OUTPUT_VOLTAGE )
+    {
+        ipr = ((viout - ZERO_CURRENT_OUTPUT_VOLTAGE) / CURRENT_SENSITIVIY) * 1000;
+    }
+    else
+    {
+        ipr = ((ZERO_CURRENT_OUTPUT_VOLTAGE - viout) / CURRENT_SENSITIVIY) * 1000;
+    }
+    return ipr;
+}
+
+/*******************************************************************************
+ * 
+ * The following functions used for ADC raw value to Temperature (Celsius Degrees) 
+ * 
+ *******************************************************************************/
 /*
  * It converts ADC raw sample into corresponding thermal resistance value.
  * 
@@ -378,25 +428,490 @@ float ConvertADCRawSampleToTemperature(uint32_t ADC_Raw_Value)
     return searchElement.temperature;
 }
 
-/*
- * It converts all ADC raw samples in ADC raw data structure into corresponding voltages and temperatures. 
- */
+
+/*******************************************************************************
+ * 
+ * It converts all ADC raw samples in ADC raw data structure into 
+ * corresponding Voltages, Currents and Temperatures.
+ *  
+ *******************************************************************************/
 void ConvertAllADCRawSamples(void)
 {
 //    SYS_DEBUG_BreakPoint();
     uint8_t i = 0;
     for( i = 0; i < 23; i++ )
     {
-        if( i < 16 )
+        if( i < 14 )
         {
-            // The first 16 elements (i = 0 ~ 15) in data buffer are voltages
+            // The first 14 elements (i = 0 ~ 13) in data buffer are voltages.
             analog_voltage_monitorData.adc_converted_data.buffer[i] = ConvertADCRawSampleToVoltage(analog_voltage_monitorData.adc_raw_data.buffer[i]);
+        }
+        else if( i < 16 )
+        {
+            // The elements (i = 14 ~ 15) in data buffer are currents.
+            analog_voltage_monitorData.adc_converted_data.buffer[i] = ConvertADCRawSampleToCurrent(analog_voltage_monitorData.adc_raw_data.buffer[i]);            
         }
         else
         {
-            // The rest 7 elements (i = 16 ~ 22) in data buffer are temperatures
+            // The rest 7 elements (i = 16 ~ 22) in data buffer are temperatures.
             analog_voltage_monitorData.adc_converted_data.buffer[i] = ConvertADCRawSampleToTemperature(analog_voltage_monitorData.adc_raw_data.buffer[i]);
         }
+    }
+}
+
+
+/*******************************************************************************
+ * 
+ * Check whether or not the ADC converted data samples exceed the warning or
+ * the fault threshold.
+ * 
+ *******************************************************************************/
+void CheckErrors(void)
+{
+    /*
+     * Compare DC power voltages against voltage warning and fault thresholds.
+     */
+    // For V-AN-380V
+    if( analog_voltage_monitorData.adc_converted_data.samples.V380V <= V380V_UNDERVOLTAGE_FAULT_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_FAULT_V380V = YES;
+    }
+    else if( analog_voltage_monitorData.adc_converted_data.samples.V380V <= V380V_UNDERVOLTAGE_WARNING_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_WARNING_V380V = YES;
+    }
+    else if( analog_voltage_monitorData.adc_converted_data.samples.V380V >= V380V_OVERVOLTAGE_FAULT_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_FAULT_V380V = YES;
+    }
+    else if( analog_voltage_monitorData.adc_converted_data.samples.V380V >= V380V_OVERVOLTAGE_WARNING_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_WARNING_V380V = YES;
+    }
+    else
+    {
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_FAULT_V380V = NO;
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_WARNING_V380V = NO;
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_FAULT_V380V = NO;
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_WARNING_V380V = NO;
+    }
+    
+    // For V-AN-325V
+    if( analog_voltage_monitorData.adc_converted_data.samples.V325V <= V325V_UNDERVOLTAGE_FAULT_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_FAULT_V325V = YES;
+    }
+    else if( analog_voltage_monitorData.adc_converted_data.samples.V325V <= V325V_UNDERVOLTAGE_WARNING_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_WARNING_V325V = YES;
+    }
+    else if( analog_voltage_monitorData.adc_converted_data.samples.V325V >= V325V_OVERVOLTAGE_FAULT_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_FAULT_V325V = YES;
+    }
+    else if( analog_voltage_monitorData.adc_converted_data.samples.V325V >= V325V_OVERVOLTAGE_WARNING_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_WARNING_V325V = YES;
+    }
+    else
+    {
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_FAULT_V325V = NO;
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_WARNING_V325V = NO;
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_FAULT_V325V = NO;
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_WARNING_V325V = NO;
+    }
+
+    // For V-AN-18V
+    if( analog_voltage_monitorData.adc_converted_data.samples.V18V <= V18V_UNDERVOLTAGE_FAULT_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_FAULT_V18V = YES;
+    }
+    else if( analog_voltage_monitorData.adc_converted_data.samples.V18V <= V18V_UNDERVOLTAGE_WARNING_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_WARNING_V18V = YES;
+    }
+    else if( analog_voltage_monitorData.adc_converted_data.samples.V18V >= V18V_OVERVOLTAGE_FAULT_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_FAULT_V18V = YES;
+    }
+    else if( analog_voltage_monitorData.adc_converted_data.samples.V18V >= V18V_OVERVOLTAGE_WARNING_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_WARNING_V18V = YES;
+    }
+    else
+    {
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_FAULT_V18V = NO;
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_WARNING_V18V = NO;
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_FAULT_V18V = NO;
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_WARNING_V18V = NO;
+    }    
+
+    // For V-AN-12V
+    if( analog_voltage_monitorData.adc_converted_data.samples.V12V <= V12V_UNDERVOLTAGE_FAULT_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_FAULT_V12V = YES;
+    }
+    else if( analog_voltage_monitorData.adc_converted_data.samples.V12V <= V12V_UNDERVOLTAGE_WARNING_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_WARNING_V12V = YES;
+    }
+    else if( analog_voltage_monitorData.adc_converted_data.samples.V12V >= V12V_OVERVOLTAGE_FAULT_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_FAULT_V12V = YES;
+    }
+    else if( analog_voltage_monitorData.adc_converted_data.samples.V12V >= V12V_OVERVOLTAGE_WARNING_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_WARNING_V12V = YES;
+    }
+    else
+    {
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_FAULT_V12V = NO;
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_WARNING_V12V = NO;
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_FAULT_V12V = NO;
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_WARNING_V12V = NO;
+    } 
+
+    // For V-AN-5V
+    if( analog_voltage_monitorData.adc_converted_data.samples.V5V <= V5V_UNDERVOLTAGE_FAULT_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_FAULT_V5V = YES;
+    }
+    else if( analog_voltage_monitorData.adc_converted_data.samples.V5V <= V5V_UNDERVOLTAGE_WARNING_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_WARNING_V5V = YES;
+    }
+    else if( analog_voltage_monitorData.adc_converted_data.samples.V5V >= V5V_OVERVOLTAGE_FAULT_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_FAULT_V5V = YES;
+    }
+    else if( analog_voltage_monitorData.adc_converted_data.samples.V5V >= V5V_OVERVOLTAGE_WARNING_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_WARNING_V5V = YES;
+    }
+    else
+    {
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_FAULT_V5V = NO;
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_WARNING_V5V = NO;
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_FAULT_V5V = NO;
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_WARNING_V5V = NO;
+    } 
+
+    // For V-AN-3V3-0
+    if( analog_voltage_monitorData.adc_converted_data.samples.V3V3_0 <= V3V3_0_UNDERVOLTAGE_FAULT_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_FAULT_V3V3_0 = YES;
+    }
+    else if( analog_voltage_monitorData.adc_converted_data.samples.V3V3_0 <= V3V3_0_UNDERVOLTAGE_WARNING_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_WARNING_V3V3_0 = YES;
+    }
+    else if( analog_voltage_monitorData.adc_converted_data.samples.V3V3_0 >= V3V3_0_OVERVOLTAGE_FAULT_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_FAULT_V3V3_0 = YES;
+    }
+    else if( analog_voltage_monitorData.adc_converted_data.samples.V3V3_0 >= V3V3_0_OVERVOLTAGE_WARNING_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_WARNING_V3V3_0 = YES;
+    }
+    else
+    {
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_FAULT_V3V3_0 = NO;
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_WARNING_V3V3_0 = NO;
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_FAULT_V3V3_0 = NO;
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_WARNING_V3V3_0 = NO;
+    }
+
+    // For V-AN-3V3-1
+    if( analog_voltage_monitorData.adc_converted_data.samples.V3V3_1 <= V3V3_1_UNDERVOLTAGE_FAULT_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_FAULT_V3V3_1 = YES;
+    }
+    else if( analog_voltage_monitorData.adc_converted_data.samples.V3V3_1 <= V3V3_1_UNDERVOLTAGE_WARNING_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_WARNING_V3V3_1 = YES;
+    }
+    else if( analog_voltage_monitorData.adc_converted_data.samples.V3V3_1 >= V3V3_1_OVERVOLTAGE_FAULT_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_FAULT_V3V3_1 = YES;
+    }
+    else if( analog_voltage_monitorData.adc_converted_data.samples.V3V3_1 >= V3V3_1_OVERVOLTAGE_WARNING_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_WARNING_V3V3_1 = YES;
+    }
+    else
+    {
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_FAULT_V3V3_1 = NO;
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_WARNING_V3V3_1 = NO;
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_FAULT_V3V3_1 = NO;
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_WARNING_V3V3_1 = NO;
+    }
+
+    // For V-AN-3V3-2
+    if( analog_voltage_monitorData.adc_converted_data.samples.V3V3_2 <= V3V3_2_UNDERVOLTAGE_FAULT_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_FAULT_V3V3_2 = YES;
+    }
+    else if( analog_voltage_monitorData.adc_converted_data.samples.V3V3_2 <= V3V3_2_UNDERVOLTAGE_WARNING_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_WARNING_V3V3_2 = YES;
+    }
+    else if( analog_voltage_monitorData.adc_converted_data.samples.V3V3_2 >= V3V3_2_OVERVOLTAGE_FAULT_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_FAULT_V3V3_2 = YES;
+    }
+    else if( analog_voltage_monitorData.adc_converted_data.samples.V3V3_2 >= V3V3_2_OVERVOLTAGE_WARNING_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_WARNING_V3V3_2 = YES;
+    }
+    else
+    {
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_FAULT_V3V3_2 = NO;
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_WARNING_V3V3_2 = NO;
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_FAULT_V3V3_2 = NO;
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_WARNING_V3V3_2 = NO;
+    }
+    
+    // For V-AN-3V3AN1
+    if( analog_voltage_monitorData.adc_converted_data.samples.V3V3AN1 <= V3V3AN1_UNDERVOLTAGE_FAULT_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_FAULT_V3V3AN1 = YES;
+    }
+    else if( analog_voltage_monitorData.adc_converted_data.samples.V3V3AN1 <= V3V3AN1_UNDERVOLTAGE_WARNING_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_WARNING_V3V3AN1 = YES;
+    }
+    else if( analog_voltage_monitorData.adc_converted_data.samples.V3V3AN1 >= V3V3AN1_OVERVOLTAGE_FAULT_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_FAULT_V3V3AN1 = YES;
+    }
+    else if( analog_voltage_monitorData.adc_converted_data.samples.V3V3AN1 >= V3V3AN1_OVERVOLTAGE_WARNING_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_WARNING_V3V3AN1 = YES;
+    }
+    else
+    {
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_FAULT_V3V3AN1 = NO;
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_WARNING_V3V3AN1 = NO;
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_FAULT_V3V3AN1 = NO;
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_WARNING_V3V3AN1 = NO;
+    }
+
+    // For V-AN-3V3AN2
+    if( analog_voltage_monitorData.adc_converted_data.samples.V3V3AN2 <= V3V3AN2_UNDERVOLTAGE_FAULT_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_FAULT_V3V3AN2 = YES;
+    }
+    else if( analog_voltage_monitorData.adc_converted_data.samples.V3V3AN2 <= V3V3AN2_UNDERVOLTAGE_WARNING_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_WARNING_V3V3AN2 = YES;
+    }
+    else if( analog_voltage_monitorData.adc_converted_data.samples.V3V3AN2 >= V3V3AN2_OVERVOLTAGE_FAULT_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_FAULT_V3V3AN2 = YES;
+    }
+    else if( analog_voltage_monitorData.adc_converted_data.samples.V3V3AN2 >= V3V3AN2_OVERVOLTAGE_WARNING_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_WARNING_V3V3AN2 = YES;
+    }
+    else
+    {
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_FAULT_V3V3AN2 = NO;
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_WARNING_V3V3AN2 = NO;
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_FAULT_V3V3AN2 = NO;
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_WARNING_V3V3AN2 = NO;
+    }    
+
+    // For V-AN-1V8-1
+    if( analog_voltage_monitorData.adc_converted_data.samples.V1V8_1 <= V1V8_1_UNDERVOLTAGE_FAULT_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_FAULT_V1V8_1 = YES;
+    }
+    else if( analog_voltage_monitorData.adc_converted_data.samples.V1V8_1 <= V1V8_1_UNDERVOLTAGE_WARNING_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_WARNING_V1V8_1 = YES;
+    }
+    else if( analog_voltage_monitorData.adc_converted_data.samples.V1V8_1 >= V1V8_1_OVERVOLTAGE_FAULT_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_FAULT_V1V8_1 = YES;
+    }
+    else if( analog_voltage_monitorData.adc_converted_data.samples.V1V8_1 >= V1V8_1_OVERVOLTAGE_WARNING_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_WARNING_V1V8_1 = YES;
+    }
+    else
+    {
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_FAULT_V1V8_1 = NO;
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_WARNING_V1V8_1 = NO;
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_FAULT_V1V8_1 = NO;
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_WARNING_V1V8_1 = NO;
+    }
+
+    // For V-AN-1V8-2
+    if( analog_voltage_monitorData.adc_converted_data.samples.V1V8_2 <= V1V8_2_UNDERVOLTAGE_FAULT_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_FAULT_V1V8_2 = YES;
+    }
+    else if( analog_voltage_monitorData.adc_converted_data.samples.V1V8_2 <= V1V8_2_UNDERVOLTAGE_WARNING_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_WARNING_V1V8_2 = YES;
+    }
+    else if( analog_voltage_monitorData.adc_converted_data.samples.V1V8_2 >= V1V8_2_OVERVOLTAGE_FAULT_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_FAULT_V1V8_2 = YES;
+    }
+    else if( analog_voltage_monitorData.adc_converted_data.samples.V1V8_2 >= V1V8_2_OVERVOLTAGE_WARNING_THRESHOLD )
+    {
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_WARNING_V1V8_2 = YES;
+    }
+    else
+    {
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_FAULT_V1V8_2 = NO;
+        error_handlerData.voltageError.status_flags.UNDERVOLTAGE_WARNING_V1V8_2 = NO;
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_FAULT_V1V8_2 = NO;
+        error_handlerData.voltageError.status_flags.OVERVOLTAGE_WARNING_V1V8_2 = NO;
+    }
+
+    /*
+     * Compare current load with current warning and fault thresholds.
+     */
+    // For current load IL12
+    if( analog_voltage_monitorData.adc_converted_data.samples.IL12 < OVERCURRENT_WARNING_THRESHOLD )
+    {
+        error_handlerData.currentError.status_flags.OVERCURRENT_WARNING_IL12 = NO;
+        error_handlerData.currentError.status_flags.OVERCURRENT_FAULT_IL12 = NO;
+    }
+    else if( analog_voltage_monitorData.adc_converted_data.samples.IL12 < OVERCURRENT_FAULT_THRESHOLD )
+    {
+        error_handlerData.currentError.status_flags.OVERCURRENT_WARNING_IL12 = YES;
+    }
+    else
+    {
+        //NOTE: This overcurrent fault IL12 flag is also set by ISR for change notification on Port C13 
+        error_handlerData.currentError.status_flags.OVERCURRENT_FAULT_IL12 = YES;
+    }
+    
+    // For current load IL34
+    if( analog_voltage_monitorData.adc_converted_data.samples.IL34 < OVERCURRENT_WARNING_THRESHOLD )
+    {
+        error_handlerData.currentError.status_flags.OVERCURRENT_WARNING_IL34 = NO;
+        error_handlerData.currentError.status_flags.OVERCURRENT_FAULT_IL34 = NO;
+    }
+    else if( analog_voltage_monitorData.adc_converted_data.samples.IL34 < OVERCURRENT_FAULT_THRESHOLD )
+    {
+        error_handlerData.currentError.status_flags.OVERCURRENT_WARNING_IL34 = YES;
+    }
+    else
+    {
+        //NOTE: This overcurrent fault IL34 flag is also set by ISR for change notification on Port D6 
+        error_handlerData.currentError.status_flags.OVERCURRENT_FAULT_IL34 = YES;
+    }    
+
+    /*
+     * Compare the temperature from the NTC resistor with overheat warning and fault thresholds.
+     */
+    // For overheat on Motor 1
+    if( analog_voltage_monitorData.adc_converted_data.samples.TEMP_M1 < MOTOR_OVERHEAT_WARNING_THRESHOLD )
+    {
+        error_handlerData.temperatureError.status_flags.OVERHEAT_WARNING_M1 = NO;
+        error_handlerData.temperatureError.status_flags.OVERHEAT_FAULT_M1 = NO;
+    }
+    else if( analog_voltage_monitorData.adc_converted_data.samples.TEMP_M1 < MOTOR_OVERHEAT_FAULT_THRESHOLD )
+    {
+        error_handlerData.temperatureError.status_flags.OVERHEAT_WARNING_M1 = YES;
+    }
+    else
+    {
+        error_handlerData.temperatureError.status_flags.OVERHEAT_FAULT_M1 = YES;
+    }
+    
+    // For overheat on Motor 2
+    if( analog_voltage_monitorData.adc_converted_data.samples.TEMP_M2 < MOTOR_OVERHEAT_WARNING_THRESHOLD )
+    {
+        error_handlerData.temperatureError.status_flags.OVERHEAT_WARNING_M2 = NO;
+        error_handlerData.temperatureError.status_flags.OVERHEAT_FAULT_M2 = NO;        
+    }
+    else if( analog_voltage_monitorData.adc_converted_data.samples.TEMP_M2 < MOTOR_OVERHEAT_FAULT_THRESHOLD )
+    {
+        error_handlerData.temperatureError.status_flags.OVERHEAT_WARNING_M2 = YES;
+    }
+    else
+    {
+        error_handlerData.temperatureError.status_flags.OVERHEAT_FAULT_M2 = YES;
+    }
+    
+    // For overheat on PFC 12
+    if( analog_voltage_monitorData.adc_converted_data.samples.TEMP_PFC12 < PFC_OVERHEAT_WARNING_THRESHOLD )
+    {
+        error_handlerData.temperatureError.status_flags.OVERHEAT_WARNING_PFC12 = NO;
+        error_handlerData.temperatureError.status_flags.OVERHEAT_FAULT_PFC12 = NO; 
+    }
+    else if( analog_voltage_monitorData.adc_converted_data.samples.TEMP_PFC12 < PFC_OVERHEAT_FAULT_THRESHOLD )
+    {
+        error_handlerData.temperatureError.status_flags.OVERHEAT_WARNING_PFC12 = YES;
+    }
+    else
+    {
+        error_handlerData.temperatureError.status_flags.OVERHEAT_FAULT_PFC12 = YES;
+    }
+    
+    // For overheat on PFC 34
+    if( analog_voltage_monitorData.adc_converted_data.samples.TEMP_PFC34 < PFC_OVERHEAT_WARNING_THRESHOLD )
+    {
+        error_handlerData.temperatureError.status_flags.OVERHEAT_WARNING_PFC34 = NO;
+        error_handlerData.temperatureError.status_flags.OVERHEAT_FAULT_PFC34 = NO; 
+    }
+    else if( analog_voltage_monitorData.adc_converted_data.samples.TEMP_PFC34 < PFC_OVERHEAT_FAULT_THRESHOLD )
+    {
+        error_handlerData.temperatureError.status_flags.OVERHEAT_WARNING_PFC34 = YES;
+    }
+    else
+    {
+        error_handlerData.temperatureError.status_flags.OVERHEAT_FAULT_PFC34 = YES;
+    }
+    
+    // For overheat on ELCO
+    if( analog_voltage_monitorData.adc_converted_data.samples.TEMP_ELCO < ELCO_OVERHEAT_WARNING_THRESHOLD )
+    {
+        error_handlerData.temperatureError.status_flags.OVERHEAT_WARNING_ELCO = NO;
+        error_handlerData.temperatureError.status_flags.OVERHEAT_FAULT_ELCO = NO;         
+    }
+    else if( analog_voltage_monitorData.adc_converted_data.samples.TEMP_ELCO < ELCO_OVERHEAT_FAULT_THRESHOLD )
+    {
+        error_handlerData.temperatureError.status_flags.OVERHEAT_WARNING_ELCO = YES;
+    }
+    else
+    {
+        error_handlerData.temperatureError.status_flags.OVERHEAT_FAULT_ELCO = YES;       
+    }
+    
+    // For overheat on BRUG
+    if( analog_voltage_monitorData.adc_converted_data.samples.TEMP_BRUG < BRUG_OVERHEAT_WARNING_THRESHOLD )
+    {
+        error_handlerData.temperatureError.status_flags.OVERHEAT_WARNING_BRUG = NO;
+        error_handlerData.temperatureError.status_flags.OVERHEAT_FAULT_BRUG = NO;         
+    }
+    else if( analog_voltage_monitorData.adc_converted_data.samples.TEMP_BRUG < BRUG_OVERHEAT_FAULT_THRESHOLD )
+    {
+        error_handlerData.temperatureError.status_flags.OVERHEAT_WARNING_BRUG = YES;
+    }
+    else
+    {
+        error_handlerData.temperatureError.status_flags.OVERHEAT_FAULT_BRUG = YES;        
+    }
+    
+    // For overheat on VOED
+    if( analog_voltage_monitorData.adc_converted_data.samples.TEMP_VOED < VOED_OVERHEAT_WARNING_THRESHOLD )
+    {
+        error_handlerData.temperatureError.status_flags.OVERHEAT_WARNING_VOED = NO;
+        error_handlerData.temperatureError.status_flags.OVERHEAT_FAULT_VOED = NO;         
+    }
+    else if( analog_voltage_monitorData.adc_converted_data.samples.TEMP_VOED < VOED_OVERHEAT_FAULT_THRESHOLD )
+    {
+        error_handlerData.temperatureError.status_flags.OVERHEAT_WARNING_VOED = YES;
+    }
+    else
+    {
+        error_handlerData.temperatureError.status_flags.OVERHEAT_FAULT_VOED = YES;        
     }
 }
 
@@ -430,37 +945,6 @@ void ANALOG_VOLTAGE_MONITOR_Initialize ( void )
     EnableDCPower();
 }
 
-void CheckFault(void)
-{
-    if(analog_voltage_monitorData.adc_converted_data.samples.TEMP_M1 > TEMPERATURE_THRESHOLD)
-    {
-        SYS_PRINT("\n Overheat on Motor 1\r\n");
-    }
-    if(analog_voltage_monitorData.adc_converted_data.samples.TEMP_M2 > TEMPERATURE_THRESHOLD)
-    {
-        SYS_PRINT("\n Overheat on Motor 2\r\n");        
-    }
-    if(analog_voltage_monitorData.adc_converted_data.samples.TEMP_PFC12 > TEMPERATURE_THRESHOLD)
-    {
-        SYS_PRINT("\n Overheat on PFC 12\r\n");        
-    }
-    if(analog_voltage_monitorData.adc_converted_data.samples.TEMP_PFC34 > TEMPERATURE_THRESHOLD)
-    {
-        SYS_PRINT("\n Overheat on PFC 34\r\n");
-    }
-    if(analog_voltage_monitorData.adc_converted_data.samples.TEMP_ELCO > TEMPERATURE_THRESHOLD)
-    {
-        SYS_PRINT("\n Overheat on ELCO\r\n");
-    }
-    if(analog_voltage_monitorData.adc_converted_data.samples.TEMP_BRUG > TEMPERATURE_THRESHOLD)
-    {
-        SYS_PRINT("\n Overheat on BRUG\r\n");
-    }
-    if(analog_voltage_monitorData.adc_converted_data.samples.TEMP_VOED > TEMPERATURE_THRESHOLD)
-    {
-        SYS_PRINT("\n Overheat on VOED\r\n");
-    }
-}
 /******************************************************************************
   Function:
     void ANALOG_VOLTAGE_MONITOR_Tasks ( void )
@@ -533,13 +1017,13 @@ void ANALOG_VOLTAGE_MONITOR_Tasks ( void )
         case ANALOG_VOLTAGE_MONITOR_STATE_CONVERT:
         {
             ConvertAllADCRawSamples();
-            analog_voltage_monitorData.state = ANALOG_VOLTAGE_MONITOR_STATE_FAULT_CHECK;
+            analog_voltage_monitorData.state = ANALOG_VOLTAGE_MONITOR_STATE_ERROR_CHECK;
             break;
         }
 
-        case ANALOG_VOLTAGE_MONITOR_STATE_FAULT_CHECK:
+        case ANALOG_VOLTAGE_MONITOR_STATE_ERROR_CHECK:
         {
-            CheckFault();
+            CheckErrors();
             analog_voltage_monitorData.state = ANALOG_VOLTAGE_MONITOR_STATE_DISPLAY;
             break;
         }        
@@ -558,7 +1042,7 @@ void ANALOG_VOLTAGE_MONITOR_Tasks ( void )
         default:
         {
             /* TODO: Handle error in application's state machine. */
-            SYS_PRINT("\n Warning: Analog voltage monitor in WRONG state!\r\n");
+            SYS_PRINT("\nFault: Analog voltage monitor in WRONG state!\r\n");
             /* Return to the initial state. */
             analog_voltage_monitorData.state = ANALOG_VOLTAGE_MONITOR_STATE_INIT;            
             break;
@@ -566,7 +1050,6 @@ void ANALOG_VOLTAGE_MONITOR_Tasks ( void )
     }
 }
 
- 
 
 /*******************************************************************************
  End of File
