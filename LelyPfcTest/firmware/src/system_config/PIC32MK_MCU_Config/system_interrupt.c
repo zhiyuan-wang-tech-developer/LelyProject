@@ -62,6 +62,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "system/common/sys_common.h"
 #include "analog_voltage_monitor.h"
 #include "error_handler.h"
+#include "led_controller.h"
 #include "system_definitions.h"
 
 extern ANALOG_VOLTAGE_MONITOR_DATA analog_voltage_monitorData;
@@ -340,6 +341,12 @@ void __ISR(_ADC_DATA47_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA47(void)
     PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA47);
 }
      
+     
+
+void __ISR(_TIMER_1_VECTOR, ipl4AUTO) IntHandlerDrvTmrInstance0(void)
+{
+    DRV_TMR_Tasks(sysObj.drvTmr0);
+}
 /*******************************************************************************
  End of File
 */

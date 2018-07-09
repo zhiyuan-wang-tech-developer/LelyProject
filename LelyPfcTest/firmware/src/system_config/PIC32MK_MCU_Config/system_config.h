@@ -57,8 +57,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 /*  This section Includes other configuration headers necessary to completely
     define this configuration.
 */
-//#include <stdarg.h>
-//#include <stdio.h>
 
 
 // DOM-IGNORE-BEGIN
@@ -162,9 +160,6 @@ extern "C" {
 #define SYS_DEBUG_BUFFER_DMA_READY
 #define SYS_DEBUG_USE_CONSOLE
 
-/* Only used for simulator*/    
-//#define SYS_PRINT(format, ...)  printf((format), __VA_ARG__)    
-
 /*** Interrupt System Service Configuration ***/
 #define SYS_INT                     true
 
@@ -173,6 +168,24 @@ extern "C" {
 // Section: Driver Configuration
 // *****************************************************************************
 // *****************************************************************************
+/*** Timer Driver Configuration ***/
+#define DRV_TMR_INTERRUPT_MODE             true
+#define DRV_TMR_INSTANCES_NUMBER           1
+#define DRV_TMR_CLIENTS_NUMBER             1
+
+/*** Timer Driver 0 Configuration ***/
+#define DRV_TMR_PERIPHERAL_ID_IDX0          TMR_ID_1
+#define DRV_TMR_INTERRUPT_SOURCE_IDX0       INT_SOURCE_TIMER_1
+#define DRV_TMR_INTERRUPT_VECTOR_IDX0       INT_VECTOR_T1
+#define DRV_TMR_ISR_VECTOR_IDX0             _TIMER_1_VECTOR
+#define DRV_TMR_INTERRUPT_PRIORITY_IDX0     INT_PRIORITY_LEVEL4
+#define DRV_TMR_INTERRUPT_SUB_PRIORITY_IDX0 INT_SUBPRIORITY_LEVEL0
+#define DRV_TMR_CLOCK_SOURCE_IDX0           DRV_TMR_CLKSOURCE_INTERNAL
+#define DRV_TMR_PRESCALE_IDX0               TMR_PRESCALE_VALUE_256
+#define DRV_TMR_OPERATION_MODE_IDX0         DRV_TMR_OPERATION_MODE_16_BIT
+#define DRV_TMR_ASYNC_WRITE_ENABLE_IDX0     false
+#define DRV_TMR_POWER_STATE_IDX0            SYS_MODULE_POWER_RUN_FULL
+
 // *****************************************************************************
 /* USART Driver Configuration Options
 */
@@ -323,6 +336,15 @@ extern "C" {
 
 /*** Application Instance 1 Configuration ***/
 
+/*** Application Instance 2 Configuration ***/
+#define LED_CONTROLLER_TMR_DRV                       0
+#define LED_CONTROLLER_TMR_DRV_IS_PERIODIC           true
+#define LED_CONTROLLER_TMR_DRV_PERIOD                0xb71b
+#define LED_CONTROLLER_TIMER_CALLBACKS_PER_EVENT     2
+
+#define YES     1
+#define NO      0
+    
 //DOM-IGNORE-BEGIN
 #ifdef __cplusplus
 }

@@ -32,12 +32,24 @@
             <itemPath>../src/system_config/PIC32MK_MCU_Config/system_definitions.h</itemPath>
           </logicalFolder>
         </logicalFolder>
+        <itemPath>../src/global_event.h</itemPath>
         <itemPath>../src/analog_voltage_monitor.h</itemPath>
         <itemPath>../src/error_handler.h</itemPath>
+        <itemPath>../src/led_controller.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f1" displayName="framework" projectFiles="true">
         <logicalFolder name="f1" displayName="driver" projectFiles="true">
-          <logicalFolder name="f1" displayName="usart" projectFiles="true">
+          <logicalFolder name="f1" displayName="tmr" projectFiles="true">
+            <logicalFolder name="f1" displayName="src" projectFiles="true">
+              <itemPath>../../../../../../Microchip/harmony/v2_05_01/framework/driver/tmr/src/drv_tmr_variant_mapping.h</itemPath>
+              <itemPath>../../../../../../Microchip/harmony/v2_05_01/framework/driver/tmr/src/drv_tmr_local.h</itemPath>
+            </logicalFolder>
+            <itemPath>../../../../../../Microchip/harmony/v2_05_01/framework/driver/tmr/drv_tmr.h</itemPath>
+            <itemPath>../../../../../../Microchip/harmony/v2_05_01/framework/driver/tmr/drv_tmr_mapping.h</itemPath>
+            <itemPath>../../../../../../Microchip/harmony/v2_05_01/framework/driver/tmr/drv_tmr_compatibility.h</itemPath>
+            <itemPath>../../../../../../Microchip/harmony/v2_05_01/framework/driver/tmr/tmr_definitions_pic32m.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="f2" displayName="usart" projectFiles="true">
             <logicalFolder name="f1" displayName="src" projectFiles="true">
               <itemPath>../../../../../../Microchip/harmony/v2_05_01/framework/driver/usart/src/drv_usart_variant_mapping.h</itemPath>
             </logicalFolder>
@@ -150,12 +162,23 @@
             <itemPath>../src/system_config/PIC32MK_MCU_Config/system_tasks.c</itemPath>
           </logicalFolder>
         </logicalFolder>
-        <itemPath>../src/main.c</itemPath>
+        <itemPath>../src/global_event.c</itemPath>
         <itemPath>../src/analog_voltage_monitor.c</itemPath>
         <itemPath>../src/error_handler.c</itemPath>
+        <itemPath>../src/led_controller.c</itemPath>
+        <itemPath>../src/main.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f1" displayName="framework" projectFiles="true">
-        <logicalFolder name="f1" displayName="system" projectFiles="true">
+        <logicalFolder name="f1" displayName="driver" projectFiles="true">
+          <logicalFolder name="f1" displayName="tmr" projectFiles="true">
+            <logicalFolder name="f1" displayName="src" projectFiles="true">
+              <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
+                <itemPath>../../../../../../Microchip/harmony/v2_05_01/framework/driver/tmr/src/dynamic/drv_tmr.c</itemPath>
+              </logicalFolder>
+            </logicalFolder>
+          </logicalFolder>
+        </logicalFolder>
+        <logicalFolder name="f2" displayName="system" projectFiles="true">
           <logicalFolder name="f1" displayName="debug" projectFiles="true">
             <logicalFolder name="f1" displayName="src" projectFiles="true">
               <itemPath>../../../../../../Microchip/harmony/v2_05_01/framework/system/debug/src/sys_debug.c</itemPath>
