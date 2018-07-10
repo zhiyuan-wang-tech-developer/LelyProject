@@ -256,6 +256,23 @@ typedef struct {
 /* These routines are called by drivers when certain events occur.
  */
 
+/*
+ * LED indication functions which are called in error_handler_tasks()
+ * 
+ * LED1 indicates voltage states
+ * LED2 indicates current states
+ * LED3 indicates temperature states 
+ */
+extern void setLed1NormalBlink(void);
+extern void setLed1WarningBlink(void);
+extern void setLed1FaultBlink(void);
+extern void setLed2NormalBlink(void);
+extern void setLed2WarningBlink(void);
+extern void setLed2FaultBlink(void);
+extern void setLed3NormalBlink(void);
+extern void setLed3WarningBlink(void);
+extern void setLed3FaultBlink(void);
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Application Initialization and State Machine Functions

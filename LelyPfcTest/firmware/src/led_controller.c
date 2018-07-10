@@ -526,7 +526,11 @@ void LED3Blink(void)
 }
 
 /*
+ * Set LED blinking color to display system states (Normal, Warning, Fault)
  * 
+ * Normal state -> Green is blinking
+ * Warning state -> Orange is blinking
+ * Fault state -> Red is blinking
  * 
  */
 // For LED 1 blink setting
@@ -547,6 +551,44 @@ void setLed1FaultBlink(void)
     led_controllerData.led1.status_flags.GreenIsBlinking = NO;
     led_controllerData.led1.status_flags.OrangeIsBlinking = NO;
     led_controllerData.led1.status_flags.RedIsBlinking = YES;    
+}
+// For LED 2 blink setting
+void setLed2NormalBlink(void)
+{
+    led_controllerData.led2.status_flags.GreenIsBlinking = YES;
+    led_controllerData.led2.status_flags.OrangeIsBlinking = NO;
+    led_controllerData.led2.status_flags.RedIsBlinking = NO;
+}
+void setLed2WarningBlink(void)
+{
+    led_controllerData.led2.status_flags.GreenIsBlinking = NO;
+    led_controllerData.led2.status_flags.OrangeIsBlinking = YES;
+    led_controllerData.led2.status_flags.RedIsBlinking = NO;    
+}
+void setLed2FaultBlink(void)
+{
+    led_controllerData.led2.status_flags.GreenIsBlinking = NO;
+    led_controllerData.led2.status_flags.OrangeIsBlinking = NO;
+    led_controllerData.led2.status_flags.RedIsBlinking = YES;    
+}
+// For LED 3 blink setting
+void setLed3NormalBlink(void)
+{
+    led_controllerData.led3.status_flags.GreenIsBlinking = YES;
+    led_controllerData.led3.status_flags.OrangeIsBlinking = NO;
+    led_controllerData.led3.status_flags.RedIsBlinking = NO;
+}
+void setLed3WarningBlink(void)
+{
+    led_controllerData.led3.status_flags.GreenIsBlinking = NO;
+    led_controllerData.led3.status_flags.OrangeIsBlinking = YES;
+    led_controllerData.led3.status_flags.RedIsBlinking = NO;    
+}
+void setLed3FaultBlink(void)
+{
+    led_controllerData.led3.status_flags.GreenIsBlinking = NO;
+    led_controllerData.led3.status_flags.OrangeIsBlinking = NO;
+    led_controllerData.led3.status_flags.RedIsBlinking = YES;    
 }
 
 // *****************************************************************************
@@ -613,10 +655,10 @@ void LED_CONTROLLER_Tasks ( void )
                 global_events.tmr_drv_led_200ms_blink_event = false;
                 
                 // After the initialization, all green LEDs are blinking. 
-                led_controllerData.led1.status_flags.GreenIsBlinking = YES;
-                led_controllerData.led2.status_flags.GreenIsBlinking = YES;
-                led_controllerData.led3.status_flags.GreenIsBlinking = YES;
-                        
+                setLed1NormalBlink();
+                setLed2NormalBlink();
+                setLed3NormalBlink();
+                
                 led_controllerData.state = LED_CONTROLLER_STATE_BLINK_LED;
             }
             break;

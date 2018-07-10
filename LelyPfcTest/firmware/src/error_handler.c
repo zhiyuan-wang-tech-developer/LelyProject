@@ -544,6 +544,13 @@ void ERROR_HANDLER_Tasks ( void )
             }
             else
             {
+                // Control LED blinking
+                // LED1 indicates voltage states
+                setLed1NormalBlink();
+                // LED2 indicates current states.
+                setLed2NormalBlink();
+                // LED3 indicates temperature states.
+                setLed3NormalBlink();
                 error_handlerData.state = ERROR_HANDLER_STATE_READY;
             }
             // Increment error check sequence for next error check
@@ -559,21 +566,25 @@ void ERROR_HANDLER_Tasks ( void )
             // Check voltage error: undervoltage warning
             if( error_handlerData.voltageError.status & 0x0000000000000FFF )
             {
+                setLed1WarningBlink();
                 handleUndervoltageWarning();
             }
             // Check voltage error: undervoltage fault
             if( error_handlerData.voltageError.status & 0x000000000FFF0000 )
             {
+                setLed1FaultBlink();
                 handleUndervoltageFault();
             }
             // Check voltage error: overvoltage warning
             if( error_handlerData.voltageError.status & 0x00000FFF00000000 )
             {
+                setLed1WarningBlink();
                 handleOvervoltageWarning();
             }
             // Check voltage error: overvoltage fault
             if( error_handlerData.voltageError.status & 0x0FFF000000000000 )
             {
+                setLed1FaultBlink();
                 handleOvervoltageFault();
             }
             error_handlerData.state = ERROR_HANDLER_STATE_READY;        
@@ -586,11 +597,13 @@ void ERROR_HANDLER_Tasks ( void )
             // Check current error: overcurrent warning
             if( error_handlerData.currentError.status & 0x03 )
             {
+                setLed2WarningBlink();
                 handleOvercurrentWarning();
             }
             // Check current error: overcurrent fault
             if( error_handlerData.currentError.status & 0x30 )
             {
+                setLed2FaultBlink();
                 handleOvercurrentFault();
             }
             error_handlerData.state = ERROR_HANDLER_STATE_READY;        
@@ -603,11 +616,13 @@ void ERROR_HANDLER_Tasks ( void )
             // Check temperature error: overheat warning
             if( error_handlerData.temperatureError.status & 0x007F )
             {
+                setLed3WarningBlink();
                 handleOverheatWarning();
             }
             // Check temperature error: overheat fault
             if( error_handlerData.temperatureError.status & 0x7F00 )
             {
+                setLed3FaultBlink();
                 handleOverheatFault();
             }
             error_handlerData.state = ERROR_HANDLER_STATE_READY;        

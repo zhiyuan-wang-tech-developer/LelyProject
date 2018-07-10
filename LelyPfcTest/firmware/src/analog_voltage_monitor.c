@@ -186,6 +186,7 @@ void ADCScanResultPrint(void)
 {
     /* Critical section begins. */
     /* Disable all the interrupts so that ADC scan results can be printed without interruption! */
+    /* User can remove the interrupt disable and the interrupt enable pair but the printing would be deformed! */
     PLIB_INT_Disable(INT_ID_0);
     SYS_PRINT("\n\t           ADC SCAN RESULT LIST         \n");
     SYS_PRINT("\t -------------------------------------------------- \n");
@@ -380,7 +381,8 @@ int compareThermalResistanceInLookupTable(const void * pSearchElement, const voi
             // The element is NOT found!
             return 1;
         }
-    } 
+    }
+    return -1;
 }
 
 /*
@@ -416,7 +418,7 @@ float ConvertADCRawSampleToTemperature(uint32_t ADC_Raw_Value)
         float slope = 0; // slope for linear interpolation
         // binary search for element in the lookup table
         // bsearch() function is from stdlib.h
-        pFoundTableElement = (NTC_LOOKUP_TABLE_TYPE *)bsearch(&searchElement, NTC_LookupTable, NTC_LOOKUP_TABLE_SIZE, sizeof(NTC_LOOKUP_TABLE_TYPE), compareThermalResistanceInLookupTable);
+        pFoundTableElement = (NTC_LOOKUP_TABLE_TYPE *)bsearch((void *)&searchElement, (void *)NTC_LookupTable, NTC_LOOKUP_TABLE_SIZE, sizeof(NTC_LOOKUP_TABLE_TYPE), compareThermalResistanceInLookupTable);
         if( pFoundTableElement != NULL )
         {
             // calculate slope
