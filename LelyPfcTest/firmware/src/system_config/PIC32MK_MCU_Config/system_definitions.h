@@ -49,18 +49,23 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include <stdbool.h>
 #include "system/common/sys_common.h"
 #include "system/common/sys_module.h"
+#include "driver/can/drv_can.h" 
+#include "driver/mcpwm/drv_mcpwm.h" 
 #include "system/devcon/sys_devcon.h"
 #include "system/clk/sys_clk.h"
 #include "system/int/sys_int.h"
 #include "system/console/sys_console.h"
 #include "driver/adc/drv_adc_static.h"
 #include "driver/tmr/drv_tmr.h"
+#include "driver/can/drv_can_static.h"
 #include "driver/usart/drv_usart_static.h"
 #include "system/ports/sys_ports.h"
 #include "system/debug/sys_debug.h"
 #include "analog_voltage_monitor.h"
 #include "error_handler.h"
 #include "led_controller.h"
+#include "pwm_controller.h"
+#include "can_controller.h"
 
 
 // DOM-IGNORE-BEGIN

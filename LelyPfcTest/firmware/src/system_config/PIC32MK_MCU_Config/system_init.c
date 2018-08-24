@@ -205,8 +205,13 @@ void SYS_Initialize ( void* data )
     /* Initialize Drivers */
 
     /* Initialize ADC */
-    DRV_ADC_Initialize();
+//    DRV_ADC_Initialize();
 
+    /* Initialize CAN Driver 0 */
+    DRV_CAN0_Initialize();
+
+    /*Initialize MCPWM */
+    DRV_MCPWM_Initialize();
 
     sysObj.drvTmr0 = DRV_TMR_Initialize(DRV_TMR_INDEX_0, (SYS_MODULE_INIT *)&drvTmr0InitData);
 
@@ -232,9 +237,11 @@ void SYS_Initialize ( void* data )
     SYS_INT_Enable();
 
     /* Initialize the Application */
-    ANALOG_VOLTAGE_MONITOR_Initialize();
-    ERROR_HANDLER_Initialize();
-    LED_CONTROLLER_Initialize();
+//    ANALOG_VOLTAGE_MONITOR_Initialize();
+//    ERROR_HANDLER_Initialize();
+//    LED_CONTROLLER_Initialize();
+    PWM_CONTROLLER_Initialize();
+    CAN_CONTROLLER_Initialize();
     
     /* Prompt the successful system initialization */
     SYS_PRINT("\nSystem is initialized!\r\n");

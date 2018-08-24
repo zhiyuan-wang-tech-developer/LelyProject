@@ -672,7 +672,7 @@ void LED_CONTROLLER_Tasks ( void )
                 // The Led 200ms Blink Count increments from 0 ~ 4;
                 // one blinking period = 1 second or 5*200ms
                 led_controllerData.led200msBlinkCount = led_controllerData.led200msBlinkCount % 5;
-                SYS_DEBUG_BreakPoint();
+//                SYS_DEBUG_BreakPoint();
             }
             LED1Blink();
             LED2Blink();

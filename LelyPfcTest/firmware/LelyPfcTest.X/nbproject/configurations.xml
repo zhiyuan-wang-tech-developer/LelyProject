@@ -12,7 +12,13 @@
                 <logicalFolder name="f1" displayName="adc" projectFiles="true">
                   <itemPath>../src/system_config/PIC32MK_MCU_Config/framework/driver/adc/drv_adc_static.h</itemPath>
                 </logicalFolder>
-                <logicalFolder name="f2" displayName="usart" projectFiles="true">
+                <logicalFolder name="f2" displayName="can" projectFiles="true">
+                  <itemPath>../src/system_config/PIC32MK_MCU_Config/framework/driver/can/drv_can_static.h</itemPath>
+                </logicalFolder>
+                <logicalFolder name="f3" displayName="mcpwm" projectFiles="true">
+                  <itemPath>../src/system_config/PIC32MK_MCU_Config/framework/driver/mcpwm/drv_mcpwm_static.h</itemPath>
+                </logicalFolder>
+                <logicalFolder name="f4" displayName="usart" projectFiles="true">
                   <logicalFolder name="f1" displayName="src" projectFiles="true">
                     <itemPath>../src/system_config/PIC32MK_MCU_Config/framework/driver/usart/src/drv_usart_static_local.h</itemPath>
                   </logicalFolder>
@@ -36,10 +42,18 @@
         <itemPath>../src/analog_voltage_monitor.h</itemPath>
         <itemPath>../src/error_handler.h</itemPath>
         <itemPath>../src/led_controller.h</itemPath>
+        <itemPath>../src/pwm_controller.h</itemPath>
+        <itemPath>../src/can_controller.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f1" displayName="framework" projectFiles="true">
         <logicalFolder name="f1" displayName="driver" projectFiles="true">
-          <logicalFolder name="f1" displayName="tmr" projectFiles="true">
+          <logicalFolder name="f1" displayName="can" projectFiles="true">
+            <itemPath>../../../../../../Microchip/harmony/v2_05_01/framework/driver/can/drv_can.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="f2" displayName="mcpwm" projectFiles="true">
+            <itemPath>../../../../../../Microchip/harmony/v2_05_01/framework/driver/mcpwm/drv_mcpwm.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="f3" displayName="tmr" projectFiles="true">
             <logicalFolder name="f1" displayName="src" projectFiles="true">
               <itemPath>../../../../../../Microchip/harmony/v2_05_01/framework/driver/tmr/src/drv_tmr_variant_mapping.h</itemPath>
               <itemPath>../../../../../../Microchip/harmony/v2_05_01/framework/driver/tmr/src/drv_tmr_local.h</itemPath>
@@ -49,7 +63,7 @@
             <itemPath>../../../../../../Microchip/harmony/v2_05_01/framework/driver/tmr/drv_tmr_compatibility.h</itemPath>
             <itemPath>../../../../../../Microchip/harmony/v2_05_01/framework/driver/tmr/tmr_definitions_pic32m.h</itemPath>
           </logicalFolder>
-          <logicalFolder name="f2" displayName="usart" projectFiles="true">
+          <logicalFolder name="f4" displayName="usart" projectFiles="true">
             <logicalFolder name="f1" displayName="src" projectFiles="true">
               <itemPath>../../../../../../Microchip/harmony/v2_05_01/framework/driver/usart/src/drv_usart_variant_mapping.h</itemPath>
             </logicalFolder>
@@ -124,7 +138,18 @@
                     <itemPath>../src/system_config/PIC32MK_MCU_Config/framework/driver/adc/src/drv_adc_static.c</itemPath>
                   </logicalFolder>
                 </logicalFolder>
-                <logicalFolder name="f2" displayName="usart" projectFiles="true">
+                <logicalFolder name="f2" displayName="can" projectFiles="true">
+                  <logicalFolder name="f1" displayName="src" projectFiles="true">
+                    <itemPath>../src/system_config/PIC32MK_MCU_Config/framework/driver/can/src/drv_can_mapping.c</itemPath>
+                    <itemPath>../src/system_config/PIC32MK_MCU_Config/framework/driver/can/src/drv_can_static.c</itemPath>
+                  </logicalFolder>
+                </logicalFolder>
+                <logicalFolder name="f3" displayName="mcpwm" projectFiles="true">
+                  <logicalFolder name="f1" displayName="src" projectFiles="true">
+                    <itemPath>../src/system_config/PIC32MK_MCU_Config/framework/driver/mcpwm/src/drv_mcpwm_static.c</itemPath>
+                  </logicalFolder>
+                </logicalFolder>
+                <logicalFolder name="f4" displayName="usart" projectFiles="true">
                   <logicalFolder name="f1" displayName="src" projectFiles="true">
                     <itemPath>../src/system_config/PIC32MK_MCU_Config/framework/driver/usart/src/drv_usart_mapping.c</itemPath>
                     <itemPath>../src/system_config/PIC32MK_MCU_Config/framework/driver/usart/src/drv_usart_static.c</itemPath>
@@ -166,6 +191,8 @@
         <itemPath>../src/analog_voltage_monitor.c</itemPath>
         <itemPath>../src/error_handler.c</itemPath>
         <itemPath>../src/led_controller.c</itemPath>
+        <itemPath>../src/pwm_controller.c</itemPath>
+        <itemPath>../src/can_controller.c</itemPath>
         <itemPath>../src/main.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f1" displayName="framework" projectFiles="true">
@@ -522,10 +549,10 @@
         <property key="tracecontrol.include.timestamp" value="summarydataenabled"/>
         <property key="tracecontrol.select" value="0"/>
         <property key="tracecontrol.stallontracebufferfull" value="false"/>
-        <property key="tracecontrol.timestamp" value="0"/>
-        <property key="tracecontrol.tracebufmax" value="546000"/>
-        <property key="tracecontrol.tracefile" value="defmplabxtrace.log"/>
-        <property key="tracecontrol.traceresetonrun" value="false"/>
+        <property key="tracecontrol.timestamp" value="1"/>
+        <property key="tracecontrol.tracebufmax" value="54600000"/>
+        <property key="tracecontrol.tracefile" value="trace.log"/>
+        <property key="tracecontrol.traceresetonrun" value="true"/>
         <property key="uart0io.output" value="window"/>
         <property key="uart0io.outputfile" value=""/>
         <property key="uart0io.uartioenabled" value="false"/>

@@ -63,6 +63,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "analog_voltage_monitor.h"
 #include "error_handler.h"
 #include "led_controller.h"
+#include "pwm_controller.h"
+#include "can_controller.h"
 #include "system_definitions.h"
 
 extern ANALOG_VOLTAGE_MONITOR_DATA analog_voltage_monitorData;

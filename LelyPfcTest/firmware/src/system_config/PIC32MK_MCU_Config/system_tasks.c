@@ -82,9 +82,11 @@ void SYS_Tasks ( void )
     /* Maintain Middleware & Other Libraries */
 
     /* Maintain the application's state machine. */
-    ANALOG_VOLTAGE_MONITOR_Tasks();
-    ERROR_HANDLER_Tasks();
-    LED_CONTROLLER_Tasks();
+//    ANALOG_VOLTAGE_MONITOR_Tasks();
+//    ERROR_HANDLER_Tasks();
+//    LED_CONTROLLER_Tasks();
+    PWM_CONTROLLER_Tasks();
+    CAN_CONTROLLER_Tasks();
 }
 
 

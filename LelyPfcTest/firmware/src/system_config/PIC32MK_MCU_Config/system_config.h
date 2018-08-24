@@ -168,6 +168,8 @@ extern "C" {
 // Section: Driver Configuration
 // *****************************************************************************
 // *****************************************************************************
+#define DRV_CAN_DRIVER_MODE_STATIC 
+#define DRV_MCPWM_DRIVER_MODE_STATIC 
 /*** Timer Driver Configuration ***/
 #define DRV_TMR_INTERRUPT_MODE             true
 #define DRV_TMR_INSTANCES_NUMBER           1
@@ -345,6 +347,10 @@ extern "C" {
 #define YES     1
 #define NO      0
     
+/*** Application Instance 3 Configuration ***/
+    
+/*** Application Instance 4 Configuration ***/
+
 //DOM-IGNORE-BEGIN
 #ifdef __cplusplus
 }
