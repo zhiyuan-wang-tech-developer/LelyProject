@@ -208,7 +208,7 @@ void SYS_Initialize ( void* data )
 //    DRV_ADC_Initialize();
 
     /* Initialize CAN Driver 0 */
-    DRV_CAN0_Initialize();
+//    DRV_CAN0_Initialize();
 
     /*Initialize MCPWM */
     DRV_MCPWM_Initialize();
@@ -241,7 +241,7 @@ void SYS_Initialize ( void* data )
 //    ERROR_HANDLER_Initialize();
 //    LED_CONTROLLER_Initialize();
     PWM_CONTROLLER_Initialize();
-    CAN_CONTROLLER_Initialize();
+//    CAN_CONTROLLER_Initialize();
     
     /* Prompt the successful system initialization */
     SYS_PRINT("\nSystem is initialized!\r\n");

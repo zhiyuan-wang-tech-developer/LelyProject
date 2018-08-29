@@ -86,7 +86,7 @@ void SYS_Tasks ( void )
 //    ERROR_HANDLER_Tasks();
 //    LED_CONTROLLER_Tasks();
     PWM_CONTROLLER_Tasks();
-    CAN_CONTROLLER_Tasks();
+//    CAN_CONTROLLER_Tasks();
 }
 
 
