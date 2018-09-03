@@ -383,6 +383,7 @@ typedef enum
     Application strings and buffers are be defined outside this structure.
  */
 
+
 typedef struct
 {
     /* The application's current state */
@@ -391,6 +392,20 @@ typedef struct
     /* TODO: Define any additional data used by the application. */
     ADC_SCAN_DATA_TYPE              adc_raw_data;
     ADC_CONVERTED_DATA_TYPE         adc_converted_data;
+    
+    struct {
+        float an_18V;   // = (4k7 + 47k) / 4k7
+        float an_12V;   // = (4k7 + 47k) / 4k7
+        float an_5V;    // = (10k + 10k) / 10k
+        float an_3V3;   // = (4k7 + 10k) / 10k
+        float an_3V3AN; // = (1k + 10k) / 10k
+        float an_1V8;   // = 1
+        float an_380V;  // = (1M + 47k + 4k7) / 4k7
+        float an_325V;  // = (1M + 47k + 4k7) / 4k7
+        float an_net;   // = (47k + 2M + 5k) / 5k
+        float an_temp;  // = (3k3 + Rt) / Rt
+        float an_il;    // = 1
+    } dividers;
 
 } ANALOG_VOLTAGE_MONITOR_DATA;
 

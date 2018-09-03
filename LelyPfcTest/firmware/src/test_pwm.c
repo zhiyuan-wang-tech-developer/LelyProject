@@ -1,4 +1,6 @@
 #include "test_pwm.h"
+#include "test_params.h"
+#include "test_adc.c"
 #include <string.h>
 
 #include <peripheral/cmp/plib_cmp.h>
@@ -7,7 +9,23 @@
 extern PWM_CONTROLLER_DATA pwm_controllerData;
 static PWM_CONTROLLER_DATA pwmData;
 
-static void test_setCurrentLimit(){
+static void test_pwm_setCurrentLimit();
+
+
+void test_pwm(){
+    memcpy(&pwmData, &pwm_controllerData, sizeof(PWM_CONTROLLER_DATA));
+
+    test_pwm_setCurrentLimit();
+    
+    while( !PLIB_MCPWM_ChannelCurrentLimitIsAsserted(MCPWM_ID_0, MCPWM_CHANNEL1) && !PLIB_CMP_OutputStatusGet(CMP_ID_1) ){
+        Nop();
+    }
+    
+    SYS_DEBUG_BreakPoint();
+}
+
+
+static void test_pwm_setCurrentLimit(){
     // Setup IL34 as current limit for PWMS
     
     // Use Comparator 1 with CDAC3 and IL34 as inputs
@@ -76,19 +94,68 @@ static void test_setCurrentLimit(){
     PLIB_CMP_Enable(CMP_ID_1);
 }
 
-
-
-void test_pwm(){
-    memcpy(&pwmData, &pwm_controllerData, sizeof(PWM_CONTROLLER_DATA));
-
-    test_setCurrentLimit();
-    
-    while( !PLIB_MCPWM_ChannelCurrentLimitIsAsserted(MCPWM_ID_0, MCPWM_CHANNEL1) && !PLIB_CMP_OutputStatusGet(CMP_ID_1) ){
-        Nop();
+void test_pwm_SetBuck(uint16_t val, bool update){
+    if( isHigherThanBuckMaxDC(val) ){
+        val = getBuckMaxDC();
     }
     
-    SYS_DEBUG_BreakPoint();
+    pwmData.dutyCycle.update_value.PWM_BUCK1 = val;
+    pwmData.dutyCycle.update_value.PWM_BUCK2 = val;
+    pwmData.dutyCycle.update_value.PWM_BUCK3 = val;
+    pwmData.dutyCycle.update_value.PWM_BUCK4 = val;
+    
+    pwmData.dutyCycleStatus.updata_status_flag.PWM_BUCK1 = true;
+    pwmData.dutyCycleStatus.updata_status_flag.PWM_BUCK2 = true;
+    pwmData.dutyCycleStatus.updata_status_flag.PWM_BUCK3 = true;
+    pwmData.dutyCycleStatus.updata_status_flag.PWM_BUCK4 = true;
+    
+    if( update ){
+        memcpy(&pwm_controllerData, &pwmData, sizeof(PWM_CONTROLLER_DATA));
+        PWM_SIGNAL_Update();
+    }
+}
+
+void test_pwm_SetBoost(uint16_t val, bool update){
+    if( isHigherThanBoostMaxDC(val) ){
+        val = getBoostMaxDC();
+    }else if( isLowerThanBoostMinDC(val)){
+        val = getBoostMinDC();
+    }
+    
+    pwmData.dutyCycle.update_value.PWM_BOOST1 = val;
+    pwmData.dutyCycle.update_value.PWM_BOOST2 = val;
+    pwmData.dutyCycle.update_value.PWM_BOOST3 = val;
+    pwmData.dutyCycle.update_value.PWM_BOOST4 = val;
+    
+    pwmData.dutyCycleStatus.updata_status_flag.PWM_BOOST1 = true;
+    pwmData.dutyCycleStatus.updata_status_flag.PWM_BOOST2 = true;
+    pwmData.dutyCycleStatus.updata_status_flag.PWM_BOOST3 = true;
+    pwmData.dutyCycleStatus.updata_status_flag.PWM_BOOST4 = true;
+
+    if( update ){
+        memcpy(&pwm_controllerData, &pwmData, sizeof(PWM_CONTROLLER_DATA));
+        PWM_SIGNAL_Update();
+    }
+}
+
+void test_pwm_SetBuckBoost(uint16_t buck, uint16_t boost){
+    test_pwm_SetBuck(buck, false);
+    test_pwm_SetBoost(boost, true);
 }
 
 
 
+
+void test_pwm_RampUp( uint16_t target){
+    uint16_t dc = 0;
+    
+    
+    do{
+        //delay 10ms, half-sine of net power
+        test_delay_10us(1000);  
+        
+        //set dc
+        test_pwm_SetBuckBoost(dc, dc);
+    }while( analog_voltage_monitorData.adc_raw_data.samples.V380V < target );
+
+}

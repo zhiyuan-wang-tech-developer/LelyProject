@@ -15,7 +15,9 @@ extern "C" {
 #include "pwm_controller.h"
 
 void test_pwm();
-
+void test_pwm_SetBuckBoost(uint16_t buck, uint16_t boost);
+void test_pwm_SetBuck(uint16_t val, bool update);
+void test_pwm_SetBoost(uint16_t val, bool update);
 
 #ifdef	__cplusplus
 }

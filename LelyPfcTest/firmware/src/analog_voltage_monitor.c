@@ -130,7 +130,21 @@ const NTC_LOOKUP_TABLE_TYPE   NTC_LookupTable[NTC_LOOKUP_TABLE_SIZE] = {
     Application strings and buffers are be defined outside this structure.
 */
 
-ANALOG_VOLTAGE_MONITOR_DATA analog_voltage_monitorData;
+ANALOG_VOLTAGE_MONITOR_DATA analog_voltage_monitorData = {
+    .dividers = {
+        .an_18V = (4.7e3 + 47e3) / 4.7e3,
+        .an_12V = (4.7e3 + 47e3) / 4.7e3,
+        .an_5V = (10e3 + 10e3) / 10e3,
+        .an_3V3 = (4.7e3 + 10e3) / 10e3,
+        .an_3V3AN = (1e3 + 10e3) / 10e3,
+        .an_1V8 = 1,
+        .an_380V = (1e6 + 47e3 + 4.7e3) / 4.7e3,
+        .an_325V = (1e6 + 47e3 + 4.7e3) / 4.7e3,
+        .an_net = (47e3 + 2e6 + 5e3) / 5e3,
+        .an_temp = 1,//(3.3e3 + Rt) / Rt,
+        .an_il = 1
+    }
+};
 
 // *****************************************************************************
 // *****************************************************************************
