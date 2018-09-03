@@ -62,6 +62,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "system/debug/sys_debug.h"
 #include <peripheral/peripheral.h>
 
+#include "startup_test.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -71,6 +72,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 int main ( void )
 {
+    test_startup();
+    
 //    printf("\nSimulator started!\r\n");    
     /* Initialize all MPLAB Harmony modules, including application(s). */
     SYS_Initialize ( NULL );

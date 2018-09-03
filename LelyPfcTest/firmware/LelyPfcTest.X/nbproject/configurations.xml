@@ -44,6 +44,7 @@
         <itemPath>../src/led_controller.h</itemPath>
         <itemPath>../src/pwm_controller.h</itemPath>
         <itemPath>../src/can_controller.h</itemPath>
+        <itemPath>../src/startup_test.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f1" displayName="framework" projectFiles="true">
         <logicalFolder name="f1" displayName="driver" projectFiles="true">
@@ -194,6 +195,7 @@
         <itemPath>../src/pwm_controller.c</itemPath>
         <itemPath>../src/can_controller.c</itemPath>
         <itemPath>../src/main.c</itemPath>
+        <itemPath>../src/startup_test.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f1" displayName="framework" projectFiles="true">
         <logicalFolder name="f1" displayName="driver" projectFiles="true">
