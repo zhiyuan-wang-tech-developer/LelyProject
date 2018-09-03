@@ -59,6 +59,12 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 // *****************************************************************************
 
+// period = FSYSCLK / (Fpwm * Prescaler)
+//        = 120 MHz / (100 KHz * 1)     = 1200
+uint16_t period = 1200;
+
+// duty cycle step = 1/120MHz = 8 1/3 ns 
+
 void DRV_MCPWM_Enable (void)
 {
 /*Enable MCPWM*/
@@ -82,10 +88,10 @@ PLIB_MCPWM_Disable (MCPWM_ID_0);
 
 
 /* Configure Primary MCPWM Master Timer */
-PLIB_MCPWM_PrimaryTimerSetup (MCPWM_ID_0 , MCPWM_CLOCK_DIVIDE_BY_1 , 800);
+PLIB_MCPWM_PrimaryTimerSetup (MCPWM_ID_0 , MCPWM_CLOCK_DIVIDE_BY_1 , period);
 
 /* Configure Secondary MCPWM Master Timer */
-PLIB_MCPWM_SecondaryTimerSetup (MCPWM_ID_0 , MCPWM_CLOCK_DIVIDE_BY_1 , 800);
+PLIB_MCPWM_SecondaryTimerSetup (MCPWM_ID_0 , MCPWM_CLOCK_DIVIDE_BY_1 , period);
 
 /* Configure Primary Special Event Trigger */
 PLIB_MCPWM_PrimarySpecialEventTriggerSetup (MCPWM_ID_0 , 0 , MCPWM_TRIGGER_DIVIDE_BY_1);
