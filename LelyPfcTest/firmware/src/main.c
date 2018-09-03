@@ -62,7 +62,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "system/debug/sys_debug.h"
 #include <peripheral/peripheral.h>
 
-#include "startup_test.h"
+#include "test_startup.h"
 
 // *****************************************************************************
 // *****************************************************************************
