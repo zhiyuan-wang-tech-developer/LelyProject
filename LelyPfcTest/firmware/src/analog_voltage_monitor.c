@@ -943,8 +943,9 @@ void ANALOG_VOLTAGE_MONITOR_Initialize ( void )
      */
     /* Clear the ADC data buffer in initial state. */
     memset(analog_voltage_monitorData.adc_raw_data.buffer, 0, sizeof(analog_voltage_monitorData.adc_raw_data.buffer));
+    
     /* Open all DC powers */
-    EnableDCPower();
+//    EnableDCPower();
 }
 
 /******************************************************************************
