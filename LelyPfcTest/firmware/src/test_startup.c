@@ -8,6 +8,7 @@
 #include <peripheral/peripheral.h>
 
 #include "test_adc.h"
+#include "test_pwm.h"
 
 
 
@@ -79,12 +80,17 @@ void test_startup(){
     // Initialize drivers
     SYS_Initialize ( NULL );
     
+    
+    test_pwm();
+
+        
     test_init_adc();
     
     DRV_ADC_Start();
 
     while( false == PLIB_ADCHS_AnalogInputDataIsReady(ADCHS_ID_0, ADCHS_AN0) );
-                
+
+    
     //Wait for 5V to be fully powered up
     test_wait_5V( V5V_UNDERVOLTAGE_WARNING_THRESHOLD );
     
@@ -94,6 +100,9 @@ void test_startup(){
     test_wait_12V( V12V_UNDERVOLTAGE_WARNING_THRESHOLD );    
 
     test_Piccolo_Power();
+    
+    
+    
 }
 
 
