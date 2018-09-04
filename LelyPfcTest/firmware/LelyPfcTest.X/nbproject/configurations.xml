@@ -204,6 +204,7 @@
         <itemPath>../src/test_pwm.c</itemPath>
         <itemPath>../src/test_params.c</itemPath>
         <itemPath>../src/test_uart.c</itemPath>
+        <itemPath>../src/test_uart_proto.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f1" displayName="framework" projectFiles="true">
         <logicalFolder name="f1" displayName="driver" projectFiles="true">

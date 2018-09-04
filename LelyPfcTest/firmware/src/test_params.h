@@ -112,6 +112,9 @@ GET_SET_PARAM(TMotorError, params.thermo.motor.ERROR);
 GET_SET_PARAM(TMotorWarn, params.thermo.motor.WARN);
 
 
+bool test_param_set(unsigned int param, uint16_t value);
+bool test_param_get(unsigned int param, uint16_t* value);
+
 void test_delay_10us(uint32_t delay_us);
 
 #endif	/* TEST_PARAMS_H */

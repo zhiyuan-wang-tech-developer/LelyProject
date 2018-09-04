@@ -94,20 +94,30 @@ static void test_pwm_setCurrentLimit(){
     PLIB_CMP_Enable(CMP_ID_1);
 }
 
-void test_pwm_SetBuck(uint16_t val, bool update){
+void test_pwm_SetBuckPhase(pwm_channel_t channel, uint16_t val, bool update){
     if( isHigherThanBuckMaxDC(val) ){
         val = getBuckMaxDC();
     }
     
-    pwmData.dutyCycle.update_value.PWM_BUCK1 = val;
-    pwmData.dutyCycle.update_value.PWM_BUCK2 = val;
-    pwmData.dutyCycle.update_value.PWM_BUCK3 = val;
-    pwmData.dutyCycle.update_value.PWM_BUCK4 = val;
+    if( channel == PWM_ALL || channel == PWM_Pair_1 || channel == PWM_Group_12 ){
+        pwmData.phaseShift.update_value.PWM_BUCK1 = val;
+        pwmData.phaseShiftStatus.updata_status_flag.PWM_BUCK1 = true;
+    }
     
-    pwmData.dutyCycleStatus.updata_status_flag.PWM_BUCK1 = true;
-    pwmData.dutyCycleStatus.updata_status_flag.PWM_BUCK2 = true;
-    pwmData.dutyCycleStatus.updata_status_flag.PWM_BUCK3 = true;
-    pwmData.dutyCycleStatus.updata_status_flag.PWM_BUCK4 = true;
+    if( channel == PWM_ALL || channel == PWM_Pair_2 || channel == PWM_Group_12 ){
+        pwmData.phaseShift.update_value.PWM_BUCK2 = val;
+        pwmData.phaseShiftStatus.updata_status_flag.PWM_BUCK2 = true;        
+    }
+    
+    if( channel == PWM_ALL || channel == PWM_Pair_3 || channel == PWM_Group_34 ){
+        pwmData.phaseShift.update_value.PWM_BUCK3 = val;
+        pwmData.phaseShiftStatus.updata_status_flag.PWM_BUCK3 = true;
+    }
+    
+    if( channel == PWM_ALL || channel == PWM_Pair_4 || channel == PWM_Group_34 ){
+        pwmData.phaseShift.update_value.PWM_BUCK4 = val;
+        pwmData.phaseShiftStatus.updata_status_flag.PWM_BUCK4 = true;
+    }
     
     if( update ){
         memcpy(&pwm_controllerData, &pwmData, sizeof(PWM_CONTROLLER_DATA));
@@ -115,22 +125,33 @@ void test_pwm_SetBuck(uint16_t val, bool update){
     }
 }
 
-void test_pwm_SetBoost(uint16_t val, bool update){
+void test_pwm_SetBoostPhase(pwm_channel_t channel, uint16_t val, bool update){
     if( isHigherThanBoostMaxDC(val) ){
         val = getBoostMaxDC();
     }else if( isLowerThanBoostMinDC(val)){
         val = getBoostMinDC();
     }
     
-    pwmData.dutyCycle.update_value.PWM_BOOST1 = val;
-    pwmData.dutyCycle.update_value.PWM_BOOST2 = val;
-    pwmData.dutyCycle.update_value.PWM_BOOST3 = val;
-    pwmData.dutyCycle.update_value.PWM_BOOST4 = val;
+    if( channel == PWM_ALL || channel == PWM_Pair_1 || channel == PWM_Group_12 ){
+        pwmData.phaseShift.update_value.PWM_BOOST1 = val;
+        pwmData.phaseShiftStatus.updata_status_flag.PWM_BOOST1 = true;
+    }
     
-    pwmData.dutyCycleStatus.updata_status_flag.PWM_BOOST1 = true;
-    pwmData.dutyCycleStatus.updata_status_flag.PWM_BOOST2 = true;
-    pwmData.dutyCycleStatus.updata_status_flag.PWM_BOOST3 = true;
-    pwmData.dutyCycleStatus.updata_status_flag.PWM_BOOST4 = true;
+    if( channel == PWM_ALL || channel == PWM_Pair_2 || channel == PWM_Group_12 ){
+        pwmData.phaseShift.update_value.PWM_BOOST2 = val;
+        pwmData.phaseShiftStatus.updata_status_flag.PWM_BOOST2 = true;
+    }
+    
+    if( channel == PWM_ALL || channel == PWM_Pair_3 || channel == PWM_Group_34 ){
+        pwmData.phaseShift.update_value.PWM_BOOST3 = val;
+        pwmData.phaseShiftStatus.updata_status_flag.PWM_BOOST3 = true;
+    }
+    
+    if( channel == PWM_ALL || channel == PWM_Pair_4 || channel == PWM_Group_34 ){
+        pwmData.phaseShift.update_value.PWM_BOOST4 = val;
+        pwmData.phaseShiftStatus.updata_status_flag.PWM_BOOST4 = true;
+    }
+    
 
     if( update ){
         memcpy(&pwm_controllerData, &pwmData, sizeof(PWM_CONTROLLER_DATA));
@@ -138,12 +159,81 @@ void test_pwm_SetBoost(uint16_t val, bool update){
     }
 }
 
-void test_pwm_SetBuckBoost(uint16_t buck, uint16_t boost){
-    test_pwm_SetBuck(buck, false);
-    test_pwm_SetBoost(boost, true);
+void test_pwm_SetBuckBoostPhase(pwm_channel_t channel, uint16_t buck, uint16_t boost){
+    test_pwm_SetBuckPhase(channel, buck, false);
+    test_pwm_SetBoostPhase(channel, boost, true);
 }
 
 
+void test_pwm_SetBuckDC(pwm_channel_t channel, uint16_t val, bool update){
+    if( isHigherThanBuckMaxDC(val) ){
+        val = getBuckMaxDC();
+    }
+    
+    if( channel == PWM_ALL || channel == PWM_Pair_1 || channel == PWM_Group_12 ){
+        pwmData.dutyCycle.update_value.PWM_BUCK1 = val;
+        pwmData.dutyCycleStatus.updata_status_flag.PWM_BUCK1 = true;
+    }
+    
+    if( channel == PWM_ALL || channel == PWM_Pair_2 || channel == PWM_Group_12 ){
+        pwmData.dutyCycle.update_value.PWM_BUCK2 = val;
+        pwmData.dutyCycleStatus.updata_status_flag.PWM_BUCK2 = true;        
+    }
+    
+    if( channel == PWM_ALL || channel == PWM_Pair_3 || channel == PWM_Group_34 ){
+        pwmData.dutyCycle.update_value.PWM_BUCK3 = val;
+        pwmData.dutyCycleStatus.updata_status_flag.PWM_BUCK3 = true;
+    }
+    
+    if( channel == PWM_ALL || channel == PWM_Pair_4 || channel == PWM_Group_34 ){
+        pwmData.dutyCycle.update_value.PWM_BUCK4 = val;
+        pwmData.dutyCycleStatus.updata_status_flag.PWM_BUCK4 = true;
+    }
+    
+    if( update ){
+        memcpy(&pwm_controllerData, &pwmData, sizeof(PWM_CONTROLLER_DATA));
+        PWM_SIGNAL_Update();
+    }
+}
+
+void test_pwm_SetBoostDC(pwm_channel_t channel, uint16_t val, bool update){
+    if( isHigherThanBoostMaxDC(val) ){
+        val = getBoostMaxDC();
+    }else if( isLowerThanBoostMinDC(val)){
+        val = getBoostMinDC();
+    }
+    
+    if( channel == PWM_ALL || channel == PWM_Pair_1 || channel == PWM_Group_12 ){
+        pwmData.dutyCycle.update_value.PWM_BOOST1 = val;
+        pwmData.dutyCycleStatus.updata_status_flag.PWM_BOOST1 = true;
+    }
+    
+    if( channel == PWM_ALL || channel == PWM_Pair_2 || channel == PWM_Group_12 ){
+        pwmData.dutyCycle.update_value.PWM_BOOST2 = val;
+        pwmData.dutyCycleStatus.updata_status_flag.PWM_BOOST2 = true;
+    }
+    
+    if( channel == PWM_ALL || channel == PWM_Pair_3 || channel == PWM_Group_34 ){
+        pwmData.dutyCycle.update_value.PWM_BOOST3 = val;
+        pwmData.dutyCycleStatus.updata_status_flag.PWM_BOOST3 = true;
+    }
+    
+    if( channel == PWM_ALL || channel == PWM_Pair_4 || channel == PWM_Group_34 ){
+        pwmData.dutyCycle.update_value.PWM_BOOST4 = val;
+        pwmData.dutyCycleStatus.updata_status_flag.PWM_BOOST4 = true;
+    }
+    
+
+    if( update ){
+        memcpy(&pwm_controllerData, &pwmData, sizeof(PWM_CONTROLLER_DATA));
+        PWM_SIGNAL_Update();
+    }
+}
+
+void test_pwm_SetBuckBoostDC(pwm_channel_t channel, uint16_t buck, uint16_t boost){
+    test_pwm_SetBuckDC(channel, buck, false);
+    test_pwm_SetBoostDC(channel, boost, true);
+}
 
 
 void test_pwm_RampUp( uint16_t target){
@@ -155,7 +245,47 @@ void test_pwm_RampUp( uint16_t target){
         test_delay_10us(1000);  
         
         //set dc
-        test_pwm_SetBuckBoost(dc, dc);
+        test_pwm_SetBuckBoostDC(PWM_ALL, dc, dc);
     }while( analog_voltage_monitorData.adc_raw_data.samples.V380V < target );
 
+}
+
+
+void test_pwm_Get( pwm_channel_t channel, pwm_type_t type, uint16_t* dc, uint16_t* phase){    
+    switch( type ){
+        case PWM_BUCK:
+            if( channel == PWM_ALL || channel == PWM_Pair_1 || channel == PWM_Group_12 ){
+                *dc = pwm_controllerData.dutyCycle.update_value.PWM_BUCK1;
+                *phase = pwm_controllerData.phaseShift.update_value.PWM_BUCK1;
+            }else if( channel == PWM_Pair_2 ){
+                *dc = pwm_controllerData.dutyCycle.update_value.PWM_BUCK2;
+                *phase = pwm_controllerData.phaseShift.update_value.PWM_BUCK2;
+            }else if( channel == PWM_Pair_3 || channel == PWM_Group_34 ){
+                *dc = pwm_controllerData.dutyCycle.update_value.PWM_BUCK3;
+                *phase = pwm_controllerData.phaseShift.update_value.PWM_BUCK3;
+            }else if( channel == PWM_Pair_4 ){
+                *dc = pwm_controllerData.dutyCycle.update_value.PWM_BUCK4;
+                *phase = pwm_controllerData.phaseShift.update_value.PWM_BUCK4;
+            }
+            break;
+            
+            
+        case PWM_BOOST:
+            if( channel == PWM_ALL || channel == PWM_Pair_1 || channel == PWM_Group_12 ){
+                *dc = pwm_controllerData.dutyCycle.update_value.PWM_BOOST1;
+                *phase = pwm_controllerData.phaseShift.update_value.PWM_BOOST1;
+            }else if( channel == PWM_Pair_2 ){
+                *dc = pwm_controllerData.dutyCycle.update_value.PWM_BOOST2;
+                *phase = pwm_controllerData.phaseShift.update_value.PWM_BOOST2;
+            }else if( channel == PWM_Pair_3  || channel == PWM_Group_34 ){
+                *dc = pwm_controllerData.dutyCycle.update_value.PWM_BOOST3;
+                *phase = pwm_controllerData.phaseShift.update_value.PWM_BOOST3;
+            }else if( channel == PWM_Pair_4 ){
+                *dc = pwm_controllerData.dutyCycle.update_value.PWM_BOOST4;
+                *phase = pwm_controllerData.phaseShift.update_value.PWM_BOOST4;
+            }
+            break;
+        default:
+            return;
+    }
 }

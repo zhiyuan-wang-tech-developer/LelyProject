@@ -12,7 +12,14 @@
 extern "C" {
 #endif
 
+#include <stdbool.h>
+#include <stdarg.h>
+    
+bool test_uart_findCommand(char c);
+void test_uart_parseCommand(char* c);
 
+
+int u2_write(char* fmt, ...);
 
 
 #ifdef	__cplusplus
