@@ -1,5 +1,6 @@
 #include "test_adc.h"
 #include "analog_voltage_monitor.h"
+#include "led_controller.h"
 
 
 extern float ConvertADCRawSampleToThermalResistance(uint32_t ADC_Raw_Value);
@@ -8,6 +9,19 @@ extern float ConvertADCRawSampleToCurrent(uint32_t ADC_Raw_Value);
 extern ANALOG_VOLTAGE_MONITOR_DATA analog_voltage_monitorData;
 
 static ANALOG_VOLTAGE_MONITOR_DATA adcData;
+
+void __ISR(_ADC_DF1_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_Filter1(void){
+    V_LED1_GOn();
+    
+    //Read filtered value
+    analog_voltage_monitorData.adc_raw_data.samples.IL34 = PLIB_ADCHS_DigitalFilterDataGet(ADCHS_ID_0, ADCHS_DIGITAL_FILTER_1);
+       
+    //Clear interrupt flag
+    IFS3bits.AD1DF1IF = 0;
+    
+    V_LED1_GOff();
+}
+
 
 
 void test_init_adc(){
@@ -20,20 +34,37 @@ void test_init_adc(){
     DRV_ADC5_Open();
     DRV_ADC6_Open();
     
-    /* Enable the global software EDGE trigger for analog input scanning. */
-    /* The global software trigger bit is cleared automatically in the next ADC clock cycle. */
-    DRV_ADC_Start();
-
     //Set ADC0 = Read AN5 == IL34
+    //Pass through digital averaging filter
     PLIB_ADCHS_ChannelInputSelect(ADCHS_ID_0, ADCHS_CHANNEL_0, ADCHS_CHANNEL_0_ALTERNATE_INP_AN5);
-
+    PLIB_ADCHS_DigitalFilterAveragingModeSetup(ADCHS_ID_0, ADCHS_DIGITAL_FILTER_1, ADCHS_AN5, ADCHS_DIGITAL_FILTER_SIGNIFICANT_FIRST_12BITS, ADCHS_DIGITAL_FILTER_AVERAGE_SAMPLE_COUNT_4, true);
+    
+    //Triggered by TMR3
+    PLIB_ADCHS_AnalogInputTriggerSourceSelect(ADCHS_ID_0, ADCHS_CLASS12_AN5, ADCHS_TRIGGER_SOURCE_TMR3_MATCH);
+    PLIB_ADCHS_ChannelTriggerSampleSelect(ADCHS_ID_0, ADCHS_CHANNEL_0, ADCHS_CHANNEL_UNSYNC_TRIGGER_UNSYNC_SAMPLING);
+    
+    //Use Filter Ready interrupt instead of data ready
+    PLIB_ADCHS_AnalogInputDataReadyInterruptDisable(ADCHS_ID_0, ADCHS_AN5);
+    PLIB_ADCHS_DigitalFilterDataReadyInterruptEnable(ADCHS_ID_0, ADCHS_DIGITAL_FILTER_1);
+    
+    //PWM period = 1200 = 100 KHz
+    //ADC period = 4* PWM = 300 = 400 KHz
+    T3CON = 0;
+    PR3 = 300;
+    T3CON = 0x8000;
+        
     //Set ADC1 = Read AN4 == VN
     PLIB_ADCHS_ChannelInputSelect(ADCHS_ID_0, ADCHS_CHANNEL_1, ADCHS_CHANNEL_1_ALTERNATE_INP_AN4);
 
     //Set ADC2 = Read AN6 == VL
     PLIB_ADCHS_ChannelInputSelect(ADCHS_ID_0, ADCHS_CHANNEL_2, ADCHS_CHANNEL_2_ALTERNATE_INP_AN6);
+    
+    
+    
+    /* Enable the global software EDGE trigger for analog input scanning. */
+    /* The global software trigger bit is cleared automatically in the next ADC clock cycle. */
+    DRV_ADC_Start();
 }
-
 
 void test_adc_convertValues(ANALOG_VOLTAGE_MONITOR_DATA* data){    
     data->adc_converted_data.samples.IL12 = ConvertADCRawSampleToCurrent(data->adc_raw_data.samples.IL12);
@@ -72,7 +103,7 @@ void test_adc_convertValues(ANALOG_VOLTAGE_MONITOR_DATA* data){
 
 void test_update_adcValues(ANALOG_VOLTAGE_MONITOR_DATA* data){
     //Read all adcs
-    
+
     //Convert ADC values to mV 
     test_adc_convertValues(&analog_voltage_monitorData);
     
