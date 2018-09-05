@@ -101,7 +101,7 @@ void test_adc_convertValues(ANALOG_VOLTAGE_MONITOR_DATA* data){
 
 }
 
-void test_update_adcValues(ANALOG_VOLTAGE_MONITOR_DATA* data){
+void test_adc_update_adcValues(ANALOG_VOLTAGE_MONITOR_DATA* data){
     //Read all adcs
 
     //Convert ADC values to mV 
@@ -116,17 +116,17 @@ void test_update_adcValues(ANALOG_VOLTAGE_MONITOR_DATA* data){
 // Common power
 void test_wait_18V(uint16_t targetADC){
     do{
-        test_update_adcValues(&adcData);
+        test_adc_update_adcValues(&adcData);
     }while( adcData.adc_raw_data.samples.V18V < targetADC );
 }
 void test_wait_12V(uint16_t targetADC){
     do{
-        test_update_adcValues(&adcData);
+        test_adc_update_adcValues(&adcData);
     }while( adcData.adc_raw_data.samples.V12V < targetADC );
 }
 void test_wait_5V(uint16_t targetADC){
     do{
-        test_update_adcValues(&adcData);
+        test_adc_update_adcValues(&adcData);
     }while( adcData.adc_raw_data.samples.V5V < targetADC );
 }
 
@@ -135,12 +135,12 @@ void test_wait_5V(uint16_t targetADC){
 // Net power
 void test_wait_380V(uint16_t targetADC){
     do{
-        test_update_adcValues(&adcData);
+        test_adc_update_adcValues(&adcData);
     }while( adcData.adc_raw_data.samples.V380V < targetADC );
 }
 void test_wait_325V(uint16_t targetADC){
     do{
-        test_update_adcValues(&adcData);
+        test_adc_update_adcValues(&adcData);
     }while( adcData.adc_raw_data.samples.V325V < targetADC );
 }
 
@@ -149,17 +149,17 @@ void test_wait_325V(uint16_t targetADC){
 // Piccolo 1 power
 void test_wait_3V3_1(uint16_t targetADC){
     do{
-        test_update_adcValues(&adcData);
+        test_adc_update_adcValues(&adcData);
     }while( adcData.adc_raw_data.samples.V3V3_1 < targetADC );
 }
 void test_wait_3V3AN_1(uint16_t targetADC){
     do{
-        test_update_adcValues(&adcData);
+        test_adc_update_adcValues(&adcData);
     }while( adcData.adc_raw_data.samples.V3V3AN1 < targetADC );
 }
 void test_wait_1V8_1(uint16_t targetADC){
     do{
-        test_update_adcValues(&adcData);
+        test_adc_update_adcValues(&adcData);
     }while( adcData.adc_raw_data.samples.V1V8_1 < targetADC );
 }
 
@@ -167,18 +167,18 @@ void test_wait_1V8_1(uint16_t targetADC){
 // Piccolo 2 power
 void test_wait_3V3_2(uint16_t targetADC){
     do{
-        test_update_adcValues(&adcData);
+        test_adc_update_adcValues(&adcData);
     }while( adcData.adc_raw_data.samples.V3V3_2 < targetADC );
     
 }
 void test_wait_3V3AN_2(uint16_t targetADC){
     do{
-        test_update_adcValues(&adcData);
+        test_adc_update_adcValues(&adcData);
     }while( adcData.adc_raw_data.samples.V3V3AN2 < targetADC );
 }
 void test_wait_1V8_2(uint16_t targetADC){
     do{
-        test_update_adcValues(&adcData);
+        test_adc_update_adcValues(&adcData);
     }while( adcData.adc_raw_data.samples.V1V8_2 < targetADC );
 }
 

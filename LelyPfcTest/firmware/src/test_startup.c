@@ -10,7 +10,6 @@
 #include "test_adc.h"
 #include "test_pwm.h"
 #include "test_params.h"
-#include "test_adc.c"
 #include "test_uart.h"
 
 
@@ -82,6 +81,7 @@ void test_startup(){
     // Initialize drivers
     SYS_Initialize ( NULL );
     
+  
     T2CON = 0;
     IFS0bits.T2IF = 0;
     TMR2 = 0;
@@ -91,15 +91,10 @@ void test_startup(){
         analog_voltage_monitorData.adc_raw_data.buffer[i] = 1;
     }
         
-    test_adc_convertValues(&analog_voltage_monitorData);
-    
     test_init_adc();
+    test_adc_update_adcValues(&analog_voltage_monitorData);
 
-    
-    test_pwm();
 
-        
-    
     DRV_ADC_Start();
 
     while( false == PLIB_ADCHS_AnalogInputDataIsReady(ADCHS_ID_0, ADCHS_AN0) );
@@ -114,6 +109,14 @@ void test_startup(){
     test_wait_12V( V12V_UNDERVOLTAGE_WARNING_THRESHOLD );    
 
     test_Piccolo_Power();
+
+
+
+    
+       
+    test_pwm();
 }
+
+
 
 

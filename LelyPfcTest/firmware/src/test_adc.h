@@ -17,8 +17,8 @@ extern "C" {
 #include "analog_voltage_monitor.h"
     
 void test_init_adc();
-void test_update_adcValues(ANALOG_VOLTAGE_MONITOR_DATA* data);
-
+void test_adc_update_adcValues(ANALOG_VOLTAGE_MONITOR_DATA* data);
+void test_adc_convertValues(ANALOG_VOLTAGE_MONITOR_DATA* data);
 
 void test_wait_18V(uint16_t targetADC);
 void test_wait_12V(uint16_t targetADC);
