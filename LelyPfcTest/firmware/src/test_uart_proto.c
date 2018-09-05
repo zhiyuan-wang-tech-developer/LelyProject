@@ -147,7 +147,7 @@ void test_uart_parseAdc(char* c){
         uint16_t adcVal;
         float convVal;
         if( test_adc_get(index, &adcVal, &convVal) ){
-            u2_write("%cA%u=%u;%f", TEST_START_CHAR, index, adcVal, convVal, TEST_END_CHAR);
+            u2_write("%cA%u=%u;%f%c", TEST_START_CHAR, index, adcVal, convVal, TEST_END_CHAR);
         }
     }
 }
@@ -217,6 +217,10 @@ void test_uart_parsSet(char* c){
 }
 
 void test_uart_parseCommand(char* c){
+    if( *c == TEST_START_CHAR ){
+        c++;
+    }
+    
     switch( *c ){
         case 's':
         case 'S':
@@ -268,3 +272,17 @@ bool test_uart_findCommand(char c){
     return false;
 }
 
+void test_uart_processCommands(const char* str, bool reset){
+    if( reset ){
+        cmd_pos = 0;
+        protoState = ProtoFindStart;
+    }
+    
+    while( *str ){
+        if( test_uart_findCommand(*str++) ){
+            SYS_DEBUG_BreakPoint();
+            test_uart_parseCommand(cmd);
+        }
+    }
+}
+    

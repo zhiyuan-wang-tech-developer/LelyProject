@@ -17,7 +17,7 @@ extern "C" {
     
 bool test_uart_findCommand(char c);
 void test_uart_parseCommand(char* c);
-
+void test_uart_processCommands(const char* str, bool reset);
 
 int u2_write(char* fmt, ...);
 
