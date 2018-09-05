@@ -243,15 +243,23 @@ bool test_uart_findCommand(char c){
             if( c == TEST_START_CHAR ){
                 cmd_pos = 0;
                 cmd[cmd_pos++] = c;
+                protoState = ProtoFindEnd;
             }
             break;
             
         case ProtoFindEnd:
             cmd[cmd_pos++] = c;
             
-            if( (c == TEST_END_CHAR) || (cmd_pos >= TEST_CMD_LEN) ){
+            if( (c == TEST_END_CHAR) ){
                 protoState = ProtoFindStart;
                 return true;
+            }else if( c == TEST_START_CHAR ){
+                cmd_pos = 0;
+                cmd[cmd_pos++] = c;
+            }else if( (cmd_pos >= TEST_CMD_LEN) ){
+                //Too long, abort
+                protoState = ProtoFindStart;
+                return false;
             }
             break;
         default:
