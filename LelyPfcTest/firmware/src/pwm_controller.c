@@ -56,34 +56,40 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "pwm_controller.h"
 #include "driver/mcpwm/drv_mcpwm_static.h"
 
+
+
 /*
  * Macro Definitions for PWM Controller
  */
 // PWM switching frequency FPWM = 150kHz
 #define PWM_FREQ    150000
+
 // one full period is 65535 in PWM time base register
 // 1% duty cycle = 65535/100 = 655.35
-#define DUTY_CYCLE_STEP     655.35
+float DUTY_CYCLE_STEP = 655.35;
+
 // 1° phase shift =  65535/360 = 182.04
-#define PHASE_SHIFT_STEP    182.04
+float PHASE_SHIFT_STEP = 182.04;
+
 // Initial Duty Cycle (%)
-#define PWM_BUCK1_DUTY_CYCLE_INIT   25
-#define PWM_BUCK2_DUTY_CYCLE_INIT   25
-#define PWM_BUCK3_DUTY_CYCLE_INIT   25
-#define PWM_BUCK4_DUTY_CYCLE_INIT   25
-#define PWM_BOOST1_DUTY_CYCLE_INIT   25
-#define PWM_BOOST2_DUTY_CYCLE_INIT   25
-#define PWM_BOOST3_DUTY_CYCLE_INIT   25
-#define PWM_BOOST4_DUTY_CYCLE_INIT   25
+uint16_t PWM_BUCK1_DUTY_CYCLE_INIT = 25;
+uint16_t PWM_BUCK2_DUTY_CYCLE_INIT = 25;
+uint16_t PWM_BUCK3_DUTY_CYCLE_INIT = 25;
+uint16_t PWM_BUCK4_DUTY_CYCLE_INIT = 25;
+uint16_t PWM_BOOST1_DUTY_CYCLE_INIT = 25;
+uint16_t PWM_BOOST2_DUTY_CYCLE_INIT = 25;
+uint16_t PWM_BOOST3_DUTY_CYCLE_INIT = 25;
+uint16_t PWM_BOOST4_DUTY_CYCLE_INIT = 25;
+
 // Initial Phase Shift (°)
-#define PWM_BUCK1_PHASE_SHIFT_INIT   0
-#define PWM_BUCK2_PHASE_SHIFT_INIT   180
-#define PWM_BUCK3_PHASE_SHIFT_INIT   90
-#define PWM_BUCK4_PHASE_SHIFT_INIT   270
-#define PWM_BOOST1_PHASE_SHIFT_INIT   10
-#define PWM_BOOST2_PHASE_SHIFT_INIT   190
-#define PWM_BOOST3_PHASE_SHIFT_INIT   100
-#define PWM_BOOST4_PHASE_SHIFT_INIT   280
+uint16_t PWM_BUCK1_PHASE_SHIFT_INIT = 10;
+uint16_t PWM_BUCK2_PHASE_SHIFT_INIT = 190;
+uint16_t PWM_BUCK3_PHASE_SHIFT_INIT = 100;
+uint16_t PWM_BUCK4_PHASE_SHIFT_INIT = 280;
+uint16_t PWM_BOOST1_PHASE_SHIFT_INIT = 0;
+uint16_t PWM_BOOST2_PHASE_SHIFT_INIT = 180;
+uint16_t PWM_BOOST3_PHASE_SHIFT_INIT = 90;
+uint16_t PWM_BOOST4_PHASE_SHIFT_INIT = 270;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -140,96 +146,96 @@ PWM_CONTROLLER_DATA pwm_controllerData;
 void PWM_BUCK1_DutyCycleSet(uint16_t dutyCycle)
 {
     dutyCycle = dutyCycle * DUTY_CYCLE_STEP;
-    PLIB_MCPWM_ChannelPrimaryDutyCycleSet (MCPWM_ID_0 , MCPWM_CHANNEL9 , dutyCycle);
+    PLIB_MCPWM_ChannelPrimaryDutyCycleSet (MCPWM_ID_0 , PWM_ChanBuck1 , dutyCycle);
 }
 void PWM_BUCK1_PhaseShiftSet(uint16_t phaseShift)
 {
     phaseShift = phaseShift * PHASE_SHIFT_STEP;
-    PLIB_MCPWM_ChannelPhaseSet (MCPWM_ID_0 , MCPWM_CHANNEL9 , phaseShift);
+    PLIB_MCPWM_ChannelPhaseSet (MCPWM_ID_0 , PWM_ChanBuck1 , phaseShift);
 }
 
 // PWM_BOOST1 <-> PWM2H
 void PWM_BOOST1_DutyCycleSet(uint16_t dutyCycle)
 {
     dutyCycle = dutyCycle * DUTY_CYCLE_STEP;
-    PLIB_MCPWM_ChannelPrimaryDutyCycleSet (MCPWM_ID_0 , MCPWM_CHANNEL2 , dutyCycle);
+    PLIB_MCPWM_ChannelPrimaryDutyCycleSet (MCPWM_ID_0 , PWM_ChanBoost1 , dutyCycle);
 }
 void PWM_BOOST1_PhaseShiftSet(uint16_t phaseShift)
 {
     phaseShift = phaseShift * PHASE_SHIFT_STEP;
-    PLIB_MCPWM_ChannelPhaseSet (MCPWM_ID_0 , MCPWM_CHANNEL2 , phaseShift);
+    PLIB_MCPWM_ChannelPhaseSet (MCPWM_ID_0 , PWM_ChanBoost1 , phaseShift);
 }
 
 // PWM_BUCK2 <-> PWM3H 
 void PWM_BUCK2_DutyCycleSet(uint16_t dutyCycle)
 {
     dutyCycle = dutyCycle * DUTY_CYCLE_STEP;
-    PLIB_MCPWM_ChannelPrimaryDutyCycleSet (MCPWM_ID_0 , MCPWM_CHANNEL3 , dutyCycle);
+    PLIB_MCPWM_ChannelPrimaryDutyCycleSet (MCPWM_ID_0 , PWM_ChanBuck2 , dutyCycle);
 }
 void PWM_BUCK2_PhaseShiftSet(uint16_t phaseShift)
 {
     phaseShift = phaseShift * PHASE_SHIFT_STEP;
-    PLIB_MCPWM_ChannelPhaseSet (MCPWM_ID_0 , MCPWM_CHANNEL3 , phaseShift);
+    PLIB_MCPWM_ChannelPhaseSet (MCPWM_ID_0 , PWM_ChanBuck2 , phaseShift);
 }
 
 // PWM_BOOST2 <-> PWM8H
 void PWM_BOOST2_DutyCycleSet(uint16_t dutyCycle)
 {
     dutyCycle = dutyCycle * DUTY_CYCLE_STEP;
-    PLIB_MCPWM_ChannelPrimaryDutyCycleSet (MCPWM_ID_0 , MCPWM_CHANNEL8 , dutyCycle);
+    PLIB_MCPWM_ChannelPrimaryDutyCycleSet (MCPWM_ID_0 , PWM_ChanBoost2 , dutyCycle);
 }
 void PWM_BOOST2_PhaseShiftSet(uint16_t phaseShift)
 {
     phaseShift = phaseShift * PHASE_SHIFT_STEP;
-    PLIB_MCPWM_ChannelPhaseSet (MCPWM_ID_0 , MCPWM_CHANNEL8 , phaseShift);
+    PLIB_MCPWM_ChannelPhaseSet (MCPWM_ID_0 , PWM_ChanBoost2, phaseShift);
 }
 
 // PWM_BUCK3 <-> PWM7H 
 void PWM_BUCK3_DutyCycleSet(uint16_t dutyCycle)
 {
     dutyCycle = dutyCycle * DUTY_CYCLE_STEP;
-    PLIB_MCPWM_ChannelPrimaryDutyCycleSet (MCPWM_ID_0 , MCPWM_CHANNEL7 , dutyCycle);
+    PLIB_MCPWM_ChannelPrimaryDutyCycleSet (MCPWM_ID_0 , PWM_ChanBuck3 , dutyCycle);
 }
 void PWM_BUCK3_PhaseShiftSet(uint16_t phaseShift)
 {
     phaseShift = phaseShift * PHASE_SHIFT_STEP;
-    PLIB_MCPWM_ChannelPhaseSet (MCPWM_ID_0 , MCPWM_CHANNEL7 , phaseShift);
+    PLIB_MCPWM_ChannelPhaseSet (MCPWM_ID_0 , PWM_ChanBuck3, phaseShift);
 }
 
 // PWM_BOOST3 <-> PWM10H
 void PWM_BOOST3_DutyCycleSet(uint16_t dutyCycle)
 {
     dutyCycle = dutyCycle * DUTY_CYCLE_STEP;
-    PLIB_MCPWM_ChannelPrimaryDutyCycleSet (MCPWM_ID_0 , MCPWM_CHANNEL10 , dutyCycle);
+    PLIB_MCPWM_ChannelPrimaryDutyCycleSet (MCPWM_ID_0 , PWM_ChanBoost3, dutyCycle);
 }
 void PWM_BOOST3_PhaseShiftSet(uint16_t phaseShift)
 {
     phaseShift = phaseShift * PHASE_SHIFT_STEP;
-    PLIB_MCPWM_ChannelPhaseSet (MCPWM_ID_0 , MCPWM_CHANNEL10 , phaseShift);
+    PLIB_MCPWM_ChannelPhaseSet (MCPWM_ID_0 , PWM_ChanBoost3, phaseShift);
 }
 
 // PWM_BUCK4 <-> PWM1H 
 void PWM_BUCK4_DutyCycleSet(uint16_t dutyCycle)
 {
     dutyCycle = dutyCycle * DUTY_CYCLE_STEP;
-    PLIB_MCPWM_ChannelPrimaryDutyCycleSet (MCPWM_ID_0 , MCPWM_CHANNEL1 , dutyCycle);
+    PLIB_MCPWM_ChannelPrimaryDutyCycleSet (MCPWM_ID_0 , PWM_ChanBuck4, dutyCycle);
 }
 void PWM_BUCK4_PhaseShiftSet(uint16_t phaseShift)
 {
     phaseShift = phaseShift * PHASE_SHIFT_STEP;
-    PLIB_MCPWM_ChannelPhaseSet (MCPWM_ID_0 , MCPWM_CHANNEL1 , phaseShift);
+    PLIB_MCPWM_ChannelPhaseSet (MCPWM_ID_0 , PWM_ChanBuck4, phaseShift);
 }
 
 // PWM_BOOST4 <-> PWM4H
 void PWM_BOOST4_DutyCycleSet(uint16_t dutyCycle)
 {
     dutyCycle = dutyCycle * DUTY_CYCLE_STEP;
-    PLIB_MCPWM_ChannelPrimaryDutyCycleSet (MCPWM_ID_0 , MCPWM_CHANNEL4 , dutyCycle);
+    PLIB_MCPWM_ChannelPrimaryDutyCycleSet (MCPWM_ID_0 , PWM_ChanBoost4, dutyCycle);
 }
 void PWM_BOOST4_PhaseShiftSet(uint16_t phaseShift)
 {
     phaseShift = phaseShift * PHASE_SHIFT_STEP;
-    PLIB_MCPWM_ChannelPhaseSet (MCPWM_ID_0 , MCPWM_CHANNEL4 , phaseShift);
+    PLIB_MCPWM_ChannelPhaseSet (MCPWM_ID_0 , PWM_ChanBoost4, phaseShift);
 }
 
 /*******************************************************************************

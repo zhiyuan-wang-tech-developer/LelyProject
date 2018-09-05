@@ -40,6 +40,9 @@ void test_pwm_SetBoostPhase(pwm_channel_t channel, uint16_t val, bool update);
 
 bool test_pwm_Get( pwm_channel_t channel, pwm_type_t type, uint16_t* dc, uint16_t* phase);
 
+void test_pwm_RampUp( pwm_channel_t pwms, uint16_t target, uint16_t dc_step);
+
+
 
 #ifdef	__cplusplus
 }

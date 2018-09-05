@@ -68,6 +68,19 @@ extern "C" {
 #endif
 // DOM-IGNORE-END 
 
+
+#define PWM_ChanBuck1 MCPWM_CHANNEL9    // 9H
+#define PWM_ChanBuck2 MCPWM_CHANNEL3    // 3H
+#define PWM_ChanBuck3 MCPWM_CHANNEL7    // 7H
+#define PWM_ChanBuck4 MCPWM_CHANNEL1    // 1H
+#define PWM_ChanBoost1 MCPWM_CHANNEL2   // 2H
+#define PWM_ChanBoost2 MCPWM_CHANNEL8   // 8H
+#define PWM_ChanBoost3 MCPWM_CHANNEL10  // 10H
+#define PWM_ChanBoost4 MCPWM_CHANNEL4   // 4H
+
+    
+    
+    
 // *****************************************************************************
 // *****************************************************************************
 // Section: Type Definitions
@@ -241,6 +254,30 @@ void PWM_CONTROLLER_Initialize ( void );
 
 void PWM_CONTROLLER_Tasks( void );
 
+
+
+// Added for tests
+void PWM_SIGNAL_Update ( void );
+
+void PWM_BOOST1_DutyCycleSet(uint16_t dutyCycle);
+void PWM_BOOST2_DutyCycleSet(uint16_t dutyCycle);
+void PWM_BOOST3_DutyCycleSet(uint16_t dutyCycle);
+void PWM_BOOST4_DutyCycleSet(uint16_t dutyCycle);
+
+void PWM_BUCK1_DutyCycleSet(uint16_t dutyCycle);
+void PWM_BUCK2_DutyCycleSet(uint16_t dutyCycle);
+void PWM_BUCK3_DutyCycleSet(uint16_t dutyCycle);
+void PWM_BUCK4_DutyCycleSet(uint16_t dutyCycle);
+
+void PWM_BOOST1_PhaseShiftSet(uint16_t phaseShift);
+void PWM_BOOST2_PhaseShiftSet(uint16_t phaseShift);
+void PWM_BOOST3_PhaseShiftSet(uint16_t phaseShift);
+void PWM_BOOST4_PhaseShiftSet(uint16_t phaseShift);
+
+void PWM_BUCK1_PhaseShiftSet(uint16_t phaseShift);
+void PWM_BUCK2_PhaseShiftSet(uint16_t phaseShift);
+void PWM_BUCK3_PhaseShiftSet(uint16_t phaseShift);
+void PWM_BUCK4_PhaseShiftSet(uint16_t phaseShift);
 
 #endif /* _PWM_CONTROLLER_H */
 
