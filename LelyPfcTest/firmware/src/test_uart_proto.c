@@ -68,7 +68,7 @@ void test_uart_parseGetIO(char* c){
     if( sscanf(c, "%*c%u", &index) == 1){
         bool value;
         if( test_io_get(index, &value) ){
-            u2_write("%gI%u=%u", TEST_START_CHAR, index, value, TEST_END_CHAR);
+            test_uart_write("%gI%u=%u", TEST_START_CHAR, index, value, TEST_END_CHAR);
         }
     }
 }
@@ -81,7 +81,7 @@ void test_uart_parseSetIO(char* c){
         bool bval = (value != '0');
         if( test_io_set(index, bval) ){
             test_io_get(index, &bval);
-            u2_write("%sI%u=%u", TEST_START_CHAR, index, bval, TEST_END_CHAR);
+            test_uart_write("%sI%u=%u", TEST_START_CHAR, index, bval, TEST_END_CHAR);
         }
     }
 }
@@ -122,7 +122,7 @@ void test_uart_parseSetPWM(char* c){
             uint16_t dc, phase;
             
             test_pwm_Get( channel, type, &dc, &phase);
-            u2_write("%cs%c%uP%uD%u%c", TEST_START_CHAR, type, channel, phase, dc, TEST_END_CHAR);
+            test_uart_write("%cs%c%uP%uD%u%c", TEST_START_CHAR, type, channel, phase, dc, TEST_END_CHAR);
         }
     }
 }
@@ -135,7 +135,7 @@ void test_uart_parseSetParameter(char* c){
     if( sscanf(c, "%*c%u=%u", &param, &value) == 2 ){
         if( test_param_set(param, value) ){
             test_param_get(param, (uint16_t*) &value);
-            u2_write("%csP%u=%u%c", TEST_START_CHAR, param, value, TEST_END_CHAR);
+            test_uart_write("%csP%u=%u%c", TEST_START_CHAR, param, value, TEST_END_CHAR);
         }
     }
 }
@@ -147,7 +147,7 @@ void test_uart_parseAdc(char* c){
         uint16_t adcVal;
         float convVal;
         if( test_adc_get(index, &adcVal, &convVal) ){
-            u2_write("%cA%u=%u;%f%c", TEST_START_CHAR, index, adcVal, convVal, TEST_END_CHAR);
+            test_uart_write("%cA%u=%u;%f%c", TEST_START_CHAR, index, adcVal, convVal, TEST_END_CHAR);
         }
     }
 }
@@ -161,7 +161,7 @@ void test_uart_parseGetPWM(char* c){
         uint16_t dc, phase;
 
         test_pwm_Get( channel, type, &dc, &phase);
-        u2_write("%cg%c%uP%uD%u%c", TEST_START_CHAR, type, channel, phase, dc, TEST_END_CHAR);
+        test_uart_write("%cg%c%uP%uD%u%c", TEST_START_CHAR, type, channel, phase, dc, TEST_END_CHAR);
     }
 }
 
@@ -170,7 +170,7 @@ void test_uart_parseGetParameter(char* c){
     
     if( sscanf(c, "%*c%u", &param) == 1 ){
         test_param_get(param, (uint16_t*) &value);
-        u2_write("%cgP%u=%u%c", TEST_START_CHAR, param, value, TEST_END_CHAR);
+        test_uart_write("%cgP%u=%u%c", TEST_START_CHAR, param, value, TEST_END_CHAR);
     }
 }
 

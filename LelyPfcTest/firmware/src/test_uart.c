@@ -20,7 +20,7 @@ void __ISR(_UART2_RX_VECTOR, ipl3AUTO) _IntHandlerUART2Rx(void){
 }
 
 
-int u2_write(char* fmt, ...){
+int test_uart_write(char* fmt, ...){
     
     va_list vl;
     va_start(vl, fmt);
@@ -37,6 +37,7 @@ int u2_write(char* fmt, ...){
     
     va_end(vl);
     
+    while( !U2STAbits.TRMT );
     return nwrite;
 }
 
@@ -63,3 +64,4 @@ void test_uart_init(){
 
      IEC1bits.U2RXIE = 1;       //Enable Rx interrupt
 }
+

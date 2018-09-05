@@ -11,6 +11,7 @@
 #include "test_pwm.h"
 #include "test_params.h"
 #include "test_adc.c"
+#include "test_uart.h"
 
 
 
