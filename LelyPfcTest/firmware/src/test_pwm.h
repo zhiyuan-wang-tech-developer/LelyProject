@@ -38,7 +38,7 @@ void test_pwm_SetBuckBoostPhase(pwm_channel_t channel, uint16_t buck, uint16_t b
 void test_pwm_SetBuckPhase(pwm_channel_t channel,uint16_t val, bool update);
 void test_pwm_SetBoostPhase(pwm_channel_t channel, uint16_t val, bool update);
 
-void test_pwm_Get( pwm_channel_t channel, pwm_type_t type, uint16_t* dc, uint16_t* phase);
+bool test_pwm_Get( pwm_channel_t channel, pwm_type_t type, uint16_t* dc, uint16_t* phase);
 
 
 #ifdef	__cplusplus

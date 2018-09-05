@@ -1,6 +1,7 @@
 #include "test_uart.h"
 #include "test_pwm.h"
-#include "test_pwm.c"
+#include "test_params.h"
+#include "test_adc.h"
 
 #include <stdio.h>
 
@@ -16,6 +17,75 @@ static enum {
     ProtoFindStart,
     ProtoFindEnd
 } protoState = ProtoFindStart;
+
+
+
+
+bool test_io_get(unsigned int index, bool* value){
+    switch( index ){
+        case 1: *value = V_PFC_OL12StateGet(); break;
+        case 2: *value = V_PFC_OL34StateGet(); break;
+        
+        case 3: *value = V_EN_12VStateGet(); break;
+        case 4: *value = V_EN_3V3_1StateGet(); break;        
+        case 5: *value = V_EN_3V3_AN1StateGet(); break;
+        case 6: *value = V_EN_1V8_1StateGet(); break;        
+        
+        case 7: *value = V_EN_3V3_2StateGet(); break;        
+        case 8: *value = V_EN_3V3_AN2StateGet(); break;
+        case 9: *value = V_EN_1V8_2StateGet(); break;                
+        default: return false;
+    }
+    
+    return true;
+}
+
+
+bool test_io_set(unsigned int index, bool value){
+    switch( index ){
+        case 1: V_PFC_STOP_12_NStateSet(value); break;
+        case 2: V_PFC_STOP_34_NStateSet(value); break;
+        
+        case 3: V_EN_12VStateSet(value); break;
+        case 4: V_EN_3V3_1StateSet(value); break;        
+        case 5: V_EN_3V3_AN1StateSet(value); break;
+        case 6: V_EN_1V8_1StateSet(value); break;        
+        
+        case 7: V_EN_3V3_2StateSet(value); break;        
+        case 8: V_EN_3V3_AN2StateSet(value); break;
+        case 9: V_EN_1V8_2StateSet(value); break;                
+        
+        default: return false;
+    }
+    
+    return true;
+}
+
+
+
+void test_uart_parseGetIO(char* c){
+    unsigned int index;
+    if( sscanf(c, "%*c%u", &index) == 1){
+        bool value;
+        if( test_io_get(index, &value) ){
+            u2_write("%gI%u=%u", TEST_START_CHAR, index, value, TEST_END_CHAR);
+        }
+    }
+}
+
+void test_uart_parseSetIO(char* c){
+    unsigned int index;
+    char value;
+        
+    if( sscanf(c, "%*c%u=%c", &index, &value) == 2){
+        bool bval = (value != '0');
+        if( test_io_set(index, bval) ){
+            test_io_get(index, &bval);
+            u2_write("%sI%u=%u", TEST_START_CHAR, index, bval, TEST_END_CHAR);
+        }
+    }
+}
+
 
 
 
@@ -115,6 +185,14 @@ void test_uart_parsGet(char* c){
         case 'P':
             test_uart_parseGetParameter(c);
             break;
+            
+        case 'i':
+        case 'I':
+            test_uart_parseGetIO(c);
+            break;
+            
+        default:
+            break;
     }
 }
 
@@ -128,6 +206,12 @@ void test_uart_parsSet(char* c){
         case 'p':
         case 'P':
             test_uart_parseSetParameter(c);
+            break;
+            
+        case 'i':
+        case 'I':
+            test_uart_parseSetIO(c);
+        default:
             break;
     }
 }
@@ -175,3 +259,4 @@ bool test_uart_findCommand(char c){
     }
     return false;
 }
+

@@ -92,23 +92,12 @@ void test_startup(){
         
     test_adc_convertValues(&analog_voltage_monitorData);
     
-    
-    SYS_DEBUG_BreakPoint();
-    
-    test_delay_10us(50);
-    
-    SYS_DEBUG_BreakPoint();
-    
-    
-    test_delay_10us(500);
-    
-    SYS_DEBUG_BreakPoint();
-    
+    test_init_adc();
+
     
     test_pwm();
 
         
-    test_init_adc();
     
     DRV_ADC_Start();
 

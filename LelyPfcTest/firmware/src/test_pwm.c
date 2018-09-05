@@ -251,7 +251,7 @@ void test_pwm_RampUp( uint16_t target){
 }
 
 
-void test_pwm_Get( pwm_channel_t channel, pwm_type_t type, uint16_t* dc, uint16_t* phase){    
+bool test_pwm_Get( pwm_channel_t channel, pwm_type_t type, uint16_t* dc, uint16_t* phase){    
     switch( type ){
         case PWM_BUCK:
             if( channel == PWM_ALL || channel == PWM_Pair_1 || channel == PWM_Group_12 ){
@@ -266,6 +266,8 @@ void test_pwm_Get( pwm_channel_t channel, pwm_type_t type, uint16_t* dc, uint16_
             }else if( channel == PWM_Pair_4 ){
                 *dc = pwm_controllerData.dutyCycle.update_value.PWM_BUCK4;
                 *phase = pwm_controllerData.phaseShift.update_value.PWM_BUCK4;
+            }else{
+                return false;
             }
             break;
             
@@ -283,9 +285,12 @@ void test_pwm_Get( pwm_channel_t channel, pwm_type_t type, uint16_t* dc, uint16_
             }else if( channel == PWM_Pair_4 ){
                 *dc = pwm_controllerData.dutyCycle.update_value.PWM_BOOST4;
                 *phase = pwm_controllerData.phaseShift.update_value.PWM_BOOST4;
+            }else{
+                return false;
             }
             break;
         default:
-            return;
+            return false;
     }
+    return true;
 }
