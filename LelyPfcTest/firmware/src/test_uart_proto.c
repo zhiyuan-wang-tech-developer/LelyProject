@@ -72,16 +72,51 @@ void test_uart_parseSetParameter(char* c){
 
 
 void test_uart_parseAdc(char* c){
-    
+    unsigned int index;
+    if( sscanf(c, "%*c%u", &index) == 1){
+        uint16_t adcVal;
+        float convVal;
+        if( test_adc_get(index, &adcVal, &convVal) ){
+            u2_write("%cA%u=%u;%f", TEST_START_CHAR, index, adcVal, convVal, TEST_END_CHAR);
+        }
+    }
 }
 
+void test_uart_parseGetPWM(char* c){
+    unsigned int channel;
+    char type;
+    
+    
+    if( sscanf(c, "%c%u", &type, &channel ) == 2){        
+        uint16_t dc, phase;
+
+        test_pwm_Get( channel, type, &dc, &phase);
+        u2_write("%cg%c%uP%uD%u%c", TEST_START_CHAR, type, channel, phase, dc, TEST_END_CHAR);
+    }
+}
+
+void test_uart_parseGetParameter(char* c){
+    unsigned int param, value;
+    
+    if( sscanf(c, "%*c%u", &param) == 1 ){
+        test_param_get(param, (uint16_t*) &value);
+        u2_write("%cgP%u=%u%c", TEST_START_CHAR, param, value, TEST_END_CHAR);
+    }
+}
 
 void test_uart_parsGet(char* c){
-    
+    switch( *c ){
+        case 'b': 
+        case 'B':
+            test_uart_parseGetPWM(c);
+            break;
+            
+        case 'p':
+        case 'P':
+            test_uart_parseGetParameter(c);
+            break;
+    }
 }
-
-
-
 
 void test_uart_parsSet(char* c){
     switch( *c ){
@@ -110,14 +145,13 @@ void test_uart_parseCommand(char* c){
             
         case 'a':
         case 'A':
-            test_uart_parseAdc(++c);
+            test_uart_parseAdc(c);
             break;
             
         default:
             break;
     }
 }
-
 
 bool test_uart_findCommand(char c){
     switch( protoState ){

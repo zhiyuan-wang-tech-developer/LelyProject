@@ -182,3 +182,28 @@ void test_wait_1V8_2(uint16_t targetADC){
     }while( adcData.adc_raw_data.samples.V1V8_2 < targetADC );
 }
 
+bool test_adc_get(unsigned int index, uint16_t* adcVal, float* convVal){
+    switch( index ){
+        case 1: *adcVal = adcData.adc_raw_data.samples.V325V; *convVal = adcData.adc_converted_data.samples.V325V; break;
+        case 2: *adcVal = adcData.adc_raw_data.samples.V380V; *convVal = adcData.adc_converted_data.samples.V380V; break;
+        case 3: *adcVal = adcData.adc_raw_data.samples.TEMP_BRUG; *convVal = adcData.adc_converted_data.samples.TEMP_BRUG; break;
+        case 4: *adcVal = adcData.adc_raw_data.samples.TEMP_VOED; *convVal = adcData.adc_converted_data.samples.TEMP_VOED; break;
+        case 5: *adcVal = adcData.adc_raw_data.samples.TEMP_ELCO; *convVal = adcData.adc_converted_data.samples.TEMP_ELCO; break;
+        case 6: *adcVal = adcData.adc_raw_data.samples.TEMP_PFC12; *convVal = adcData.adc_converted_data.samples.TEMP_PFC12; break;
+        case 7: *adcVal = adcData.adc_raw_data.samples.TEMP_PFC34; *convVal = adcData.adc_converted_data.samples.TEMP_PFC34; break;
+        case 8: *adcVal = adcData.adc_raw_data.samples.TEMP_M1; *convVal = adcData.adc_converted_data.samples.TEMP_M1; break;
+        case 9: *adcVal = adcData.adc_raw_data.samples.TEMP_M2; *convVal = adcData.adc_converted_data.samples.TEMP_M2; break;
+        case 10: *adcVal = adcData.adc_raw_data.samples.V18V; *convVal = adcData.adc_converted_data.samples.V18V; break;
+        case 11: *adcVal = adcData.adc_raw_data.samples.V12V; *convVal = adcData.adc_converted_data.samples.V12V; break;
+        case 12: *adcVal = adcData.adc_raw_data.samples.V5V; *convVal = adcData.adc_converted_data.samples.V5V; break;
+        case 13: *adcVal = adcData.adc_raw_data.samples.V3V3_0; *convVal = adcData.adc_converted_data.samples.V3V3_0; break;
+        case 14: *adcVal = adcData.adc_raw_data.samples.V3V3_1; *convVal = adcData.adc_converted_data.samples.V3V3_1; break;
+        case 15: *adcVal = adcData.adc_raw_data.samples.V3V3AN1; *convVal = adcData.adc_converted_data.samples.V3V3AN1; break;
+        case 16: *adcVal = adcData.adc_raw_data.samples.V1V8_1; *convVal = adcData.adc_converted_data.samples.V1V8_1; break;
+        case 17: *adcVal = adcData.adc_raw_data.samples.V3V3_2; *convVal = adcData.adc_converted_data.samples.V3V3_2; break;
+        case 18: *adcVal = adcData.adc_raw_data.samples.V3V3AN2; *convVal = adcData.adc_converted_data.samples.V3V3AN2; break;
+        case 19: *adcVal = adcData.adc_raw_data.samples.V1V8_2; *convVal = adcData.adc_converted_data.samples.V1V8_2; break;
+        default: return false;
+    }
+    return true;
+}

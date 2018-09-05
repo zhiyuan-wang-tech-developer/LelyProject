@@ -35,6 +35,7 @@ void test_wait_3V3_2(uint16_t targetADC);
 void test_wait_3V3AN_2(uint16_t targetADC);
 void test_wait_1V8_2(uint16_t targetADC);
 
+bool test_adc_get(unsigned int index, uint16_t* adcVal, float* convVal);
 
 #ifdef	__cplusplus
 }
