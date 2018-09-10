@@ -309,12 +309,11 @@ void PWM_SIGNAL_Update ( void )
         if( pwm_controllerData.phaseShiftStatus.updata_status_flag.PWM_BOOST3 ) PWM_BOOST3_PhaseShiftSet( pwm_controllerData.phaseShift.update_value.PWM_BOOST3 );
         if( pwm_controllerData.phaseShiftStatus.updata_status_flag.PWM_BOOST4 ) PWM_BOOST4_PhaseShiftSet( pwm_controllerData.phaseShift.update_value.PWM_BOOST4 );
     }
-    // clear duty cycle update status and update values
+    // clear duty cycle update status
     pwm_controllerData.dutyCycleStatus.update_status = 0;
-    memset(pwm_controllerData.dutyCycle.update_array, 0, 16);
-    // clear phase shift update status and update values
+
+    // clear phase shift update status
     pwm_controllerData.phaseShiftStatus.update_status = 0;
-    memset(pwm_controllerData.phaseShift.update_array, 0, 16);
 }
 
 // *****************************************************************************
