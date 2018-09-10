@@ -69,6 +69,8 @@ extern "C" {
 // DOM-IGNORE-END 
 
 
+#define PWM_TDO_WORKAROUND
+
 #define PWM_ChanBuck1 MCPWM_CHANNEL9    // 9H
 #define PWM_ChanBuck2 MCPWM_CHANNEL3    // 3H
 #define PWM_ChanBuck3 MCPWM_CHANNEL7    // 7H
@@ -76,8 +78,12 @@ extern "C" {
 #define PWM_ChanBoost1 MCPWM_CHANNEL2   // 2H
 #define PWM_ChanBoost2 MCPWM_CHANNEL8   // 8H
 #define PWM_ChanBoost3 MCPWM_CHANNEL10  // 10H
-#define PWM_ChanBoost4 MCPWM_CHANNEL4   // 4H
 
+#ifdef PWM_TDO_WORKAROUND
+#define PWM_ChanBoost4 MCPWM_CHANNEL11   // 11H (instead of SPI Flash chip select)
+#else
+#define PWM_ChanBoost4 MCPWM_CHANNEL4   // 4H
+#endif
     
     
     
