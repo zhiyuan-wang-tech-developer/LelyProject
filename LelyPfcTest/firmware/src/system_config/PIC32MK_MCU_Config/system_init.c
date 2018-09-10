@@ -67,10 +67,10 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #pragma config FSLEEP =     OFF
 #pragma config DBGPER =     PG_ALL
 #pragma config SMCLR =      MCLR_NORM
-#pragma config SOSCGAIN =   GAIN_2X
-#pragma config SOSCBOOST =  ON
-#pragma config POSCGAIN =   GAIN_LEVEL_3
-#pragma config POSCBOOST =  ON
+#pragma config SOSCGAIN =   GAIN_1X
+#pragma config SOSCBOOST =  OFF
+#pragma config POSCGAIN =   GAIN_LEVEL_0
+#pragma config POSCBOOST =  OFF
 #pragma config EJTAGBEN =   NORMAL
 #pragma config CP =         OFF
 
@@ -78,8 +78,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 #pragma config FNOSC =      SPLL
 #pragma config DMTINTV =    WIN_127_128
-#pragma config FSOSCEN =    ON
-#pragma config IESO =       ON
+#pragma config FSOSCEN =    OFF
+#pragma config IESO =       OFF
 #pragma config POSCMOD =    EC
 #pragma config OSCIOFNC =   OFF
 #pragma config FCKSM =      CSECME
@@ -93,28 +93,28 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 /*** DEVCFG2 ***/
 
 #pragma config FPLLIDIV =   DIV_1
-#pragma config FPLLRNG =    RANGE_5_10_MHZ
-#pragma config FPLLICLK =   PLL_FRC
-#pragma config FPLLMULT =   MUL_60
+#pragma config FPLLRNG =    RANGE_8_16_MHZ
+#pragma config FPLLICLK =   PLL_POSC
+#pragma config FPLLMULT =   MUL_40
 #pragma config FPLLODIV =   DIV_4
-#pragma config VBATBOREN =  ON
-#pragma config DSBOREN =    ON
+#pragma config VBATBOREN =  OFF
+#pragma config DSBOREN =    OFF
 #pragma config DSWDTPS =    DSPS32
 #pragma config DSWDTOSC =   LPRC
 #pragma config DSWDTEN =    OFF
-#pragma config FDSEN =      ON
+#pragma config FDSEN =      OFF
 #pragma config BORSEL =     HIGH
 #pragma config UPLLEN =     OFF
 /*** DEVCFG3 ***/
 
 #pragma config USERID =     0xffff
-#pragma config FUSBIDIO2 =   ON
-#pragma config FVBUSIO2 =  ON
+#pragma config FUSBIDIO2 =   OFF
+#pragma config FVBUSIO2 =  OFF
 #pragma config PGL1WAY =    OFF
 #pragma config PMDL1WAY =   OFF
 #pragma config IOL1WAY =    OFF
-#pragma config FUSBIDIO1 =   ON
-#pragma config FVBUSIO1 =  ON
+#pragma config FUSBIDIO1 =   OFF
+#pragma config FVBUSIO1 =  OFF
 #pragma config PWMLOCK =  OFF
 
 /*** BF1SEQ0 ***/
@@ -203,7 +203,7 @@ void SYS_Initialize ( void* data )
     SYS_PORTS_Initialize();
 
     /* Initialize Drivers */
-
+    
     /* Initialize ADC */
 //    DRV_ADC_Initialize();
 
