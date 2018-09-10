@@ -130,7 +130,7 @@ const NTC_LOOKUP_TABLE_TYPE   NTC_LookupTable[NTC_LOOKUP_TABLE_SIZE] = {
     Application strings and buffers are be defined outside this structure.
 */
 
-ANALOG_VOLTAGE_MONITOR_DATA analog_voltage_monitorData = {
+volatile ANALOG_VOLTAGE_MONITOR_DATA analog_voltage_monitorData = {
     .dividers = {
         .an_18V = (4.7e3 + 47e3) / 4.7e3,
         .an_12V = (4.7e3 + 47e3) / 4.7e3,
@@ -956,7 +956,8 @@ void ANALOG_VOLTAGE_MONITOR_Initialize ( void )
      * parameters.
      */
     /* Clear the ADC data buffer in initial state. */
-    memset(analog_voltage_monitorData.adc_raw_data.buffer, 0, sizeof(analog_voltage_monitorData.adc_raw_data.buffer));
+    SYS_DEBUG_BreakPoint();
+    memset((void*)analog_voltage_monitorData.adc_raw_data.buffer, 0, sizeof(analog_voltage_monitorData.adc_raw_data.buffer));
     
     /* Open all DC powers */
 //    EnableDCPower();
@@ -983,22 +984,22 @@ void ANALOG_VOLTAGE_MONITOR_Tasks ( void )
 //            SYS_DEBUG_BreakPoint();           
             if (appInitialized)
             {            
-                analog_voltage_monitorData.state = ANALOG_VOLTAGE_MONITOR_STATE_SCAN;
-                /* Clear the ADC data buffer in initial state. */
-                memset(analog_voltage_monitorData.adc_raw_data.buffer, 0, sizeof(analog_voltage_monitorData.adc_raw_data.buffer));
-                memset(analog_voltage_monitorData.adc_converted_data.buffer, 0, sizeof(analog_voltage_monitorData.adc_converted_data.buffer));
-                /* Start the ADC */
-//                ADCCON3bits.DIGEN0 = 1;
-                /* Enable the channel digital features. */
-                DRV_ADC0_Open();
-                DRV_ADC1_Open();
-                DRV_ADC2_Open();
-                DRV_ADC4_Open();
-                DRV_ADC5_Open();
-                DRV_ADC6_Open();
-                /* Enable the global software EDGE trigger for analog input scanning. */
-                /* The global software trigger bit is cleared automatically in the next ADC clock cycle. */
-                DRV_ADC_Start();
+//                analog_voltage_monitorData.state = ANALOG_VOLTAGE_MONITOR_STATE_SCAN;
+//                /* Clear the ADC data buffer in initial state. */
+//                memset(analog_voltage_monitorData.adc_raw_data.buffer, 0, sizeof(analog_voltage_monitorData.adc_raw_data.buffer));
+//                memset(analog_voltage_monitorData.adc_converted_data.buffer, 0, sizeof(analog_voltage_monitorData.adc_converted_data.buffer));
+//                /* Start the ADC */
+////                ADCCON3bits.DIGEN0 = 1;
+//                /* Enable the channel digital features. */
+//                DRV_ADC0_Open();
+//                DRV_ADC1_Open();
+//                DRV_ADC2_Open();
+//                DRV_ADC4_Open();
+//                DRV_ADC5_Open();
+//                DRV_ADC6_Open();
+//                /* Enable the global software EDGE trigger for analog input scanning. */
+//                /* The global software trigger bit is cleared automatically in the next ADC clock cycle. */
+//                DRV_ADC_Start();
             }
             break;
         }

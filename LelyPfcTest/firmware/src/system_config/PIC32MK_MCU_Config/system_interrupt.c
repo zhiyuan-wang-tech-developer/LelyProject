@@ -67,6 +67,9 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "can_controller.h"
 #include "system_definitions.h"
 
+//#define DEBUG_ADC_INTERRUPTS
+
+
 extern ANALOG_VOLTAGE_MONITOR_DATA analog_voltage_monitorData;
 extern ERROR_HANDLER_DATA error_handlerData;
 
@@ -99,7 +102,9 @@ void __ISR(_CHANGE_NOTICE_D_VECTOR, ipl1AUTO) _IntHandlerChangeNotification_Port
 
 void __ISR(_ADC_DATA0_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA0(void)
 {
-//    SYS_DEBUG_BreakPoint();
+#ifdef DEBUG_ADC_INTERRUPTS
+    SYS_DEBUG_BreakPoint();
+#endif
     if( DRV_ADC_SamplesAvailable(ADCHS_AN0) == true )
     {
         analog_voltage_monitorData.adc_raw_data.samples.V380V = DRV_ADC_SamplesRead(ADCHS_AN0);
@@ -111,7 +116,10 @@ void __ISR(_ADC_DATA0_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA0(void)
 
 void __ISR(_ADC_DATA1_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA1(void)
 {
-//    SYS_DEBUG_BreakPoint();
+#ifdef DEBUG_ADC_INTERRUPTS
+    SYS_DEBUG_BreakPoint();
+#endif
+
     if( DRV_ADC_SamplesAvailable(ADCHS_AN1) == true )
     {
         analog_voltage_monitorData.adc_raw_data.samples.TEMP_PFC34 = DRV_ADC_SamplesRead(ADCHS_AN1);
@@ -123,7 +131,9 @@ void __ISR(_ADC_DATA1_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA1(void)
 
 void __ISR(_ADC_DATA2_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA2(void)
 {
-//    SYS_DEBUG_BreakPoint();
+#ifdef DEBUG_ADC_INTERRUPTS
+    SYS_DEBUG_BreakPoint();
+#endif
     if( DRV_ADC_SamplesAvailable(ADCHS_AN2) == true )
     {
         analog_voltage_monitorData.adc_raw_data.samples.V18V = DRV_ADC_SamplesRead(ADCHS_AN2);
@@ -135,7 +145,9 @@ void __ISR(_ADC_DATA2_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA2(void)
 
 void __ISR(_ADC_DATA4_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA4(void)
 {
-//    SYS_DEBUG_BreakPoint();
+#ifdef DEBUG_ADC_INTERRUPTS
+    SYS_DEBUG_BreakPoint();
+#endif
     if( DRV_ADC_SamplesAvailable(ADCHS_AN4) == true )
     {
         analog_voltage_monitorData.adc_raw_data.samples.VNEUTRAL = DRV_ADC_SamplesRead(ADCHS_AN4);
@@ -147,6 +159,9 @@ void __ISR(_ADC_DATA4_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA4(void)
 
 void __ISR(_ADC_DATA6_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA6(void)
 {
+#ifdef DEBUG_ADC_INTERRUPTS
+    SYS_DEBUG_BreakPoint();
+#endif
     if( DRV_ADC_SamplesAvailable(ADCHS_AN6) == true )
     {
         analog_voltage_monitorData.adc_raw_data.samples.VLIVE = DRV_ADC_SamplesRead(ADCHS_AN6);
@@ -158,6 +173,9 @@ void __ISR(_ADC_DATA6_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA6(void)
 
 void __ISR(_ADC_DATA7_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA7(void)
 {
+#ifdef DEBUG_ADC_INTERRUPTS
+    SYS_DEBUG_BreakPoint();
+#endif
     if( DRV_ADC_SamplesAvailable(ADCHS_AN7) == true )
     {
         analog_voltage_monitorData.adc_raw_data.samples.V3V3AN2 = DRV_ADC_SamplesRead(ADCHS_AN7);
@@ -169,6 +187,9 @@ void __ISR(_ADC_DATA7_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA7(void)
 
 void __ISR(_ADC_DATA8_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA8(void)
 {
+#ifdef DEBUG_ADC_INTERRUPTS
+    SYS_DEBUG_BreakPoint();
+#endif
     if( DRV_ADC_SamplesAvailable(ADCHS_AN8) == true )
     {
         analog_voltage_monitorData.adc_raw_data.samples.V3V3_2 = DRV_ADC_SamplesRead(ADCHS_AN8);
@@ -180,6 +201,9 @@ void __ISR(_ADC_DATA8_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA8(void)
 
 void __ISR(_ADC_DATA9_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA9(void)
 {
+#ifdef DEBUG_ADC_INTERRUPTS
+    SYS_DEBUG_BreakPoint();
+#endif
     if( DRV_ADC_SamplesAvailable(ADCHS_AN9) == true )
     {
         analog_voltage_monitorData.adc_raw_data.samples.V3V3_1 = DRV_ADC_SamplesRead(ADCHS_AN9);
@@ -191,6 +215,9 @@ void __ISR(_ADC_DATA9_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA9(void)
 
 void __ISR(_ADC_DATA10_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA10(void)
 {
+#ifdef DEBUG_ADC_INTERRUPTS
+    SYS_DEBUG_BreakPoint();
+#endif
     if( DRV_ADC_SamplesAvailable(ADCHS_AN10) == true )
     {
         analog_voltage_monitorData.adc_raw_data.samples.V3V3AN1 = DRV_ADC_SamplesRead(ADCHS_AN10);
@@ -202,6 +229,10 @@ void __ISR(_ADC_DATA10_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA10(void)
 
 void __ISR(_ADC_DATA11_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA11(void)
 {
+    #ifdef DEBUG_ADC_INTERRUPTS
+    SYS_DEBUG_BreakPoint();
+#endif
+
     if( DRV_ADC_SamplesAvailable(ADCHS_AN11) == true )
     {
         analog_voltage_monitorData.adc_raw_data.samples.V1V8_2 = DRV_ADC_SamplesRead(ADCHS_AN11);
@@ -213,6 +244,10 @@ void __ISR(_ADC_DATA11_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA11(void)
 	
 void __ISR(_ADC_DATA12_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA12(void)
 {
+    #ifdef DEBUG_ADC_INTERRUPTS
+    SYS_DEBUG_BreakPoint();
+#endif
+
     if( DRV_ADC_SamplesAvailable(ADCHS_AN12) == true )
     {
         analog_voltage_monitorData.adc_raw_data.samples.V5V = DRV_ADC_SamplesRead(ADCHS_AN12);
@@ -224,6 +259,10 @@ void __ISR(_ADC_DATA12_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA12(void)
  
 void __ISR(_ADC_DATA13_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA13(void)
 {
+    #ifdef DEBUG_ADC_INTERRUPTS
+    SYS_DEBUG_BreakPoint();
+#endif
+
     if( DRV_ADC_SamplesAvailable(ADCHS_AN13) == true )
     {
         analog_voltage_monitorData.adc_raw_data.samples.V3V3_0 = DRV_ADC_SamplesRead(ADCHS_AN13);
@@ -235,6 +274,10 @@ void __ISR(_ADC_DATA13_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA13(void)
  
 void __ISR(_ADC_DATA17_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA17(void)
 {
+    #ifdef DEBUG_ADC_INTERRUPTS
+    SYS_DEBUG_BreakPoint();
+#endif
+
     if( DRV_ADC_SamplesAvailable(ADCHS_AN17) == true )
     {
         analog_voltage_monitorData.adc_raw_data.samples.TEMP_PFC12 = DRV_ADC_SamplesRead(ADCHS_AN17);
@@ -246,6 +289,10 @@ void __ISR(_ADC_DATA17_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA17(void)
  
 void __ISR(_ADC_DATA23_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA23(void)
 {
+    #ifdef DEBUG_ADC_INTERRUPTS
+    SYS_DEBUG_BreakPoint();
+#endif
+
     if( DRV_ADC_SamplesAvailable(ADCHS_AN23) == true )
     {
         analog_voltage_monitorData.adc_raw_data.samples.TEMP_M2 = DRV_ADC_SamplesRead(ADCHS_AN23);
@@ -257,6 +304,10 @@ void __ISR(_ADC_DATA23_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA23(void)
  
 void __ISR(_ADC_DATA27_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA27(void)
 {
+    #ifdef DEBUG_ADC_INTERRUPTS
+    SYS_DEBUG_BreakPoint();
+#endif
+
     if( DRV_ADC_SamplesAvailable(ADCHS_AN27) == true )
     {
         analog_voltage_monitorData.adc_raw_data.samples.V12V = DRV_ADC_SamplesRead(ADCHS_AN27);
@@ -268,6 +319,10 @@ void __ISR(_ADC_DATA27_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA27(void)
  
 void __ISR(_ADC_DATA35_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA35(void)
 {
+    #ifdef DEBUG_ADC_INTERRUPTS
+    SYS_DEBUG_BreakPoint();
+#endif
+
     if( DRV_ADC_SamplesAvailable(ADCHS_AN35) == true )
     {
         analog_voltage_monitorData.adc_raw_data.samples.TEMP_ELCO = DRV_ADC_SamplesRead(ADCHS_AN35);
@@ -279,6 +334,10 @@ void __ISR(_ADC_DATA35_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA35(void)
  
 void __ISR(_ADC_DATA36_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA36(void)
 {
+    #ifdef DEBUG_ADC_INTERRUPTS
+    SYS_DEBUG_BreakPoint();
+#endif
+
     if( DRV_ADC_SamplesAvailable(ADCHS_AN36) == true )
     {
         analog_voltage_monitorData.adc_raw_data.samples.TEMP_BRUG = DRV_ADC_SamplesRead(ADCHS_AN36);
@@ -290,6 +349,10 @@ void __ISR(_ADC_DATA36_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA36(void)
  
 void __ISR(_ADC_DATA37_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA37(void)
 {
+    #ifdef DEBUG_ADC_INTERRUPTS
+    SYS_DEBUG_BreakPoint();
+#endif
+
     if( DRV_ADC_SamplesAvailable(ADCHS_AN37) == true )
     {
         analog_voltage_monitorData.adc_raw_data.samples.TEMP_VOED = DRV_ADC_SamplesRead(ADCHS_AN37);
@@ -301,6 +364,10 @@ void __ISR(_ADC_DATA37_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA37(void)
  
 void __ISR(_ADC_DATA39_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA39(void)
 {
+    #ifdef DEBUG_ADC_INTERRUPTS
+    SYS_DEBUG_BreakPoint();
+#endif
+
     if( DRV_ADC_SamplesAvailable(ADCHS_AN39) == true )
     {
         analog_voltage_monitorData.adc_raw_data.samples.V325V = DRV_ADC_SamplesRead(ADCHS_AN39);
@@ -312,6 +379,10 @@ void __ISR(_ADC_DATA39_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA39(void)
  
 void __ISR(_ADC_DATA45_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA45(void)
 {
+    #ifdef DEBUG_ADC_INTERRUPTS
+    SYS_DEBUG_BreakPoint();
+#endif
+
     if( DRV_ADC_SamplesAvailable(ADCHS_AN45) == true )
     {
         analog_voltage_monitorData.adc_raw_data.samples.V1V8_1 = DRV_ADC_SamplesRead(ADCHS_AN45);
@@ -323,6 +394,10 @@ void __ISR(_ADC_DATA45_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA45(void)
  
 void __ISR(_ADC_DATA46_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA46(void)
 {
+    #ifdef DEBUG_ADC_INTERRUPTS
+    SYS_DEBUG_BreakPoint();
+#endif
+
     if( DRV_ADC_SamplesAvailable(ADCHS_AN46) == true )
     {
         analog_voltage_monitorData.adc_raw_data.samples.IL12 = DRV_ADC_SamplesRead(ADCHS_AN46);
@@ -334,6 +409,10 @@ void __ISR(_ADC_DATA46_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA46(void)
  
 void __ISR(_ADC_DATA47_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA47(void)
 {
+    #ifdef DEBUG_ADC_INTERRUPTS
+    SYS_DEBUG_BreakPoint();
+#endif
+
     if( DRV_ADC_SamplesAvailable(ADCHS_AN47) == true )
     {
         analog_voltage_monitorData.adc_raw_data.samples.TEMP_M1 = DRV_ADC_SamplesRead(ADCHS_AN47);

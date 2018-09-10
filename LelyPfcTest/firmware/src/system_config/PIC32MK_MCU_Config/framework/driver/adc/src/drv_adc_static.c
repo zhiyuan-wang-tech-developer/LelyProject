@@ -59,7 +59,7 @@ void DRV_ADC_Initialize(void)
      ADCHS_CHARGEPUMP_DISABLE,
      ADCHS_OUTPUT_DATA_FORMAT_INTEGER,
      false,
-     ADCHS_FAST_SYNC_SYSTEM_CLOCK_DISABLE,
+     ADCHS_FAST_SYNC_SYSTEM_CLOCK_ENABLE,
      ADCHS_FAST_SYNC_PERIPHERAL_CLOCK_ENABLE,
      ADCHS_INTERRUPT_BIT_SHIFT_LEFT_0_BITS,
      0x0000,
@@ -73,8 +73,8 @@ void DRV_ADC_Initialize(void)
      DRV_ADC_ID_1,
      ADCHS_CHANNEL_0,
      ADCHS_DATA_RESOLUTION_12BIT,
-     125,
-     10,
+     1,
+     1,
      ADCHS_EARLY_INTERRUPT_PRIOR_CLOCK_4
      );
 
@@ -123,7 +123,7 @@ void DRV_ADC_Initialize(void)
      DRV_ADC_ID_1,
      ADCHS_CHANNEL_1,
      ADCHS_DATA_RESOLUTION_12BIT,
-     125,
+     1,
      1,
      ADCHS_EARLY_INTERRUPT_PRIOR_CLOCK_4
      );
@@ -172,8 +172,8 @@ void DRV_ADC_Initialize(void)
      DRV_ADC_ID_1,
      ADCHS_CHANNEL_2,
      ADCHS_DATA_RESOLUTION_12BIT,
-     125,
-     10,
+     1,
+     1,
      ADCHS_EARLY_INTERRUPT_PRIOR_CLOCK_4
      );
 
@@ -221,8 +221,8 @@ void DRV_ADC_Initialize(void)
      DRV_ADC_ID_1,
      ADCHS_CHANNEL_4,
      ADCHS_DATA_RESOLUTION_12BIT,
-     125,
-     10,
+     1,
+     1,
      ADCHS_EARLY_INTERRUPT_PRIOR_CLOCK_4
      );
 

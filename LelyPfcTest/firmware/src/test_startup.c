@@ -14,6 +14,9 @@
 
 
 
+extern volatile ANALOG_VOLTAGE_MONITOR_DATA analog_voltage_monitorData;
+extern PWM_CONTROLLER_DATA pwm_controllerData;
+
 static void test_Piccolo1_PowerOn(){
     //Enable 3V3-1
     V_EN_3V3_1On();    
