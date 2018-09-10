@@ -1,10 +1,12 @@
 #include "test_pwm.h"
 #include "test_params.h"
 #include "test_adc.c"
+#include "system/devcon/sys_devcon.h"
 #include <string.h>
 
 #include <peripheral/cmp/plib_cmp.h>
 #include <peripheral/cdac/plib_cdac.h>
+#include <peripheral/devcon/plib_devcon.h>
 
 extern PWM_CONTROLLER_DATA pwm_controllerData;
 static PWM_CONTROLLER_DATA pwmData;
@@ -13,15 +15,162 @@ static void test_pwm_setCurrentLimit();
 
 
 #define C1OUT_ON_LED
-void test_pwm(){
-    memcpy(&pwmData, &pwm_controllerData, sizeof(PWM_CONTROLLER_DATA));
 
+
+void test_pwm_init(){
+    uint16_t period = 1200;
+    
+    //Enable current limit
     test_pwm_setCurrentLimit();
     
-    while( !PLIB_MCPWM_ChannelCurrentLimitIsAsserted(MCPWM_ID_0, MCPWM_CHANNEL1) && !PLIB_CMP_OutputStatusGet(CMP_ID_1) ){
+    
+    
+    //Disable for reconfiguration
+    PLIB_MCPWM_Disable(MCPWM_ID_0);
+    
+    
+    SYS_DEBUG_BreakPoint();
+    
+    //Enable PWM outputs 7H - 10H
+    SYS_DEVCON_SystemUnlock();   
+    
+//    PLIB_DEVCON_2WireJTAGDisableTDO(DEVCON_ID_0);       //disable JTAG TDO
+    PLIB_DEVCON_JTAGPortDisable(DEVCON_ID_0);           //disable JTAG
+    
+    CFGCONbits.PWMAPIN1 = 1;    //output 7H on pin 1L
+    CFGCONbits.PWMAPIN2 = 1;    //output 8H on pin 2L
+    CFGCONbits.PWMAPIN3 = 1;    //output 9H on pin 3L
+    CFGCONbits.PWMAPIN4 = 1;    //output 10H on pin 4L    
+    SYS_DEVCON_SystemLock();
+    
+    
+    SYS_DEBUG_BreakPoint();
+    
+    
+    PLIB_MCPWM_PrimaryTimerSetup( MCPWM_ID_0, MCPWM_CLOCK_DIVIDE_BY_1, period);
+    
+    PLIB_MCPWM_ChannelSetup(MCPWM_ID_0, PWM_ChanBuck1, MCPWM_TIME_BASE_SOURCE_PRIMARY, MCPWM_TIME_BASE_SYNCHRONIZED, MCPWM_EDGE_ALIGNED, MCPWM_OUTPUT_REDUNDANT_MODE, MCPWM_PWMxH_ACTIVEHIGH, MCPWM_PWMxL_ACTIVELOW, MCPWM_DEADTIME_DISABLE, MCPWM_DEADTIME_COMPENSATION_POLARITY_ACTIVE_LOW);
+    PLIB_MCPWM_ChannelSetup(MCPWM_ID_0, PWM_ChanBuck2, MCPWM_TIME_BASE_SOURCE_PRIMARY, MCPWM_TIME_BASE_SYNCHRONIZED, MCPWM_EDGE_ALIGNED, MCPWM_OUTPUT_REDUNDANT_MODE, MCPWM_PWMxH_ACTIVEHIGH, MCPWM_PWMxL_ACTIVELOW, MCPWM_DEADTIME_DISABLE, MCPWM_DEADTIME_COMPENSATION_POLARITY_ACTIVE_LOW);
+    PLIB_MCPWM_ChannelSetup(MCPWM_ID_0, PWM_ChanBuck3, MCPWM_TIME_BASE_SOURCE_PRIMARY, MCPWM_TIME_BASE_SYNCHRONIZED, MCPWM_EDGE_ALIGNED, MCPWM_OUTPUT_REDUNDANT_MODE, MCPWM_PWMxH_ACTIVEHIGH, MCPWM_PWMxL_ACTIVELOW, MCPWM_DEADTIME_DISABLE, MCPWM_DEADTIME_COMPENSATION_POLARITY_ACTIVE_LOW);
+    PLIB_MCPWM_ChannelSetup(MCPWM_ID_0, PWM_ChanBuck4, MCPWM_TIME_BASE_SOURCE_PRIMARY, MCPWM_TIME_BASE_SYNCHRONIZED, MCPWM_EDGE_ALIGNED, MCPWM_OUTPUT_REDUNDANT_MODE, MCPWM_PWMxH_ACTIVEHIGH, MCPWM_PWMxL_ACTIVELOW, MCPWM_DEADTIME_DISABLE, MCPWM_DEADTIME_COMPENSATION_POLARITY_ACTIVE_LOW);
+    PLIB_MCPWM_ChannelSetup(MCPWM_ID_0, PWM_ChanBoost1, MCPWM_TIME_BASE_SOURCE_PRIMARY, MCPWM_TIME_BASE_SYNCHRONIZED, MCPWM_EDGE_ALIGNED, MCPWM_OUTPUT_REDUNDANT_MODE, MCPWM_PWMxH_ACTIVEHIGH, MCPWM_PWMxL_ACTIVELOW, MCPWM_DEADTIME_DISABLE, MCPWM_DEADTIME_COMPENSATION_POLARITY_ACTIVE_LOW);
+    PLIB_MCPWM_ChannelSetup(MCPWM_ID_0, PWM_ChanBoost2, MCPWM_TIME_BASE_SOURCE_PRIMARY, MCPWM_TIME_BASE_SYNCHRONIZED, MCPWM_EDGE_ALIGNED, MCPWM_OUTPUT_REDUNDANT_MODE, MCPWM_PWMxH_ACTIVEHIGH, MCPWM_PWMxL_ACTIVELOW, MCPWM_DEADTIME_DISABLE, MCPWM_DEADTIME_COMPENSATION_POLARITY_ACTIVE_LOW);
+    PLIB_MCPWM_ChannelSetup(MCPWM_ID_0, PWM_ChanBoost3, MCPWM_TIME_BASE_SOURCE_PRIMARY, MCPWM_TIME_BASE_SYNCHRONIZED, MCPWM_EDGE_ALIGNED, MCPWM_OUTPUT_REDUNDANT_MODE, MCPWM_PWMxH_ACTIVEHIGH, MCPWM_PWMxL_ACTIVELOW, MCPWM_DEADTIME_DISABLE, MCPWM_DEADTIME_COMPENSATION_POLARITY_ACTIVE_LOW);
+    PLIB_MCPWM_ChannelSetup(MCPWM_ID_0, PWM_ChanBoost4, MCPWM_TIME_BASE_SOURCE_PRIMARY, MCPWM_TIME_BASE_SYNCHRONIZED, MCPWM_EDGE_ALIGNED, MCPWM_OUTPUT_REDUNDANT_MODE, MCPWM_PWMxH_ACTIVEHIGH, MCPWM_PWMxL_ACTIVELOW, MCPWM_DEADTIME_DISABLE, MCPWM_DEADTIME_COMPENSATION_POLARITY_ACTIVE_LOW);    
+    
+    
+    //Disable faults    
+    PLIB_MCPWM_ChannelFaultSetup(MCPWM_ID_0, PWM_ChanBuck1, MCPWM_FAULT_SOURCE_IS_FLT1, MCPWM_FAULT_INPUT_POLARITY_ACTIVE_HIGH, MCPWM_FAULT_OVERRIDE_PWMxH_0, MCPWM_FAULT_OVERRIDE_PWMxL_0, MCPWM_FAULT_MODE_DISABLED);
+    PLIB_MCPWM_ChannelFaultSetup(MCPWM_ID_0, PWM_ChanBuck2, MCPWM_FAULT_SOURCE_IS_FLT1, MCPWM_FAULT_INPUT_POLARITY_ACTIVE_HIGH, MCPWM_FAULT_OVERRIDE_PWMxH_0, MCPWM_FAULT_OVERRIDE_PWMxL_0, MCPWM_FAULT_MODE_DISABLED);
+    PLIB_MCPWM_ChannelFaultSetup(MCPWM_ID_0, PWM_ChanBuck3, MCPWM_FAULT_SOURCE_IS_FLT1, MCPWM_FAULT_INPUT_POLARITY_ACTIVE_HIGH, MCPWM_FAULT_OVERRIDE_PWMxH_0, MCPWM_FAULT_OVERRIDE_PWMxL_0, MCPWM_FAULT_MODE_DISABLED);
+    PLIB_MCPWM_ChannelFaultSetup(MCPWM_ID_0, PWM_ChanBuck4, MCPWM_FAULT_SOURCE_IS_FLT1, MCPWM_FAULT_INPUT_POLARITY_ACTIVE_HIGH, MCPWM_FAULT_OVERRIDE_PWMxH_0, MCPWM_FAULT_OVERRIDE_PWMxL_0, MCPWM_FAULT_MODE_DISABLED);
+    PLIB_MCPWM_ChannelFaultSetup(MCPWM_ID_0, PWM_ChanBoost1, MCPWM_FAULT_SOURCE_IS_FLT1, MCPWM_FAULT_INPUT_POLARITY_ACTIVE_HIGH, MCPWM_FAULT_OVERRIDE_PWMxH_0, MCPWM_FAULT_OVERRIDE_PWMxL_0, MCPWM_FAULT_MODE_DISABLED);
+    PLIB_MCPWM_ChannelFaultSetup(MCPWM_ID_0, PWM_ChanBoost2, MCPWM_FAULT_SOURCE_IS_FLT1, MCPWM_FAULT_INPUT_POLARITY_ACTIVE_HIGH, MCPWM_FAULT_OVERRIDE_PWMxH_0, MCPWM_FAULT_OVERRIDE_PWMxL_0, MCPWM_FAULT_MODE_DISABLED);
+    PLIB_MCPWM_ChannelFaultSetup(MCPWM_ID_0, PWM_ChanBoost3, MCPWM_FAULT_SOURCE_IS_FLT1, MCPWM_FAULT_INPUT_POLARITY_ACTIVE_HIGH, MCPWM_FAULT_OVERRIDE_PWMxH_0, MCPWM_FAULT_OVERRIDE_PWMxL_0, MCPWM_FAULT_MODE_DISABLED);
+    PLIB_MCPWM_ChannelFaultSetup(MCPWM_ID_0, PWM_ChanBoost4, MCPWM_FAULT_SOURCE_IS_FLT1, MCPWM_FAULT_INPUT_POLARITY_ACTIVE_HIGH, MCPWM_FAULT_OVERRIDE_PWMxH_0, MCPWM_FAULT_OVERRIDE_PWMxL_0, MCPWM_FAULT_MODE_DISABLED);
+
+    //Set duty cycles to 0
+    PLIB_MCPWM_ChannelPrimaryDutyCycleSet(MCPWM_ID_0, PWM_ChanBuck1, 0);
+    PLIB_MCPWM_ChannelPrimaryDutyCycleSet(MCPWM_ID_0, PWM_ChanBuck2, 0);
+    PLIB_MCPWM_ChannelPrimaryDutyCycleSet(MCPWM_ID_0, PWM_ChanBuck3, 0);
+    PLIB_MCPWM_ChannelPrimaryDutyCycleSet(MCPWM_ID_0, PWM_ChanBuck4, 0);
+    PLIB_MCPWM_ChannelPrimaryDutyCycleSet(MCPWM_ID_0, PWM_ChanBoost1, 0);
+    PLIB_MCPWM_ChannelPrimaryDutyCycleSet(MCPWM_ID_0, PWM_ChanBoost2, 0);
+    PLIB_MCPWM_ChannelPrimaryDutyCycleSet(MCPWM_ID_0, PWM_ChanBoost3, 0);
+    PLIB_MCPWM_ChannelPrimaryDutyCycleSet(MCPWM_ID_0, PWM_ChanBoost4, 0);
+
+    //Set phase shift to 0
+    PLIB_MCPWM_ChannelPhaseSet(MCPWM_ID_0, PWM_ChanBuck1, period * 0 / 360.0);
+    PLIB_MCPWM_ChannelPhaseSet(MCPWM_ID_0, PWM_ChanBuck2, period * 180 / 360.0);
+    
+    PLIB_MCPWM_ChannelPhaseSet(MCPWM_ID_0, PWM_ChanBuck3, period * 90 / 360.0);
+    PLIB_MCPWM_ChannelPhaseSet(MCPWM_ID_0, PWM_ChanBuck4, period * 270 / 360.0);
+    
+    PLIB_MCPWM_ChannelPhaseSet(MCPWM_ID_0, PWM_ChanBoost1, period * 10 / 360.0);
+    PLIB_MCPWM_ChannelPhaseSet(MCPWM_ID_0, PWM_ChanBoost2, period * 190 / 360.0);
+    
+    PLIB_MCPWM_ChannelPhaseSet(MCPWM_ID_0, PWM_ChanBoost3, period * 100 / 360.0);
+    PLIB_MCPWM_ChannelPhaseSet(MCPWM_ID_0, PWM_ChanBoost4, period * 280 / 360.0);
+    
+    //Enable PWM_H outputs
+    PLIB_MCPWM_ChannelPWMxHEnable(MCPWM_ID_0, PWM_ChanBuck1);
+    PLIB_MCPWM_ChannelPWMxHEnable(MCPWM_ID_0, PWM_ChanBuck2);
+    PLIB_MCPWM_ChannelPWMxHEnable(MCPWM_ID_0, PWM_ChanBuck3);
+    PLIB_MCPWM_ChannelPWMxHEnable(MCPWM_ID_0, PWM_ChanBuck4);
+    PLIB_MCPWM_ChannelPWMxHEnable(MCPWM_ID_0, PWM_ChanBoost1);
+    PLIB_MCPWM_ChannelPWMxHEnable(MCPWM_ID_0, PWM_ChanBoost2);
+    PLIB_MCPWM_ChannelPWMxHEnable(MCPWM_ID_0, PWM_ChanBoost3);
+    PLIB_MCPWM_ChannelPWMxHEnable(MCPWM_ID_0, PWM_ChanBoost4);
+
+    //Disable PMW_H overrides
+    PLIB_MCPWM_ChannelPWMxHOverrideDisable(MCPWM_ID_0, PWM_ChanBuck1);
+    PLIB_MCPWM_ChannelPWMxHOverrideDisable(MCPWM_ID_0, PWM_ChanBuck2);
+    PLIB_MCPWM_ChannelPWMxHOverrideDisable(MCPWM_ID_0, PWM_ChanBuck3);
+    PLIB_MCPWM_ChannelPWMxHOverrideDisable(MCPWM_ID_0, PWM_ChanBuck4);
+    PLIB_MCPWM_ChannelPWMxHOverrideDisable(MCPWM_ID_0, PWM_ChanBoost1);
+    PLIB_MCPWM_ChannelPWMxHOverrideDisable(MCPWM_ID_0, PWM_ChanBoost2);
+    PLIB_MCPWM_ChannelPWMxHOverrideDisable(MCPWM_ID_0, PWM_ChanBoost3);
+    PLIB_MCPWM_ChannelPWMxHOverrideDisable(MCPWM_ID_0, PWM_ChanBoost4);
+    
+    
+//    //Disable current limites
+//    PLIB_MCPWM_ChannelCurrentLimitSetup(MCPWM_ID_0, PWM_ChanBoost1, MCPWM_CURRENTLIMIT_SOURCE_IS_COMPARATOR1, MCPWM_CURRENTLIMIT_INPUT_POLARITY_ACTIVE_LOW, MCPWM_CURRENTLIMIT_OVERRIDE_PWMxH_0, MCPWM_CURRENTLIMIT_OVERRIDE_PWMxL_0, MCPWM_CURRENTLIMIT_DISABLE);
+//    PLIB_MCPWM_ChannelCurrentLimitSetup(MCPWM_ID_0, PWM_ChanBoost2, MCPWM_CURRENTLIMIT_SOURCE_IS_COMPARATOR1, MCPWM_CURRENTLIMIT_INPUT_POLARITY_ACTIVE_LOW, MCPWM_CURRENTLIMIT_OVERRIDE_PWMxH_0, MCPWM_CURRENTLIMIT_OVERRIDE_PWMxL_0, MCPWM_CURRENTLIMIT_DISABLE);
+//    PLIB_MCPWM_ChannelCurrentLimitSetup(MCPWM_ID_0, PWM_ChanBoost3, MCPWM_CURRENTLIMIT_SOURCE_IS_COMPARATOR1, MCPWM_CURRENTLIMIT_INPUT_POLARITY_ACTIVE_LOW, MCPWM_CURRENTLIMIT_OVERRIDE_PWMxH_0, MCPWM_CURRENTLIMIT_OVERRIDE_PWMxL_0, MCPWM_CURRENTLIMIT_DISABLE);
+//    PLIB_MCPWM_ChannelCurrentLimitSetup(MCPWM_ID_0, PWM_ChanBoost4, MCPWM_CURRENTLIMIT_SOURCE_IS_COMPARATOR1, MCPWM_CURRENTLIMIT_INPUT_POLARITY_ACTIVE_LOW, MCPWM_CURRENTLIMIT_OVERRIDE_PWMxH_0, MCPWM_CURRENTLIMIT_OVERRIDE_PWMxL_0, MCPWM_CURRENTLIMIT_DISABLE);
+//    PLIB_MCPWM_ChannelCurrentLimitSetup(MCPWM_ID_0, PWM_ChanBuck1, MCPWM_CURRENTLIMIT_SOURCE_IS_COMPARATOR1, MCPWM_CURRENTLIMIT_INPUT_POLARITY_ACTIVE_LOW, MCPWM_CURRENTLIMIT_OVERRIDE_PWMxH_0, MCPWM_CURRENTLIMIT_OVERRIDE_PWMxL_0, MCPWM_CURRENTLIMIT_DISABLE);
+//    PLIB_MCPWM_ChannelCurrentLimitSetup(MCPWM_ID_0, PWM_ChanBuck2, MCPWM_CURRENTLIMIT_SOURCE_IS_COMPARATOR1, MCPWM_CURRENTLIMIT_INPUT_POLARITY_ACTIVE_LOW, MCPWM_CURRENTLIMIT_OVERRIDE_PWMxH_0, MCPWM_CURRENTLIMIT_OVERRIDE_PWMxL_0, MCPWM_CURRENTLIMIT_DISABLE);
+//    PLIB_MCPWM_ChannelCurrentLimitSetup(MCPWM_ID_0, PWM_ChanBuck3, MCPWM_CURRENTLIMIT_SOURCE_IS_COMPARATOR1, MCPWM_CURRENTLIMIT_INPUT_POLARITY_ACTIVE_LOW, MCPWM_CURRENTLIMIT_OVERRIDE_PWMxH_0, MCPWM_CURRENTLIMIT_OVERRIDE_PWMxL_0, MCPWM_CURRENTLIMIT_DISABLE);
+//    PLIB_MCPWM_ChannelCurrentLimitSetup(MCPWM_ID_0, PWM_ChanBuck4, MCPWM_CURRENTLIMIT_SOURCE_IS_COMPARATOR1, MCPWM_CURRENTLIMIT_INPUT_POLARITY_ACTIVE_LOW, MCPWM_CURRENTLIMIT_OVERRIDE_PWMxH_0, MCPWM_CURRENTLIMIT_OVERRIDE_PWMxL_0, MCPWM_CURRENTLIMIT_DISABLE);
+//    
+    
+    //Enable PWM
+    PLIB_MCPWM_Enable(MCPWM_ID_0);
+}
+
+void test_pwm(){
+    SYS_DEBUG_BreakPoint();    
+        
+    memcpy(&pwmData, &pwm_controllerData, sizeof(PWM_CONTROLLER_DATA));
+
+    test_pwm_init();
+    
+    while( PLIB_MCPWM_ChannelCurrentLimitIsAsserted(MCPWM_ID_0, MCPWM_CHANNEL1) && !PLIB_CMP_OutputStatusGet(CMP_ID_1) ){
         Nop();
     }
     
+    //Target ADC value of ~ 300V
+    //(300.0 / ((1e6 + 47e3 + 4.7e3) / 4.7e3)) * (4095.0/3.300) = 1663
+    uint16_t target_adc_380v = (uint16_t) ((300.0 / analog_voltage_monitorData.dividers.an_380V) * (4095.0/3.300));
+
+    
+                        // s  -> ms  -> 10us
+    uint32_t delay_10us = 30U * 1000U * 100U;
+    
+    //test: pwm channel, target adc value, dc step
+    //First try a single PMW pair
+    test_pwm_RampUp(PWM_Pair_1, target_adc_380v , 1 );
+
+    //Disable PWM, allow capacitors to drain
+    PLIB_MCPWM_Disable(MCPWM_ID_0);
+    test_delay_10us( delay_10us );
+    
+    //Re-initialize
+    test_pwm_init();
+    
+    //Now try it with a whole group
+    test_pwm_RampUp(PWM_Group_12, target_adc_380v , 1 );
+    
+    //Disable PWM, allow capacitors to drain
+    PLIB_MCPWM_Disable(MCPWM_ID_0);
+    test_delay_10us( delay_10us );
+    
+    //Re-initialize
+    test_pwm_init();
+    
+    //Now try it with all PWMs
+    test_pwm_RampUp(PWM_ALL, target_adc_380v , 1 );
+
     SYS_DEBUG_BreakPoint();
 }
 
@@ -253,16 +402,29 @@ void test_pwm_SetBuckBoostDC(pwm_channel_t channel, uint16_t buck, uint16_t boos
 
 void test_pwm_RampUp( pwm_channel_t pwms, uint16_t target, uint16_t dc_step){
     uint16_t dc = 0;
+    
+    volatile bool sw_exit = false;
 
+    //                          s -> ms -> 10us
+    const uint32_t delay_10us = 1 * 10U * 100U;
+    
     do{
         //delay 10ms, half-sine of net power
-        test_delay_10us(1000);  
+        test_delay_10us(delay_10us);  
+        
+        if( dc % 100 == 0 )
+            SYS_DEBUG_BreakPoint();
         
         //set dc
         test_pwm_SetBuckBoostDC(pwms, dc, dc);
         
         dc += dc_step;
-    }while( analog_voltage_monitorData.adc_raw_data.samples.V380V < target );
+        
+        if( (dc >= getBoostMaxDC() ) && (dc >= getBuckMaxDC() ) ){
+            SYS_DEBUG_BreakPoint();
+            sw_exit = true;
+        }
+    }while( (analog_voltage_monitorData.adc_raw_data.samples.V380V < target) && (sw_exit == false) );
 
 }
 
