@@ -2,7 +2,34 @@
 
 #include "test_params.h"
 
-test_params_t params = { {0} };
+test_params_t params = { 
+    .boost = {
+        .dc_step_err = -10,
+        .dc_step_min = -1,
+        .dc_step_plus = 1,
+        .max_dc = (1200 * 33)/100, //max dc ~ 33%
+        .min_dc = 0
+    }, 
+    .buck = {
+        .dc_step_plus = 1,
+        .max_dc = (1200 * 40) / 100,     //max dc = 95%
+    },
+    .pwr_380V = { 0 },
+    .net = { 
+        .current = { 0 },
+        .voltage = { 
+            .HIGH = { 0 },
+            .LOW = { 0 }
+        }
+    },
+    .thermo = {
+        .brug = { 0 },
+        .elco = { 0 },
+        .motor = { 0 },
+        .pfc = { 0 },
+        .voed = { 0 }
+    }
+};
 
 void test_delay_10us(uint32_t delay_us){
     PR2 = 1200;
