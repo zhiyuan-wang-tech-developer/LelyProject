@@ -80,28 +80,121 @@ static void test_Piccolo_Power(){
 }
 
 
+void test_comparator(){
+     uint16_t cdac_threshold = ((3300.0 / 2.0) + (-11.0 * 66.0)) * (4095.0 / 3300.0);
+
+    //Disable CDAC before (re-)configuring
+    PLIB_CDAC_Disable(CDAC_ID_3);
+    
+    //Configure Comparator 1 threshold (CDAC3)
+    PLIB_CDAC_OutputDisable(CDAC_ID_3, CDAC_OUTPUT1);               //No output to pin
+    PLIB_CDAC_ReferenceVoltageSelect(CDAC_ID_3, CDAC_VREF_AVDD);    //Positive reference = AVdd
+    PLIB_CDAC_DataWrite(CDAC_ID_3, cdac_threshold);                 //Set target value
+    
+    //Enable CDAC
+    PLIB_CDAC_Enable(CDAC_ID_3);
+
+    //Disable Comparator before (re-)configuring
+    PLIB_CMP_Disable(CMP_ID_1);
+    
+    //Disable outputs
+    PLIB_CMP_OpAmpOutputDisable(CMP_ID_1);
+
+    //Enable outputs
+    PLIB_CMP_OutputEnable(CMP_ID_1);
+        
+    //Disable OpAmp mode
+    PLIB_CMP_OpAmpDisable(CMP_ID_1);
+    
+    //Compare CDAC3 to C1IN1- = V-AN-IL34    
+    PLIB_CMP_NonInvertingInputChannelSelect(CMP_ID_1, CMP_NON_INVERTING_INPUT_CDAC);
+    PLIB_CMP_InvertingInputChannelSelect(CMP_ID_1, CMP_INVERTING_INPUT_1);    
+    
+    //Configure polarity
+    //Invert output: COUT = Vin+ < Vin- => COUT = V-AN-IL34 > CDAC3
+    //Normal output: COUT = Vin+ > Vin- => COUT = V-AN-IL34 < CDAC3
+    PLIB_CMP_OutputInvertDisable(CMP_ID_1);
+//    PLIB_CMP_OutputInvertEnable(CMP_ID_1);
+    
+    PLIB_CMP_Enable(CMP_ID_1);
+    
+    
+
+    // Remap C1OUT -> LED 2 Green
+    PLIB_PORTS_RemapOutput(PORTS_ID_0, OUTPUT_FUNC_C1OUT, OUTPUT_PIN_RPE15);
+}
+
 void test_startup(){
+    volatile bool flag = true;
+    
+    SYS_DEBUG_BreakPoint();
+    
     // Initialize drivers
     SYS_Initialize ( NULL );
     
+    test_init_adc();
+    
+    
+    
+    ADC_SCAN_UPDATE_STATUS updateAll;
+    updateAll.status = -1;
+    updateAll.status_bits.UNUSED = 0;    
+    const uint32_t allUpdated = updateAll.status;
+    
+    
+    
+    
+    test_comparator();
+    
+    
+    
+    SYS_DEBUG_BreakPoint();
+    
+    PLIB_ADCHS_AnalogInputDataReadyInterruptEnable(ADCHS_ID_0, ADCHS_AN17);
+    
+    PLIB_ADCHS_SoftwareConversionInputSelect(ADCHS_ID_0, ADCHS_AN17);
+    PLIB_ADCHS_SoftwareConversionStart(ADCHS_ID_0);
+    
+    while( !PLIB_ADCHS_AnalogInputDataIsReady(ADCHS_ID_0, ADCHS_AN17) );
+    
+    SYS_DEBUG_BreakPoint();
+    
+    analog_voltage_monitorData.adc_raw_data.samples.update.status = 0;
+        
+#define ADCHS_TRIGGER_SOURCE_SCAN 3
+    PLIB_ADCHS_AnalogInputTriggerSourceSelect(ADCHS_ID_0, ADCHS_CLASS12_AN13, ADCHS_TRIGGER_SOURCE_SCAN);
+    PLIB_ADCHS_AnalogInputTriggerSourceSelect(ADCHS_ID_0, ADCHS_CLASS12_AN17, ADCHS_TRIGGER_SOURCE_SCAN);    
+    PLIB_ADCHS_AnalogInputTriggerSourceSelect(ADCHS_ID_0, ADCHS_CLASS12_AN23, ADCHS_TRIGGER_SOURCE_SCAN);
+    PLIB_ADCHS_AnalogInputTriggerSourceSelect(ADCHS_ID_0, ADCHS_CLASS12_AN27, ADCHS_TRIGGER_SOURCE_SCAN);
+
+    PLIB_ADCHS_AnalogInputScanSetup(ADCHS_ID_0, ADCHS_AN17, ADCHS_SCAN_TRIGGER_SENSITIVE_EDGE, ADCHS_SCAN_TRIGGER_SOURCE_GLOBAL_SOFTWARE_EDGE);
+    
+    DRV_ADC_Start();
+    
+    
+    while( flag ){
+        if( analog_voltage_monitorData.adc_raw_data.samples.update.status == allUpdated ){
+            //wait for first conversion
+            flag = false;
+//            V_LED1_GToggle();
+//            test_adc_convertValues(&analog_voltage_monitorData);
+//            analog_voltage_monitorData.adc_raw_data.samples.update.status = 0;
+//            DRV_ADC_Start();
+        }
+    }
+    
+    SYS_DEBUG_BreakPoint();
+    
+    test_uart_init();
   
+    SYS_DEBUG_BreakPoint();
+    
     T2CON = 0;
     IFS0bits.T2IF = 0;
     TMR2 = 0;
     
-    int i;
-    for( i = 0; i < 24; i++){
-        analog_voltage_monitorData.adc_raw_data.buffer[i] = 1;
-    }
-        
-    test_init_adc();
-    test_adc_update_adcValues(&analog_voltage_monitorData);
-
-
-    DRV_ADC_Start();
-
-    while( false == PLIB_ADCHS_AnalogInputDataIsReady(ADCHS_ID_0, ADCHS_AN0) );
-
+    SYS_DEBUG_BreakPoint();
+    
     
     //Wait for 5V to be fully powered up
     test_wait_5V( V5V_UNDERVOLTAGE_WARNING_THRESHOLD );
@@ -113,10 +206,6 @@ void test_startup(){
 
     test_Piccolo_Power();
 
-
-
-    
-       
     test_pwm();
 }
 
