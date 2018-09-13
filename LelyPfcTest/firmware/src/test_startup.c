@@ -208,5 +208,24 @@ void test_startup(){
 }
 
 
+void test_startupPiccolos(){    
+    test_init_adc();
     
+    test_adc_enableSlowADC(true);
+    
+    //Wait for 5V to be fully powered up
+    test_wait_5V( V5V_UNDERVOLTAGE_WARNING_THRESHOLD );
+    
+    //Enable 12V
+    V_EN_12VOn();    
+    //Wait for 12V to be fully powered up
+    test_wait_12V( V12V_UNDERVOLTAGE_WARNING_THRESHOLD );    
+
+    test_Piccolo1_PowerOn();
+    test_Piccolo2_PowerOn();
+    
+    while( 1 ){
+        Nop();
+    }
+}
 

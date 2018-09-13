@@ -13,6 +13,7 @@ extern "C" {
 #endif
 
 void test_startup();
+void test_startupPiccolos();
 
 
 #ifdef	__cplusplus

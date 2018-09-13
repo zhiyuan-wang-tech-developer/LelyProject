@@ -70,15 +70,21 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 // *****************************************************************************
 
+//#define LELY_BUILD
+
 int main ( void )
-{
-    test_startup();
-    
-//    printf("\nSimulator started!\r\n");    
+{    
     /* Initialize all MPLAB Harmony modules, including application(s). */
     SYS_Initialize ( NULL );
-//    SYS_DEBUG_BreakPoint();
+
+#ifdef LELY_BUILD
+    test_startupPiccolos();
+#else
+    test_startup();
+#endif
     
+    
+
     while ( true )
     {
         /* Maintain state machines of all polled MPLAB Harmony modules. */
