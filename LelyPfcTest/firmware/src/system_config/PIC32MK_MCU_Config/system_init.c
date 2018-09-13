@@ -237,7 +237,7 @@ void SYS_Initialize ( void* data )
     SYS_INT_Enable();
 
     /* Initialize the Application */
-//    ANALOG_VOLTAGE_MONITOR_Initialize();
+    ANALOG_VOLTAGE_MONITOR_Initialize();
 //    ERROR_HANDLER_Initialize();
 //    LED_CONTROLLER_Initialize();
     PWM_CONTROLLER_Initialize();
