@@ -225,9 +225,11 @@ typedef union
     {
         // Bit fields in the status are arranged in little-endianness.
         uint32_t V380V: 1;
-        uint32_t V325V: 1;
+        uint32_t IL34: 1;   // --> AN5
         uint32_t VLIVE: 1;
         uint32_t VNEUTRAL: 1;
+        uint32_t TEMP_PFC34: 1;
+        uint32_t V325V: 1;
         uint32_t V18V: 1;
         uint32_t V12V: 1;
         uint32_t V5V: 1;
@@ -239,11 +241,9 @@ typedef union
         uint32_t V1V8_1: 1;
         uint32_t V1V8_2: 1;
         uint32_t IL12: 1;
-        uint32_t IL34: 1;   // --> AN5
         uint32_t TEMP_M1: 1;
         uint32_t TEMP_M2: 1;
         uint32_t TEMP_PFC12: 1;
-        uint32_t TEMP_PFC34: 1;
         uint32_t TEMP_ELCO: 1;
         uint32_t TEMP_BRUG: 1;
         uint32_t TEMP_VOED: 1;
