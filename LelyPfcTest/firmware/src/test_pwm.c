@@ -80,17 +80,17 @@ void test_pwm_init(){
     PLIB_MCPWM_ChannelPrimaryDutyCycleSet(MCPWM_ID_0, PWM_ChanBoost4, 0);
 
     //Set phase shift to 0
-    PLIB_MCPWM_ChannelPhaseSet(MCPWM_ID_0, PWM_ChanBuck1, period * 0 / 360.0);
-    PLIB_MCPWM_ChannelPhaseSet(MCPWM_ID_0, PWM_ChanBuck2, period * 180 / 360.0);
+    PLIB_MCPWM_ChannelPhaseSet(MCPWM_ID_0, PWM_ChanBuck1, period * 10 / 360.0);
+    PLIB_MCPWM_ChannelPhaseSet(MCPWM_ID_0, PWM_ChanBuck2, period * 190 / 360.0);
     
-    PLIB_MCPWM_ChannelPhaseSet(MCPWM_ID_0, PWM_ChanBuck3, period * 90 / 360.0);
-    PLIB_MCPWM_ChannelPhaseSet(MCPWM_ID_0, PWM_ChanBuck4, period * 270 / 360.0);
+    PLIB_MCPWM_ChannelPhaseSet(MCPWM_ID_0, PWM_ChanBuck3, period * 100 / 360.0);
+    PLIB_MCPWM_ChannelPhaseSet(MCPWM_ID_0, PWM_ChanBuck4, period * 280 / 360.0);
     
-    PLIB_MCPWM_ChannelPhaseSet(MCPWM_ID_0, PWM_ChanBoost1, period * 10 / 360.0);
-    PLIB_MCPWM_ChannelPhaseSet(MCPWM_ID_0, PWM_ChanBoost2, period * 190 / 360.0);
+    PLIB_MCPWM_ChannelPhaseSet(MCPWM_ID_0, PWM_ChanBoost1, period * 0 / 360.0);
+    PLIB_MCPWM_ChannelPhaseSet(MCPWM_ID_0, PWM_ChanBoost2, period * 180 / 360.0);
     
-    PLIB_MCPWM_ChannelPhaseSet(MCPWM_ID_0, PWM_ChanBoost3, period * 100 / 360.0);
-    PLIB_MCPWM_ChannelPhaseSet(MCPWM_ID_0, PWM_ChanBoost4, period * 280 / 360.0);
+    PLIB_MCPWM_ChannelPhaseSet(MCPWM_ID_0, PWM_ChanBoost3, period * 90 / 360.0);
+    PLIB_MCPWM_ChannelPhaseSet(MCPWM_ID_0, PWM_ChanBoost4, period * 270 / 360.0);
     
     //Enable PWM_H outputs
     PLIB_MCPWM_ChannelPWMxHEnable(MCPWM_ID_0, PWM_ChanBuck1);
