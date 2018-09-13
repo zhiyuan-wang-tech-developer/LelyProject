@@ -189,7 +189,7 @@ void test_init_adc(){
     //Set ADC5 = Read AN5 == IL34
     //Pass through digital averaging filter
     PLIB_ADCHS_ChannelInputSelect(ADCHS_ID_0, ADCHS_CHANNEL_5, ADCHS_CHANNEL_5_DEFAULT_INP_AN5);
-    PLIB_ADCHS_DigitalFilterAveragingModeSetup(ADCHS_ID_0, ADCHS_DIGITAL_FILTER_1, ADCHS_AN5, ADCHS_DIGITAL_FILTER_SIGNIFICANT_FIRST_12BITS, ADCHS_DIGITAL_FILTER_AVERAGE_SAMPLE_COUNT_16, true);
+    PLIB_ADCHS_DigitalFilterAveragingModeSetup(ADCHS_ID_0, ADCHS_DIGITAL_FILTER_1, ADCHS_AN5, ADCHS_DIGITAL_FILTER_SIGNIFICANT_FIRST_12BITS, ADCHS_DIGITAL_FILTER_AVERAGE_SAMPLE_COUNT_4, true);
     PLIB_ADCHS_DigitalFilterEnable(ADCHS_ID_0, ADCHS_DIGITAL_FILTER_1);
     
     
@@ -462,7 +462,7 @@ bool test_adc_get(unsigned int index, uint16_t* adcVal, float* convVal){
 }
 
 void test_adc_enableFastADC(bool val){
-    PR3 = 150-1;
+    PR3 = 300-1;
     T3CON = val ? 0x8000 : 0;
 }
 
