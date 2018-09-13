@@ -185,7 +185,7 @@ void test_pwm_manual(){
 
 void test_pwm_cooldown(){
                         // s  -> ms  -> 10us
-    uint32_t delay_10us = 60U * 1000U * 100U;
+    uint32_t delay_10us = 30U * 1000U * 100U;
      
     //Disable PWM, allow capacitors to drain
     PLIB_MCPWM_Disable(MCPWM_ID_0);
@@ -194,7 +194,8 @@ void test_pwm_cooldown(){
 
 void test_pwm(){
     SYS_DEBUG_BreakPoint();
-
+    
+    
     //Do manual testing
     test_pwm_manual();
     test_pwm_cooldown();
@@ -435,7 +436,7 @@ void test_pwm_SetBuckBoostDC(pwm_channel_t channel, uint16_t buck, uint16_t boos
 void test_pwm_RampUp( pwm_channel_t pwms){    
     volatile bool sw_exit = false;
 
-    enum {
+    volatile enum {
         Init,
         RampBuck,
         RampBoost,
