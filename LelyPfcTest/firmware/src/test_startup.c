@@ -225,6 +225,7 @@ void test_startupPiccolos(){
     test_Piccolo2_PowerOn();
     
     while( 1 ){
+        PLIB_WDT_TimerClear(WDT_ID_0);
         Nop();
     }
 }
