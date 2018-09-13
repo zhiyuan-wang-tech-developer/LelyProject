@@ -131,9 +131,12 @@ void test_startup(){
     
     // Initialize drivers
     SYS_Initialize ( NULL );
+
+    //Disable pre-fetch
+    CHECONbits.PREFEN = 0;
     
     test_init_adc();
-    
+
     
     
     ADC_SCAN_UPDATE_STATUS updateAll;
@@ -146,35 +149,30 @@ void test_startup(){
     
     test_comparator();
     
-    
-    
+
     SYS_DEBUG_BreakPoint();
     
-    PLIB_ADCHS_AnalogInputDataReadyInterruptEnable(ADCHS_ID_0, ADCHS_AN17);
     
+    //Try single ADC    
+    while( PLIB_ADCHS_AnalogInputDataIsReady(ADCHS_ID_0, ADCHS_AN17) ){
+        PLIB_ADCHS_AnalogInputResultGet(ADCHS_ID_0, ADCHS_AN17);
+    }
     PLIB_ADCHS_SoftwareConversionInputSelect(ADCHS_ID_0, ADCHS_AN17);
-    PLIB_ADCHS_SoftwareConversionStart(ADCHS_ID_0);
-    
+    PLIB_ADCHS_SoftwareConversionStart(ADCHS_ID_0);    
     while( !PLIB_ADCHS_AnalogInputDataIsReady(ADCHS_ID_0, ADCHS_AN17) );
     
     SYS_DEBUG_BreakPoint();
     
+    
     analog_voltage_monitorData.adc_raw_data.samples.update.status = 0;
-        
-#define ADCHS_TRIGGER_SOURCE_SCAN 3
-    PLIB_ADCHS_AnalogInputTriggerSourceSelect(ADCHS_ID_0, ADCHS_CLASS12_AN13, ADCHS_TRIGGER_SOURCE_SCAN);
-    PLIB_ADCHS_AnalogInputTriggerSourceSelect(ADCHS_ID_0, ADCHS_CLASS12_AN17, ADCHS_TRIGGER_SOURCE_SCAN);    
-    PLIB_ADCHS_AnalogInputTriggerSourceSelect(ADCHS_ID_0, ADCHS_CLASS12_AN23, ADCHS_TRIGGER_SOURCE_SCAN);
-    PLIB_ADCHS_AnalogInputTriggerSourceSelect(ADCHS_ID_0, ADCHS_CLASS12_AN27, ADCHS_TRIGGER_SOURCE_SCAN);
 
-    PLIB_ADCHS_AnalogInputScanSetup(ADCHS_ID_0, ADCHS_AN17, ADCHS_SCAN_TRIGGER_SENSITIVE_EDGE, ADCHS_SCAN_TRIGGER_SOURCE_GLOBAL_SOFTWARE_EDGE);
-    
-    DRV_ADC_Start();
-    
+    test_adc_enableSlowADC(true);
+    test_adc_enableFastADC(true);
     
     while( flag ){
         if( analog_voltage_monitorData.adc_raw_data.samples.update.status == allUpdated ){
             //wait for first conversion
+            SYS_DEBUG_BreakPoint();
             flag = false;
 //            V_LED1_GToggle();
 //            test_adc_convertValues(&analog_voltage_monitorData);
@@ -184,7 +182,7 @@ void test_startup(){
     }
     
     SYS_DEBUG_BreakPoint();
-    
+
     test_uart_init();
   
     SYS_DEBUG_BreakPoint();
@@ -210,5 +208,5 @@ void test_startup(){
 }
 
 
-
+    
 

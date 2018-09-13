@@ -37,6 +37,10 @@ void test_wait_1V8_2(uint16_t targetADC);
 
 bool test_adc_get(unsigned int index, uint16_t* adcVal, float* convVal);
 
+
+void test_adc_enableFastADC(bool val);
+void test_adc_enableSlowADC(bool val);
+
 #ifdef	__cplusplus
 }
 #endif

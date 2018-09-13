@@ -1,6 +1,7 @@
 #include "test_adc.h"
 #include "analog_voltage_monitor.h"
 #include "led_controller.h"
+#include "test_pwm.h"
 
 #define ADC_Channel_380V     ADCHS_AN0
 #define ADC_Channel_TPFC_34  ADCHS_AN1
@@ -42,7 +43,6 @@
             analog_voltage_monitorData.adc_raw_data.samples.update.status_bits.__SAMPLE_NAME__ = true; \
         } \
     } while(0)
-
 
 
 extern float ConvertADCRawSampleToThermalResistance(uint32_t ADC_Raw_Value);
@@ -195,7 +195,6 @@ void test_init_adc(){
     
     //Triggered by TMR3
     PLIB_ADCHS_AnalogInputScanRemove(ADCHS_ID_0, ADCHS_AN5);
-//    PLIB_ADCHS_AnalogInputTriggerSourceSelect(ADCHS_ID_0, ADCHS_CLASS12_AN5, ADCHS_TRIGGER_SOURCE_TMR3_MATCH);
     PLIB_ADCHS_ChannelTriggerSampleSelect(ADCHS_ID_0, ADCHS_CHANNEL_5, ADCHS_CHANNEL_UNSYNC_TRIGGER_UNSYNC_SAMPLING);
     
     //Use Filter Ready interrupt instead of data ready
@@ -252,21 +251,12 @@ void test_init_adc(){
     
     //PWM period = 1200 = 100 KHz
     //ADC period = 4* PWM = 300 = 400 KHz
-    T3CON = 0;
-    PR3 = 150-1;
-    T3CON = 0x8000;
 
-    IPC3bits.T3IP = 4;
-    IPC3bits.T3IS = 0;    
-    IFS0bits.T3IF = 0;
-//    IEC0bits.T3IE = 1;
-
+    //disable Fast ADC timer interrupts
+    IEC0bits.T3IE = 0;
     
-    PLIB_ADCHS_AnalogInputScanSelect(ADCHS_ID_0, ADC_Channel_12V);
-    PLIB_ADCHS_AnalogInputScanSelect(ADCHS_ID_0, ADC_Channel_TPFC_12);
-    PLIB_ADCHS_AnalogInputScanSelect(ADCHS_ID_0, ADC_Channel_TM_2);
-    PLIB_ADCHS_AnalogInputScanSelect(ADCHS_ID_0, ADC_Channel_3V3_0);
-    
+    //disable Slow ADC timer interrupts
+    IEC0bits.T5IE = 0;
     
     //Set ADC0 = Read AN0 = +380V
     PLIB_ADCHS_ChannelInputSelect(ADCHS_ID_0, ADCHS_CHANNEL_0, ADCHS_CHANNEL_0_DEFAULT_INP_AN0);
@@ -280,6 +270,12 @@ void test_init_adc(){
     //Set ADC4 = Read AN4 == VN
     PLIB_ADCHS_ChannelInputSelect(ADCHS_ID_0, ADCHS_CHANNEL_4, ADCHS_CHANNEL_4_DEFAULT_INP_AN4);
 
+    PLIB_ADCHS_AnalogInputTriggerSourceSelect(ADCHS_ID_0, ADCHS_CLASS12_AN0, ADCHS_TRIGGER_SOURCE_TMR3_MATCH);
+    PLIB_ADCHS_AnalogInputTriggerSourceSelect(ADCHS_ID_0, ADCHS_CLASS12_AN1, ADCHS_TRIGGER_SOURCE_TMR3_MATCH);    
+    PLIB_ADCHS_AnalogInputTriggerSourceSelect(ADCHS_ID_0, ADCHS_CLASS12_AN4, ADCHS_TRIGGER_SOURCE_TMR3_MATCH);
+    PLIB_ADCHS_AnalogInputTriggerSourceSelect(ADCHS_ID_0, ADCHS_CLASS12_AN5, ADCHS_TRIGGER_SOURCE_TMR3_MATCH);
+    PLIB_ADCHS_AnalogInputTriggerSourceSelect(ADCHS_ID_0, ADCHS_CLASS12_AN6, ADCHS_TRIGGER_SOURCE_TMR3_MATCH);
+    
     
     //Remove dedicated lines from scan list
     PLIB_ADCHS_AnalogInputScanRemove(ADCHS_ID_0, ADCHS_AN0);
@@ -292,11 +288,22 @@ void test_init_adc(){
     PLIB_ADCHS_ExternalConversionRequestEnable(ADCHS_ID_0);
     PLIB_ADCHS_ScanCompleteInterruptEnable(ADCHS_ID_0);
 
-    /* Enable the global software EDGE trigger for analog input scanning. */
-    /* The global software trigger bit is cleared automatically in the next ADC clock cycle. */
-    DRV_ADC_Start();
+    //Remap analog inputs to SCAN trigger
+#define ADCHS_TRIGGER_SOURCE_SCAN 3
+    PLIB_ADCHS_AnalogInputTriggerSourceSelect(ADCHS_ID_0, ADCHS_CLASS12_AN2, ADCHS_TRIGGER_SOURCE_SCAN);   //18v
+    PLIB_ADCHS_AnalogInputTriggerSourceSelect(ADCHS_ID_0, ADCHS_CLASS12_AN7, ADCHS_TRIGGER_SOURCE_SCAN);   //3v3an2
+    PLIB_ADCHS_AnalogInputTriggerSourceSelect(ADCHS_ID_0, ADCHS_CLASS12_AN8, ADCHS_TRIGGER_SOURCE_SCAN);   //3v3-2
+    PLIB_ADCHS_AnalogInputTriggerSourceSelect(ADCHS_ID_0, ADCHS_CLASS12_AN9, ADCHS_TRIGGER_SOURCE_SCAN);   //3v3-1
+    PLIB_ADCHS_AnalogInputTriggerSourceSelect(ADCHS_ID_0, ADCHS_CLASS12_AN10, ADCHS_TRIGGER_SOURCE_SCAN);   //3v3an1
+    PLIB_ADCHS_AnalogInputTriggerSourceSelect(ADCHS_ID_0, ADCHS_CLASS12_AN11, ADCHS_TRIGGER_SOURCE_SCAN);   //1v8-2
+    PLIB_ADCHS_AnalogInputTriggerSourceSelect(ADCHS_ID_0, ADCHS_CLASS12_AN12, ADCHS_TRIGGER_SOURCE_SCAN);   //5v
+    PLIB_ADCHS_AnalogInputTriggerSourceSelect(ADCHS_ID_0, ADCHS_CLASS12_AN13, ADCHS_TRIGGER_SOURCE_SCAN);   //3v3-0
+    PLIB_ADCHS_AnalogInputTriggerSourceSelect(ADCHS_ID_0, ADCHS_CLASS12_AN17, ADCHS_TRIGGER_SOURCE_SCAN);   //t-pfc12
+    PLIB_ADCHS_AnalogInputTriggerSourceSelect(ADCHS_ID_0, ADCHS_CLASS12_AN23, ADCHS_TRIGGER_SOURCE_SCAN);   //t-m2
+    PLIB_ADCHS_AnalogInputTriggerSourceSelect(ADCHS_ID_0, ADCHS_CLASS12_AN27, ADCHS_TRIGGER_SOURCE_SCAN);   //12v
     
-//    while( !ADCHS_AnalogInputScanIsComplete_Default(ADCHS_ID_0) );
+    //Use T5 as trigger source for analog input scan
+    PLIB_ADCHS_AnalogInputScanSetup(ADCHS_ID_0, ADCHS_AN2, ADCHS_SCAN_TRIGGER_SENSITIVE_EDGE, ADCHS_SCAN_TRIGGER_SOURCE_TMR5_MATCH);
 }
 
 void test_adc_convertValues(ANALOG_VOLTAGE_MONITOR_DATA* data){    
@@ -337,7 +344,15 @@ void test_adc_convertValues(ANALOG_VOLTAGE_MONITOR_DATA* data){
 void test_adc_update_adcValues(ANALOG_VOLTAGE_MONITOR_DATA* data){
     //Read all adcs
     analog_voltage_monitorData.adc_raw_data.samples.update.status = 0;
-    DRV_ADC_Start();
+    if( !T5CONbits.ON ){
+        test_adc_enableSlowADC(true);
+    }
+    if( !T3CONbits.ON ){
+        test_adc_enableFastADC(true);   
+    }
+    
+    
+//    DRV_ADC_Start();
     while( analog_voltage_monitorData.adc_raw_data.samples.update.status == 0){
         Nop();
     }
@@ -444,4 +459,14 @@ bool test_adc_get(unsigned int index, uint16_t* adcVal, float* convVal){
         default: return false;
     }
     return true;
+}
+
+void test_adc_enableFastADC(bool val){
+    PR3 = 150-1;
+    T3CON = val ? 0x8000 : 0;
+}
+
+void test_adc_enableSlowADC(bool val){
+    PR5 = 12*1000 -1;     //0.1 ms
+    T5CON = val ? 0x8000 : 0;
 }
