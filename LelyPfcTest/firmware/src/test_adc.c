@@ -26,19 +26,20 @@
 #define ADC_Channel_IL_12    ADCHS_AN46
 #define ADC_Channel_TM_1     ADCHS_AN47
 
-#define _setSample(sample, channel)  \
+
+#define _setSample(__SAMPLE_NAME__, __CHANNEL_NAME__)  \
     do{ \
-        if( PLIB_ADCHS_AnalogInputDataIsReady( ADCHS_ID_0, channel ) ) { \
-            analog_voltage_monitorData.adc_raw_data.samples.sample = PLIB_ADCHS_AnalogInputResultGet(ADCHS_ID_0, channel); \
-            analog_voltage_monitorData.adc_raw_data.samples.update.status_bits.sample = true; \
+        if( PLIB_ADCHS_AnalogInputDataIsReady( ADCHS_ID_0, __CHANNEL_NAME__ ) ) { \
+            analog_voltage_monitorData.adc_raw_data.samples.__SAMPLE_NAME__ = PLIB_ADCHS_AnalogInputResultGet(ADCHS_ID_0, __CHANNEL_NAME__); \
+            analog_voltage_monitorData.adc_raw_data.samples.update.status_bits.__SAMPLE_NAME__ = true; \
         } \
     } while(0)
 
-#define _setFilteredSample(sample, filter)  \
+#define _setFilteredSample(__SAMPLE_NAME__, __FILTER_NAME__)  \
     do{ \
-        if( PLIB_ADCHS_DigitalFilterDataIsReady( ADCHS_ID_0, filter ) ) { \
-            analog_voltage_monitorData.adc_raw_data.samples.sample = PLIB_ADCHS_DigitalFilterDataGet(ADCHS_ID_0, filter); \
-            analog_voltage_monitorData.adc_raw_data.samples.update.status_bits.sample = true; \
+        if( PLIB_ADCHS_DigitalFilterDataIsReady( ADCHS_ID_0, __FILTER_NAME__ ) ) { \
+            analog_voltage_monitorData.adc_raw_data.samples.__SAMPLE_NAME__ = PLIB_ADCHS_DigitalFilterDataGet(ADCHS_ID_0, __FILTER_NAME__); \
+            analog_voltage_monitorData.adc_raw_data.samples.update.status_bits.__SAMPLE_NAME__ = true; \
         } \
     } while(0)
 
