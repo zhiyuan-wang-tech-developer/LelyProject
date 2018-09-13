@@ -4,17 +4,19 @@
 
 test_params_t params = { 
     .boost = {
-        .dc_step_err = -10,
-        .dc_step_min = -1,
+        .dc_step_err = 10,  // -10 in error
+        .dc_step_min = 1,   // -1  at overshoot
         .dc_step_plus = 1,
-        .max_dc = (1200 * 33)/100, //max dc ~ 33%
+        .max_dc = 600, //max dc = 50%
         .min_dc = 0
     }, 
     .buck = {
         .dc_step_plus = 1,
-        .max_dc = (1200 * 40) / 100,     //max dc = 95%
+        .max_dc = 1100, //max dc = 91%
     },
-    .pwr_380V = { 0 },
+    .pwr_380V = { 
+        .TARGET = (uint16_t) ((380.0 * (4.7e3/(1e6+47e3+4.7e3)) ) * (4095.0/3.300))
+    },
     .net = { 
         .current = { 0 },
         .voltage = { 
@@ -47,7 +49,7 @@ void test_delay_10us(uint32_t delay_us){
 }
 
 
-bool test_param_set(unsigned int param, uint16_t value){    
+bool test_param_set(unsigned int param, uint16_t value){
     switch( param ){
         case 1: setTarget380V(value); break;
         case 2: setMaxError380V(value); break;
