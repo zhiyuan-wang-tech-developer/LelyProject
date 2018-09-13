@@ -56,18 +56,18 @@ void __ISR(_ADC_DF1_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_Filter1(void){
 
     //Read filtered value
     _setFilteredSample(IL34, ADCHS_DIGITAL_FILTER_1);
-       
+
     //Clear interrupt flag
     IFS3bits.AD1DF1IF = 0;
-    
+
     V_LED1_GOff();
 }
 
 void __ISR(_ADC_DATA5_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA5(void)
-{    
+{
 //    V_LEDR_GOn();
     
-    _setSample(IL34, ADCHS_AN5);
+    _setSample(IL34, ADCHS_AN5);    
     
     IFS3bits.AD1D5IF = 0;
 //    V_LEDR_GOff();
@@ -82,8 +82,8 @@ void __ISR(_ADC_EOS_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_END_OF_SCAN(void)
         return;
     }
 
-    V_LED1_ROn();    
-        
+    V_LED1_ROn();
+    
     _setSample( IL12, ADC_Channel_IL_12 );    
     _setSample( IL34, ADC_Channel_IL_34);    
     _setSample( TEMP_BRUG, ADC_Channel_TBRUG);    
@@ -130,10 +130,6 @@ void test_init_adc(){
     if (DEVADC5 != 0xFFFFFFFF)
     PLIB_ADCHS_ChannelConfigurationSet(DRV_ADC_ID_1, ADCHS_CHANNEL_5, DEVADC5);
     
-    PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA5);
-    PLIB_INT_SourceEnable(INT_ID_0, INT_SOURCE_ADC_1_DATA5);
-    PLIB_INT_VectorPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA5, INT_PRIORITY_LEVEL3);
-    PLIB_INT_VectorSubPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA5, INT_SUBPRIORITY_LEVEL0);         
     
     PLIB_ADCHS_ChannelSetup( DRV_ADC_ID_1, ADCHS_CHANNEL_5, ADCHS_DATA_RESOLUTION_12BIT, 1, 1, ADCHS_EARLY_INTERRUPT_PRIOR_CLOCK_4 );
     PLIB_ADCHS_ChannelTriggerSampleSelect( DRV_ADC_ID_1, ADCHS_CHANNEL_5, ADCHS_CHANNEL_UNSYNC_TRIGGER_UNSYNC_SAMPLING );
@@ -156,14 +152,8 @@ void test_init_adc(){
     PLIB_ADCHS_ChannelTriggerSampleSelect(ADCHS_ID_0, ADCHS_CHANNEL_5, ADCHS_CHANNEL_UNSYNC_TRIGGER_UNSYNC_SAMPLING);
     
     //Use Filter Ready interrupt instead of data ready
-    PLIB_ADCHS_AnalogInputDataReadyInterruptDisable(ADCHS_ID_0, ADCHS_AN5);
     PLIB_ADCHS_DigitalFilterDataReadyInterruptEnable(ADCHS_ID_0, ADCHS_DIGITAL_FILTER_1);
     
-
-    PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA5);
-    PLIB_INT_SourceEnable(INT_ID_0, INT_SOURCE_ADC_1_DATA5);
-    PLIB_INT_VectorPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA5, INT_PRIORITY_LEVEL3);
-    PLIB_INT_VectorSubPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA5, INT_SUBPRIORITY_LEVEL0);
     
     PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DF1);
     PLIB_INT_SourceEnable(INT_ID_0, INT_SOURCE_ADC_1_DF1);
@@ -223,20 +213,12 @@ void test_init_adc(){
     IPC3bits.T3IS = 0;    
     IFS0bits.T3IF = 0;
 //    IEC0bits.T3IE = 1;
-    
+
     
     PLIB_ADCHS_AnalogInputScanSelect(ADCHS_ID_0, ADC_Channel_12V);
     PLIB_ADCHS_AnalogInputScanSelect(ADCHS_ID_0, ADC_Channel_TPFC_12);
     PLIB_ADCHS_AnalogInputScanSelect(ADCHS_ID_0, ADC_Channel_TM_2);
     PLIB_ADCHS_AnalogInputScanSelect(ADCHS_ID_0, ADC_Channel_3V3_0);
-//    PLIB_ADCHS_AnalogInputDataReadyInterruptDisable(ADCHS_ID_0, ADC_Channel_TPFC_12);
-//    PLIB_ADCHS_AnalogInputDataReadyInterruptDisable(ADCHS_ID_0, ADC_Channel_TM_2);
-//    PLIB_ADCHS_AnalogInputDataReadyInterruptDisable(ADCHS_ID_0, ADC_Channel_3V3_0);
-//    PLIB_ADCHS_AnalogInputDataReadyInterruptDisable(ADCHS_ID_0, ADC_Channel_12V);
-//    PLIB_ADCHS_AnalogInputDataReadyInterruptDisable(ADCHS_ID_0, ADC_Channel_12V);
-//    PLIB_ADCHS_AnalogInputDataReadyInterruptDisable(ADCHS_ID_0, ADC_Channel_12V);
-//    PLIB_ADCHS_AnalogInputDataReadyInterruptDisable(ADCHS_ID_0, ADC_Channel_12V);
-//    PLIB_ADCHS_AnalogInputDataReadyInterruptDisable(ADCHS_ID_0, ADC_Channel_12V);
     
     
     //Set ADC0 = Read AN0 = +380V
@@ -262,7 +244,7 @@ void test_init_adc(){
     //Set up scan complete interrupt
     PLIB_ADCHS_ExternalConversionRequestEnable(ADCHS_ID_0);
     PLIB_ADCHS_ScanCompleteInterruptEnable(ADCHS_ID_0);
-    
+
     /* Enable the global software EDGE trigger for analog input scanning. */
     /* The global software trigger bit is cleared automatically in the next ADC clock cycle. */
     DRV_ADC_Start();

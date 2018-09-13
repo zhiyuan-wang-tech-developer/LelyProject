@@ -114,11 +114,6 @@ void DRV_ADC_Initialize(void)
      );
     if (DEVADC0 != 0xFFFFFFFF)
     PLIB_ADCHS_ChannelConfigurationSet(DRV_ADC_ID_1, ADCHS_CHANNEL_0, DEVADC0);
-    /* Initialize ADC Data Interrupt */
-    PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA0);
-    PLIB_INT_SourceEnable(INT_ID_0, INT_SOURCE_ADC_1_DATA0);
-    PLIB_INT_VectorPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA0, INT_PRIORITY_LEVEL3);
-    PLIB_INT_VectorSubPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA0, INT_SUBPRIORITY_LEVEL0);     
      PLIB_ADCHS_ChannelSetup(
      DRV_ADC_ID_1,
      ADCHS_CHANNEL_1,
@@ -163,11 +158,6 @@ void DRV_ADC_Initialize(void)
      );
     if (DEVADC1 != 0xFFFFFFFF)
     PLIB_ADCHS_ChannelConfigurationSet(DRV_ADC_ID_1, ADCHS_CHANNEL_1, DEVADC1);
-    /* Initialize ADC Data Interrupt */
-    PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA1);
-    PLIB_INT_SourceEnable(INT_ID_0, INT_SOURCE_ADC_1_DATA1);
-    PLIB_INT_VectorPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA1, INT_PRIORITY_LEVEL3);
-    PLIB_INT_VectorSubPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA1, INT_SUBPRIORITY_LEVEL0);     
      PLIB_ADCHS_ChannelSetup(
      DRV_ADC_ID_1,
      ADCHS_CHANNEL_2,
@@ -212,11 +202,6 @@ void DRV_ADC_Initialize(void)
      );
     if (DEVADC2 != 0xFFFFFFFF)
     PLIB_ADCHS_ChannelConfigurationSet(DRV_ADC_ID_1, ADCHS_CHANNEL_2, DEVADC2);
-    /* Initialize ADC Data Interrupt */
-    PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA2);
-    PLIB_INT_SourceEnable(INT_ID_0, INT_SOURCE_ADC_1_DATA2);
-    PLIB_INT_VectorPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA2, INT_PRIORITY_LEVEL3);
-    PLIB_INT_VectorSubPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA2, INT_SUBPRIORITY_LEVEL0);     
      PLIB_ADCHS_ChannelSetup(
      DRV_ADC_ID_1,
      ADCHS_CHANNEL_4,
@@ -261,11 +246,6 @@ void DRV_ADC_Initialize(void)
      );
     if (DEVADC4 != 0xFFFFFFFF)
     PLIB_ADCHS_ChannelConfigurationSet(DRV_ADC_ID_1, ADCHS_CHANNEL_4, DEVADC4);
-    /* Initialize ADC Data Interrupt */
-    PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA4);
-    PLIB_INT_SourceEnable(INT_ID_0, INT_SOURCE_ADC_1_DATA4);
-    PLIB_INT_VectorPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA4, INT_PRIORITY_LEVEL3);
-    PLIB_INT_VectorSubPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA4, INT_SUBPRIORITY_LEVEL0);     
 
 /* Setting for class-2 analog inputs */
      PLIB_ADCHS_AnalogInputModeSelect(
@@ -284,11 +264,6 @@ void DRV_ADC_Initialize(void)
                (ADCHS_CLASS12_AN_INPUT_ID)ADCHS_CLASS2_AN6,
                ADCHS_TRIGGER_SOURCE_GLOBAL_SOFTWARE_EDGE
      );
-    /* Initialize ADC Data Interrupt */
-    PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA6);
-    PLIB_INT_SourceEnable(INT_ID_0, INT_SOURCE_ADC_1_DATA6);
-    PLIB_INT_VectorPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA6, INT_PRIORITY_LEVEL3);
-    PLIB_INT_VectorSubPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA6, INT_SUBPRIORITY_LEVEL0);     
 /* Setting for class-2 analog inputs */
      PLIB_ADCHS_AnalogInputModeSelect(
                DRV_ADC_ID_1,
@@ -306,11 +281,6 @@ void DRV_ADC_Initialize(void)
                (ADCHS_CLASS12_AN_INPUT_ID)ADCHS_CLASS2_AN7,
                ADCHS_TRIGGER_SOURCE_GLOBAL_SOFTWARE_EDGE
      );
-    /* Initialize ADC Data Interrupt */
-    PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA7);
-    PLIB_INT_SourceEnable(INT_ID_0, INT_SOURCE_ADC_1_DATA7);
-    PLIB_INT_VectorPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA7, INT_PRIORITY_LEVEL3);
-    PLIB_INT_VectorSubPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA7, INT_SUBPRIORITY_LEVEL0);     
 /* Setting for class-2 analog inputs */
      PLIB_ADCHS_AnalogInputModeSelect(
                DRV_ADC_ID_1,
@@ -328,11 +298,6 @@ void DRV_ADC_Initialize(void)
                (ADCHS_CLASS12_AN_INPUT_ID)ADCHS_CLASS2_AN8,
                ADCHS_TRIGGER_SOURCE_GLOBAL_SOFTWARE_EDGE
      );
-    /* Initialize ADC Data Interrupt */
-    PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA8);
-    PLIB_INT_SourceEnable(INT_ID_0, INT_SOURCE_ADC_1_DATA8);
-    PLIB_INT_VectorPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA8, INT_PRIORITY_LEVEL3);
-    PLIB_INT_VectorSubPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA8, INT_SUBPRIORITY_LEVEL0);     
 /* Setting for class-2 analog inputs */
      PLIB_ADCHS_AnalogInputModeSelect(
                DRV_ADC_ID_1,
@@ -350,11 +315,6 @@ void DRV_ADC_Initialize(void)
                (ADCHS_CLASS12_AN_INPUT_ID)ADCHS_CLASS2_AN9,
                ADCHS_TRIGGER_SOURCE_GLOBAL_SOFTWARE_EDGE
      );
-    /* Initialize ADC Data Interrupt */
-    PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA9);
-    PLIB_INT_SourceEnable(INT_ID_0, INT_SOURCE_ADC_1_DATA9);
-    PLIB_INT_VectorPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA9, INT_PRIORITY_LEVEL3);
-    PLIB_INT_VectorSubPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA9, INT_SUBPRIORITY_LEVEL0);     
 /* Setting for class-2 analog inputs */
      PLIB_ADCHS_AnalogInputModeSelect(
                DRV_ADC_ID_1,
@@ -372,11 +332,6 @@ void DRV_ADC_Initialize(void)
                (ADCHS_CLASS12_AN_INPUT_ID)ADCHS_CLASS2_AN10,
                ADCHS_TRIGGER_SOURCE_GLOBAL_SOFTWARE_EDGE
      );
-    /* Initialize ADC Data Interrupt */
-    PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA10);
-    PLIB_INT_SourceEnable(INT_ID_0, INT_SOURCE_ADC_1_DATA10);
-    PLIB_INT_VectorPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA10, INT_PRIORITY_LEVEL3);
-    PLIB_INT_VectorSubPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA10, INT_SUBPRIORITY_LEVEL0);     
 /* Setting for class-2 analog inputs */
      PLIB_ADCHS_AnalogInputModeSelect(
                DRV_ADC_ID_1,
@@ -394,11 +349,6 @@ void DRV_ADC_Initialize(void)
                (ADCHS_CLASS12_AN_INPUT_ID)ADCHS_CLASS2_AN11,
                ADCHS_TRIGGER_SOURCE_GLOBAL_SOFTWARE_EDGE
      );
-    /* Initialize ADC Data Interrupt */
-    PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA11);
-    PLIB_INT_SourceEnable(INT_ID_0, INT_SOURCE_ADC_1_DATA11);
-    PLIB_INT_VectorPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA11, INT_PRIORITY_LEVEL3);
-    PLIB_INT_VectorSubPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA11, INT_SUBPRIORITY_LEVEL0);     
 /* Setting for class-2 analog inputs */
      PLIB_ADCHS_AnalogInputModeSelect(
                DRV_ADC_ID_1,
@@ -416,11 +366,6 @@ void DRV_ADC_Initialize(void)
                (ADCHS_CLASS12_AN_INPUT_ID)ADCHS_CLASS2_AN12,
                ADCHS_TRIGGER_SOURCE_GLOBAL_SOFTWARE_EDGE
      );
-    /* Initialize ADC Data Interrupt */
-    PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA12);
-    PLIB_INT_SourceEnable(INT_ID_0, INT_SOURCE_ADC_1_DATA12);
-    PLIB_INT_VectorPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA12, INT_PRIORITY_LEVEL3);
-    PLIB_INT_VectorSubPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA12, INT_SUBPRIORITY_LEVEL0);     
 
 
 
@@ -584,11 +529,6 @@ void DRV_ADC_Initialize(void)
           ADCHS_SCAN_TRIGGER_SOURCE_GLOBAL_SOFTWARE_EDGE
      );
      PLIB_ADCHS_EarlyInterruptEnable(DRV_ADC_ID_1);
-    /* Initialize ADC Data Interrupt */
-    PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA12);
-    PLIB_INT_SourceEnable(INT_ID_0, INT_SOURCE_ADC_1_DATA12);
-    PLIB_INT_VectorPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA12, INT_PRIORITY_LEVEL3);
-    PLIB_INT_VectorSubPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA12, INT_SUBPRIORITY_LEVEL0);     
 
      /* Include Analog input to Scan list */
      PLIB_ADCHS_AnalogInputScanSelect
@@ -612,11 +552,6 @@ void DRV_ADC_Initialize(void)
           ADCHS_SCAN_TRIGGER_SOURCE_GLOBAL_SOFTWARE_EDGE
      );
      PLIB_ADCHS_EarlyInterruptEnable(DRV_ADC_ID_1);
-    /* Initialize ADC Data Interrupt */
-    PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA13);
-    PLIB_INT_SourceEnable(INT_ID_0, INT_SOURCE_ADC_1_DATA13);
-    PLIB_INT_VectorPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA13, INT_PRIORITY_LEVEL3);
-    PLIB_INT_VectorSubPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA13, INT_SUBPRIORITY_LEVEL0);     
 
      /* Include Analog input to Scan list */
      PLIB_ADCHS_AnalogInputScanSelect
@@ -640,11 +575,6 @@ void DRV_ADC_Initialize(void)
           ADCHS_SCAN_TRIGGER_SOURCE_GLOBAL_SOFTWARE_EDGE
      );
      PLIB_ADCHS_EarlyInterruptEnable(DRV_ADC_ID_1);
-    /* Initialize ADC Data Interrupt */
-    PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA17);
-    PLIB_INT_SourceEnable(INT_ID_0, INT_SOURCE_ADC_1_DATA17);
-    PLIB_INT_VectorPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA17, INT_PRIORITY_LEVEL3);
-    PLIB_INT_VectorSubPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA17, INT_SUBPRIORITY_LEVEL0);     
 
      /* Include Analog input to Scan list */
      PLIB_ADCHS_AnalogInputScanSelect
@@ -668,11 +598,6 @@ void DRV_ADC_Initialize(void)
           ADCHS_SCAN_TRIGGER_SOURCE_GLOBAL_SOFTWARE_EDGE
      );
      PLIB_ADCHS_EarlyInterruptEnable(DRV_ADC_ID_1);
-    /* Initialize ADC Data Interrupt */
-    PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA23);
-    PLIB_INT_SourceEnable(INT_ID_0, INT_SOURCE_ADC_1_DATA23);
-    PLIB_INT_VectorPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA23, INT_PRIORITY_LEVEL3);
-    PLIB_INT_VectorSubPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA23, INT_SUBPRIORITY_LEVEL0);     
 
      /* Include Analog input to Scan list */
      PLIB_ADCHS_AnalogInputScanSelect
@@ -696,11 +621,6 @@ void DRV_ADC_Initialize(void)
           ADCHS_SCAN_TRIGGER_SOURCE_GLOBAL_SOFTWARE_EDGE
      );
      PLIB_ADCHS_EarlyInterruptEnable(DRV_ADC_ID_1);
-    /* Initialize ADC Data Interrupt */
-    PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA27);
-    PLIB_INT_SourceEnable(INT_ID_0, INT_SOURCE_ADC_1_DATA27);
-    PLIB_INT_VectorPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA27, INT_PRIORITY_LEVEL3);
-    PLIB_INT_VectorSubPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA27, INT_SUBPRIORITY_LEVEL0);     
 
 
      /* Include Analog input to Scan list */
@@ -725,11 +645,6 @@ void DRV_ADC_Initialize(void)
           ADCHS_SCAN_TRIGGER_SOURCE_GLOBAL_SOFTWARE_EDGE
      );
      PLIB_ADCHS_EarlyInterruptEnable(DRV_ADC_ID_1);
-    /* Initialize ADC Data Interrupt */
-    PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA35);
-    PLIB_INT_SourceEnable(INT_ID_0, INT_SOURCE_ADC_1_DATA35);
-    PLIB_INT_VectorPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA35, INT_PRIORITY_LEVEL3);
-    PLIB_INT_VectorSubPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA35, INT_SUBPRIORITY_LEVEL0);     
 
      /* Include Analog input to Scan list */
      PLIB_ADCHS_AnalogInputScanSelect
@@ -753,11 +668,6 @@ void DRV_ADC_Initialize(void)
           ADCHS_SCAN_TRIGGER_SOURCE_GLOBAL_SOFTWARE_EDGE
      );
      PLIB_ADCHS_EarlyInterruptEnable(DRV_ADC_ID_1);
-    /* Initialize ADC Data Interrupt */
-    PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA36);
-    PLIB_INT_SourceEnable(INT_ID_0, INT_SOURCE_ADC_1_DATA36);
-    PLIB_INT_VectorPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA36, INT_PRIORITY_LEVEL3);
-    PLIB_INT_VectorSubPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA36, INT_SUBPRIORITY_LEVEL0);     
 
      /* Include Analog input to Scan list */
      PLIB_ADCHS_AnalogInputScanSelect
@@ -781,11 +691,6 @@ void DRV_ADC_Initialize(void)
           ADCHS_SCAN_TRIGGER_SOURCE_GLOBAL_SOFTWARE_EDGE
      );
      PLIB_ADCHS_EarlyInterruptEnable(DRV_ADC_ID_1);
-    /* Initialize ADC Data Interrupt */
-    PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA37);
-    PLIB_INT_SourceEnable(INT_ID_0, INT_SOURCE_ADC_1_DATA37);
-    PLIB_INT_VectorPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA37, INT_PRIORITY_LEVEL3);
-    PLIB_INT_VectorSubPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA37, INT_SUBPRIORITY_LEVEL0);     
 
      /* Include Analog input to Scan list */
      PLIB_ADCHS_AnalogInputScanSelect
@@ -809,11 +714,6 @@ void DRV_ADC_Initialize(void)
           ADCHS_SCAN_TRIGGER_SOURCE_GLOBAL_SOFTWARE_EDGE
      );
      PLIB_ADCHS_EarlyInterruptEnable(DRV_ADC_ID_1);
-    /* Initialize ADC Data Interrupt */
-    PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA39);
-    PLIB_INT_SourceEnable(INT_ID_0, INT_SOURCE_ADC_1_DATA39);
-    PLIB_INT_VectorPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA39, INT_PRIORITY_LEVEL3);
-    PLIB_INT_VectorSubPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA39, INT_SUBPRIORITY_LEVEL0);     
 
      /* Include Analog input to Scan list */
      PLIB_ADCHS_AnalogInputScanSelect
@@ -837,11 +737,6 @@ void DRV_ADC_Initialize(void)
           ADCHS_SCAN_TRIGGER_SOURCE_GLOBAL_SOFTWARE_EDGE
      );
      PLIB_ADCHS_EarlyInterruptEnable(DRV_ADC_ID_1);
-    /* Initialize ADC Data Interrupt */
-    PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA45);
-    PLIB_INT_SourceEnable(INT_ID_0, INT_SOURCE_ADC_1_DATA45);
-    PLIB_INT_VectorPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA45, INT_PRIORITY_LEVEL3);
-    PLIB_INT_VectorSubPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA45, INT_SUBPRIORITY_LEVEL0);     
 
      /* Include Analog input to Scan list */
      PLIB_ADCHS_AnalogInputScanSelect
@@ -865,11 +760,6 @@ void DRV_ADC_Initialize(void)
           ADCHS_SCAN_TRIGGER_SOURCE_GLOBAL_SOFTWARE_EDGE
      );
      PLIB_ADCHS_EarlyInterruptEnable(DRV_ADC_ID_1);
-    /* Initialize ADC Data Interrupt */
-    PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA46);
-    PLIB_INT_SourceEnable(INT_ID_0, INT_SOURCE_ADC_1_DATA46);
-    PLIB_INT_VectorPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA46, INT_PRIORITY_LEVEL3);
-    PLIB_INT_VectorSubPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA46, INT_SUBPRIORITY_LEVEL0);     
 
      /* Include Analog input to Scan list */
      PLIB_ADCHS_AnalogInputScanSelect
@@ -893,11 +783,6 @@ void DRV_ADC_Initialize(void)
           ADCHS_SCAN_TRIGGER_SOURCE_GLOBAL_SOFTWARE_EDGE
      );
      PLIB_ADCHS_EarlyInterruptEnable(DRV_ADC_ID_1);
-    /* Initialize ADC Data Interrupt */
-    PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA47);
-    PLIB_INT_SourceEnable(INT_ID_0, INT_SOURCE_ADC_1_DATA47);
-    PLIB_INT_VectorPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA47, INT_PRIORITY_LEVEL3);
-    PLIB_INT_VectorSubPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DATA47, INT_SUBPRIORITY_LEVEL0);     
 
 
     /* Enable ADC */
