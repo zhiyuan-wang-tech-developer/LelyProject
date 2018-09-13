@@ -11,11 +11,59 @@
 #include "test_pwm.h"
 #include "test_params.h"
 #include "test_uart.h"
-
+#include <float.h>
 
 
 extern volatile ANALOG_VOLTAGE_MONITOR_DATA analog_voltage_monitorData;
 extern PWM_CONTROLLER_DATA pwm_controllerData;
+
+
+float inductor_uH = -110; // 5 * 22 uH per pair
+
+
+inline float test_pwm_calc_time(float Uinductor_V, float current_A){
+    //Uinductor = -L * dI / dT
+    if( Uinductor_V == 0 ) return FLT_EPSILON;
+    
+    float time_us = inductor_uH * current_A / Uinductor_V;
+    return time_us;
+}
+
+inline float test_pwm_calc_Uinductor(float current_A, float time_us){
+    //Uinductor = -L * dI / dT
+    if( time_us == 0 ) return FLT_EPSILON;
+    
+    float Uinductor_V = inductor_uH * current_A / time_us;
+    return Uinductor_V;
+}
+
+inline float test_pwm_calc_current(float Uinductor, float time_us){
+    //Uinductor = -L * dI / dT
+    if( time_us == 0 ) return FLT_EPSILON;
+    float current_A = inductor_uH * Uinductor / time_us;
+    return current_A;
+}
+
+
+void test_calcs(){
+    
+    const float current_meas = analog_voltage_monitorData.adc_converted_data.samples.IL12;
+    const float voltage_meas = (analog_voltage_monitorData.adc_converted_data.samples.VLIVE - analog_voltage_monitorData.adc_converted_data.samples.VNEUTRAL);
+
+    volatile float time_us = pwm_controllerData.dutyCycle.update_value.PWM_BOOST1 / 120.0;   //duty cycle, runs @ 120 MHz    
+    
+    volatile float current_calc = test_pwm_calc_current(voltage_meas, time_us);
+    volatile float voltage_calc = test_pwm_calc_current(current_meas, time_us);
+    volatile float time_calc = test_pwm_calc_time(voltage_calc, current_calc);
+    
+    
+    SYS_DEBUG_BreakPoint();
+}
+
+
+
+
+
 
 static void test_Piccolo1_PowerOn(){
     //Enable 3V3-1
@@ -129,22 +177,16 @@ void test_startup(){
     
     SYS_DEBUG_BreakPoint();
     
-    // Initialize drivers
-    SYS_Initialize ( NULL );
 
     //Disable pre-fetch
     CHECONbits.PREFEN = 0;
     
     test_init_adc();
-
-    
     
     ADC_SCAN_UPDATE_STATUS updateAll;
     updateAll.status = -1;
     updateAll.status_bits.UNUSED = 0;    
     const uint32_t allUpdated = updateAll.status;
-    
-    
     
     
     test_comparator();
@@ -153,7 +195,7 @@ void test_startup(){
     SYS_DEBUG_BreakPoint();
     
     
-    //Try single ADC    
+    //Try single ADC
     while( PLIB_ADCHS_AnalogInputDataIsReady(ADCHS_ID_0, ADCHS_AN17) ){
         PLIB_ADCHS_AnalogInputResultGet(ADCHS_ID_0, ADCHS_AN17);
     }
@@ -183,9 +225,6 @@ void test_startup(){
     
     SYS_DEBUG_BreakPoint();
 
-    test_uart_init();
-  
-    SYS_DEBUG_BreakPoint();
     
     T2CON = 0;
     IFS0bits.T2IF = 0;
