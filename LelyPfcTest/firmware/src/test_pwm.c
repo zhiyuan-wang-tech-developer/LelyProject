@@ -23,13 +23,8 @@ void test_pwm_init(){
     //Enable current limit
     test_pwm_setCurrentLimit();
     
-    
-    
     //Disable for reconfiguration
     PLIB_MCPWM_Disable(MCPWM_ID_0);
-    
-    
-    SYS_DEBUG_BreakPoint();
     
     //Enable PWM outputs 7H - 10H
     SYS_DEVCON_SystemUnlock();   
@@ -43,8 +38,6 @@ void test_pwm_init(){
     CFGCONbits.PWMAPIN4 = 1;    //output 10H on pin 4L    
     SYS_DEVCON_SystemLock();
     
-    
-    SYS_DEBUG_BreakPoint();
     
     
     PLIB_MCPWM_PrimaryTimerSetup( MCPWM_ID_0, MCPWM_CLOCK_DIVIDE_BY_1, period);
@@ -128,48 +121,97 @@ void test_pwm_init(){
     PLIB_MCPWM_Enable(MCPWM_ID_0);
 }
 
-void test_pwm(){
-    SYS_DEBUG_BreakPoint();    
-        
-    memcpy(&pwmData, &pwm_controllerData, sizeof(PWM_CONTROLLER_DATA));
 
+void test_pwm_manual(){
+    //Re-initialize
     test_pwm_init();
-    
-    while( PLIB_MCPWM_ChannelCurrentLimitIsAsserted(MCPWM_ID_0, MCPWM_CHANNEL1) && !PLIB_CMP_OutputStatusGet(CMP_ID_1) ){
-        Nop();
-    }
-    
-    //Target ADC value of ~ 300V
-    //(300.0 / ((1e6 + 47e3 + 4.7e3) / 4.7e3)) * (4095.0/3.300) = 1663
-    uint16_t target_adc_380v = (uint16_t) ((300.0 / analog_voltage_monitorData.dividers.an_380V) * (4095.0/3.300));
 
+    volatile pwm_channel_t pwmChannels = PWM_ALL;
+    volatile uint16_t buck_dc = 0;
+    volatile uint16_t boost_dc = 0;
     
+    volatile uint16_t boost1_phase = 0;         //= 0%
+    volatile uint16_t boost2_phase = 600;       //= 50%
+    volatile uint16_t boost3_phase = 300;       //= 25%
+    volatile uint16_t boost4_phase = 900;       //= 75%
+        
+    volatile uint16_t buck_boost_phase = 120;   //= 10% shift
+    
+    volatile uint16_t buck1_phase = boost1_phase + buck_boost_phase;
+    volatile uint16_t buck2_phase = boost2_phase + buck_boost_phase;
+    volatile uint16_t buck3_phase = boost3_phase + buck_boost_phase;
+    volatile uint16_t buck4_phase = boost4_phase + buck_boost_phase;
+    
+
+    //Enable FPCs
+    V_PFC_STOP_12_NOn();
+    V_PFC_STOP_34_NOn();
+    
+    //Flag to clear overload error state
+    volatile bool resetOverloads = false;
+    
+    //Flag to stop the manual test
+    volatile bool sw_exit = false;
+    
+    do {
+        // Period = 1200
+        // Change buck/boost phase and buck/boost dc to test
+        test_pwm_SetBuckBoostDC(pwmChannels, buck_dc, boost_dc);
+
+        buck1_phase = boost1_phase + buck_boost_phase;
+        buck2_phase = boost2_phase + buck_boost_phase;
+        buck3_phase = boost3_phase + buck_boost_phase;
+        buck4_phase = boost4_phase + buck_boost_phase;
+
+        test_pwm_SetBuckBoostPhase(PWM_Pair_1, buck1_phase, boost1_phase);
+        test_pwm_SetBuckBoostPhase(PWM_Pair_2, buck2_phase, boost2_phase);
+        test_pwm_SetBuckBoostPhase(PWM_Pair_3, buck3_phase, boost3_phase);
+        test_pwm_SetBuckBoostPhase(PWM_Pair_4, buck4_phase, boost4_phase);
+
+        if( resetOverloads ){
+            resetOverloads = false;
+
+            V_PFC_STOP_12_NOff();
+            V_PFC_STOP_34_NOff();
+
+            V_PFC_STOP_12_NOn();
+            V_PFC_STOP_34_NOn();
+        }
+
+        
+        SYS_DEBUG_BreakPoint();
+    }while( !sw_exit );
+}
+
+void test_pwm_cooldown(){
                         // s  -> ms  -> 10us
-    uint32_t delay_10us = 30U * 1000U * 100U;
-    
-    //test: pwm channel, target adc value, dc step
-    //First try a single PMW pair
-    test_pwm_RampUp(PWM_Pair_1, target_adc_380v , 1 );
-
+    uint32_t delay_10us = 60U * 1000U * 100U;
+     
     //Disable PWM, allow capacitors to drain
     PLIB_MCPWM_Disable(MCPWM_ID_0);
     test_delay_10us( delay_10us );
+}
+
+void test_pwm(){
+    SYS_DEBUG_BreakPoint();
+
+    //Do manual testing
+    test_pwm_manual();
+    test_pwm_cooldown();
     
-    //Re-initialize
-    test_pwm_init();
+    
+    //Try with a single pair
+    test_pwm_RampUp(PWM_Pair_3);
+        
+    test_pwm_cooldown();
     
     //Now try it with a whole group
-    test_pwm_RampUp(PWM_Group_12, target_adc_380v , 1 );
+    test_pwm_RampUp(PWM_Group_34);
     
-    //Disable PWM, allow capacitors to drain
-    PLIB_MCPWM_Disable(MCPWM_ID_0);
-    test_delay_10us( delay_10us );
-    
-    //Re-initialize
-    test_pwm_init();
-    
+    test_pwm_cooldown();
+        
     //Now try it with all PWMs
-    test_pwm_RampUp(PWM_ALL, target_adc_380v , 1 );
+    test_pwm_RampUp(PWM_ALL);
 
     SYS_DEBUG_BreakPoint();
 }
@@ -259,10 +301,6 @@ static void test_pwm_setCurrentLimit(){
 }
 
 void test_pwm_SetBuckPhase(pwm_channel_t channel, uint16_t val, bool update){
-    if( isHigherThanBuckMaxDC(val) ){
-        val = getBuckMaxDC();
-    }
-    
     if( channel == PWM_ALL || channel == PWM_Pair_1 || channel == PWM_Group_12 ){
         pwmData.phaseShift.update_value.PWM_BUCK1 = val;
         pwmData.phaseShiftStatus.updata_status_flag.PWM_BUCK1 = true;
@@ -290,12 +328,6 @@ void test_pwm_SetBuckPhase(pwm_channel_t channel, uint16_t val, bool update){
 }
 
 void test_pwm_SetBoostPhase(pwm_channel_t channel, uint16_t val, bool update){
-    if( isHigherThanBoostMaxDC(val) ){
-        val = getBoostMaxDC();
-    }else if( isLowerThanBoostMinDC(val)){
-        val = getBoostMinDC();
-    }
-    
     if( channel == PWM_ALL || channel == PWM_Pair_1 || channel == PWM_Group_12 ){
         pwmData.phaseShift.update_value.PWM_BOOST1 = val;
         pwmData.phaseShiftStatus.updata_status_flag.PWM_BOOST1 = true;
@@ -400,32 +432,161 @@ void test_pwm_SetBuckBoostDC(pwm_channel_t channel, uint16_t buck, uint16_t boos
 }
 
 
-void test_pwm_RampUp( pwm_channel_t pwms, uint16_t target, uint16_t dc_step){
-    uint16_t dc = 0;
-    
+void test_pwm_RampUp( pwm_channel_t pwms){    
     volatile bool sw_exit = false;
 
-    //                          s -> ms -> 10us
-    const uint32_t delay_10us = 1 * 10U * 100U;
+    enum {
+        Init,
+        RampBuck,
+        RampBoost,
+        Settle
+    } step = Init;
+        
+    volatile uint16_t buck_dc = 0;
+    volatile uint16_t boost_dc = 150;           //Initialize with 150 / 120Mhz = 1.25 us overlap
     
-    do{
-        //delay 10ms, half-sine of net power
-        test_delay_10us(delay_10us);  
+    const uint16_t boost1_phase = 0;         //= 0%
+    const uint16_t boost2_phase = 600;       //= 50%
+    const uint16_t boost3_phase = 300;       //= 25%
+    const uint16_t boost4_phase = 900;       //= 75%
         
-        if( dc % 100 == 0 )
-            SYS_DEBUG_BreakPoint();
-        
-        //set dc
-        test_pwm_SetBuckBoostDC(pwms, dc, dc);
-        
-        dc += dc_step;
-        
-        if( (dc >= getBoostMaxDC() ) && (dc >= getBuckMaxDC() ) ){
-            SYS_DEBUG_BreakPoint();
-            sw_exit = true;
-        }
-    }while( (analog_voltage_monitorData.adc_raw_data.samples.V380V < target) && (sw_exit == false) );
+    volatile uint16_t buck_boost_phase = 120;   //= 10% shift
+    
+    volatile uint16_t buck1_phase = boost1_phase + buck_boost_phase;
+    volatile uint16_t buck2_phase = boost2_phase + buck_boost_phase;
+    volatile uint16_t buck3_phase = boost3_phase + buck_boost_phase;
+    volatile uint16_t buck4_phase = boost4_phase + buck_boost_phase;
+    
+    
+    volatile uint32_t buck_delay_step = 10 * 100;           //10ms between steps
+    volatile uint32_t boost_delay_step = 1 * 200 * 100;    //500ms between steps
 
+
+    do{
+        uint16_t target = getTarget380V();
+        
+        switch( step ){
+            case Init:
+                //Off during init
+                V_LED3_GOff();
+                V_LED3_ROff();                
+                
+                //Initialize driver
+                test_pwm_init();
+                
+                //Set safe initial values                
+                buck_dc = 200;
+                boost_dc = 150;
+                buck_boost_phase = 120;   //= 10% shift
+                boost_delay_step = 1 * 200 * 100;    //200ms between steps
+                 
+                buck1_phase = boost1_phase + buck_boost_phase;
+                buck2_phase = boost2_phase + buck_boost_phase;
+                buck3_phase = boost3_phase + buck_boost_phase;
+                buck4_phase = boost4_phase + buck_boost_phase;
+
+                test_pwm_SetBuckBoostPhase(PWM_Pair_1, buck1_phase, boost1_phase);
+                test_pwm_SetBuckBoostPhase(PWM_Pair_2, buck2_phase, boost2_phase);
+                test_pwm_SetBuckBoostPhase(PWM_Pair_3, buck3_phase, boost3_phase);
+                test_pwm_SetBuckBoostPhase(PWM_Pair_4, buck4_phase, boost4_phase);
+
+                test_pwm_SetBuckBoostDC(pwms, buck_dc, boost_dc);
+                
+                //Reset overloads
+                V_PFC_STOP_12_NOff();
+                V_PFC_STOP_34_NOff();
+    
+                V_PFC_STOP_12_NOn();
+                V_PFC_STOP_34_NOn();                
+                
+                step = RampBuck;
+                break;
+                
+            case RampBuck:
+                //Orange during Buck
+                V_LED3_GOn();
+                V_LED3_ROn();                
+
+                
+                //Ramp up to target buck DC
+                test_delay_10us(buck_delay_step);   //delay between steps
+                
+                if( buck_dc >= getBuckMaxDC() ){
+                    step = RampBoost;
+                }else{
+                    buck_dc += getBuckStepPlus();
+                }
+                
+                test_pwm_SetBuckBoostDC(pwms, buck_dc, boost_dc);
+                break;
+                
+            case RampBoost:
+                //Green when ramping boost up
+                V_LED3_GOn();
+                V_LED3_ROff();                
+
+                
+                test_delay_10us(boost_delay_step);   //delay between steps
+                
+                if( analog_voltage_monitorData.adc_raw_data.samples.V380V < (target - 100) ){
+                    //Target -20V
+                    boost_dc += 10;
+                    boost_delay_step = 1 * 1000 * 100;    //1000ms between steps;
+                    
+                }else if(analog_voltage_monitorData.adc_raw_data.samples.V380V < (target - 50) ){
+                    //Target -10V
+                    boost_dc += 5;
+                    boost_delay_step = 500 * 100;    //500ms between steps;
+                    
+                }else if(analog_voltage_monitorData.adc_raw_data.samples.V380V < (target - 10) ){
+                    //Target -5V
+                    boost_dc += 2;
+                    boost_delay_step = 200 * 100;    //200ms between steps;
+                }else if(analog_voltage_monitorData.adc_raw_data.samples.V380V < (target - 5) ){
+                    //Target -5V
+                    boost_dc += 1;
+                    boost_delay_step = 100 * 100;       //100ms between steps;                    
+                }
+                
+                if( analog_voltage_monitorData.adc_raw_data.samples.V380V >= (target - 10) ){
+                    //Target -5V
+                    step = Settle;
+                    boost_delay_step = 100 * 100;       //100ms between steps;
+                }
+                                
+                if( boost_dc > getBoostMaxDC() ){
+                    boost_dc = getBoostMaxDC();
+                }
+                
+                test_pwm_SetBuckBoostDC(pwms, buck_dc, boost_dc);
+                break;
+
+            case Settle:
+                //Red when ramping boost down
+                V_LED3_GOff();
+                V_LED3_ROn();                
+
+                
+                test_delay_10us(boost_delay_step);   //delay between steps
+                
+                if( analog_voltage_monitorData.adc_raw_data.samples.V380V > (target + 50) ){
+                    //Target +20V
+                    boost_dc -= 10;
+                    boost_delay_step = 200 * 100;  //200ms
+                }
+                else if( analog_voltage_monitorData.adc_raw_data.samples.V380V > (target + 10) ){
+                    //Target +5V
+                    boost_dc -= 1;
+                    boost_delay_step = 200 * 100;  //200ms
+                }else{
+                    step = RampBoost;
+                }
+                
+                test_pwm_SetBuckBoostDC(pwms, buck_dc, boost_dc);
+
+                break;
+        }
+    }while( !sw_exit );
 }
 
 
