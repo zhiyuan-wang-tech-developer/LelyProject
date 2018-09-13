@@ -52,26 +52,70 @@ extern volatile ANALOG_VOLTAGE_MONITOR_DATA analog_voltage_monitorData;
 
 static ANALOG_VOLTAGE_MONITOR_DATA adcData;
 
-void __ISR(_ADC_DF1_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_Filter1(void){
-    V_LED1_GOn();
 
-    //Read filtered value
-    _setFilteredSample(IL34, ADCHS_DIGITAL_FILTER_1);
+
+
+// adc difference from mid -> mV -> A
+const float adcToA = (3300.0 / 4095.0) / 66.0;
+
+// adc -> mV adc -> V380V
+const float adcToV = (3.300 / 4095.0) * (47e3+1e6+4.7e3)/(4.7e3);
+
+
+
+
+
+void __attribute__(( at_vector(_ADC_DF1_VECTOR), interrupt(ipl5SRS), aligned(16) )) _IntHandlerDrvAdc_Filter1Shadow(void)
+{    
+    //V_LED1_GOn();
+    PORTESET = _PORTE_RE0_MASK;    
+
+//    static const ADC_SCAN_UPDATE_STATUS flagMask = {
+//        .status_bits.IL34 = 1,
+//        .status_bits.V380V = 1,
+//        .status_bits.VLIVE = 1,
+//        .status_bits.VNEUTRAL = 1,
+//        .status_bits.TEMP_PFC34 = 1
+//    };
+//    
+//    
+    //Read the dedicated channels, interrupting on ADC Filter, because this triggers after the normal conversions are complete
+    analog_voltage_monitorData.adc_raw_data.samples.IL34 = PLIB_ADCHS_DigitalFilterDataGet(ADCHS_ID_0, ADCHS_DIGITAL_FILTER_1);
+//    analog_voltage_monitorData.adc_raw_data.samples.update.status_bits.IL34 = true;
+    
+    analog_voltage_monitorData.adc_raw_data.samples.V380V = PLIB_ADCHS_AnalogInputResultGet(ADCHS_ID_0, ADC_Channel_380V);
+//    analog_voltage_monitorData.adc_raw_data.samples.update.status_bits.V380V = true;
+
+    analog_voltage_monitorData.adc_raw_data.samples.VLIVE = PLIB_ADCHS_AnalogInputResultGet(ADCHS_ID_0, ADC_Channel_LIVE);
+//    analog_voltage_monitorData.adc_raw_data.samples.update.status_bits.VLIVE = true;
+
+    analog_voltage_monitorData.adc_raw_data.samples.VNEUTRAL = PLIB_ADCHS_AnalogInputResultGet(ADCHS_ID_0, ADC_Channel_NEUTRAL);
+//    analog_voltage_monitorData.adc_raw_data.samples.update.status_bits.VNEUTRAL = true;
+
+    analog_voltage_monitorData.adc_raw_data.samples.TEMP_PFC34 = PLIB_ADCHS_AnalogInputResultGet(ADCHS_ID_0, ADC_Channel_TPFC_34);
+//    analog_voltage_monitorData.adc_raw_data.samples.update.status_bits.TEMP_PFC34 = true;
+    
+    analog_voltage_monitorData.adc_raw_data.samples.update.status |= 0x1f;//flagMask.status;
+    
+    
+//    //data->adc_converted_data.samples.V380V = data->adc_raw_data.samples.V380V * ADC_LSB_VOLTAGE_mV * data->dividers.an_380V;
+//    float Uinductor = analog_voltage_monitorData.adc_raw_data.samples.V380V * adcToV;
+//    float current_A = (float)(analog_voltage_monitorData.adc_raw_data.samples.IL34 - 2048) * adcToA;
+//    float time = test_pwm_calc_time(Uinductor, current_A);
+    
+//    V_LED1_GOff();
+    PORTECLR = _PORTE_RE0_MASK;
 
     //Clear interrupt flag
-    IFS3bits.AD1DF1IF = 0;
-
-    V_LED1_GOff();
+//    IFS3bits.AD1DF1IF = 0;    
+    IFS3CLR = _IFS3_AD1DF1IF_MASK;
 }
+
 
 void __ISR(_ADC_DATA5_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA5(void)
 {
-//    V_LEDR_GOn();
-    
     _setSample(IL34, ADCHS_AN5);    
-    
     IFS3bits.AD1D5IF = 0;
-//    V_LEDR_GOff();
 }
 
 
@@ -126,6 +170,8 @@ void __ISR(_TIMER_3_VECTOR, ipl4AUTO) _IntHandler_Timer3(void)
 void test_init_adc(){
     DRV_ADC_Initialize();
 
+    //dedicated shadow register set for fast ADC ISR    
+    PLIB_INT_ShadowRegisterAssign(INT_ID_0, INT_PRIORITY_LEVEL5, INT_SHADOW_REGISTER_1);
     
     //Configure ADC5 in the same way other ADCs are configured
     if (DEVADC5 != 0xFFFFFFFF)
@@ -158,7 +204,7 @@ void test_init_adc(){
     
     PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DF1);
     PLIB_INT_SourceEnable(INT_ID_0, INT_SOURCE_ADC_1_DF1);
-    PLIB_INT_VectorPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DF1, INT_PRIORITY_LEVEL3);
+    PLIB_INT_VectorPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DF1, INT_PRIORITY_LEVEL5);
     PLIB_INT_VectorSubPrioritySet(INT_ID_0, INT_VECTOR_ADC1_DF1, INT_SUBPRIORITY_LEVEL0);
     
         
