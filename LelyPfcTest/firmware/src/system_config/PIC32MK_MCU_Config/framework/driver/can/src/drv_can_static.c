@@ -51,6 +51,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVOCES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 // *****************************************************************************
 #include "driver/can/drv_can.h"
+#include "system/debug/sys_debug.h"
 
 
 static CAN_TX_MSG_BUFFER  *drv_Message0;
@@ -64,41 +65,40 @@ static CAN_TX_MSG_BUFFER __attribute__((coherent, aligned(16))) can_message_buff
 // *****************************************************************************
 void DRV_CAN0_Initialize(void)
 {
-
     /* Switch the CAN module ON */
-    PLIB_CAN_Enable(CAN_ID_2);
+    PLIB_CAN_Enable(CAN_ID_1);
 
     /* Switch the CAN module to Configuration mode. Wait until the switch is complete */
-    PLIB_CAN_OperationModeSelect(CAN_ID_2, CAN_CONFIGURATION_MODE);
-    while(PLIB_CAN_OperationModeGet(CAN_ID_2) != CAN_CONFIGURATION_MODE);
+    PLIB_CAN_OperationModeSelect(CAN_ID_1, CAN_CONFIGURATION_MODE);
+    while(PLIB_CAN_OperationModeGet(CAN_ID_1) != CAN_CONFIGURATION_MODE);
 
-    PLIB_CAN_PhaseSegment2LengthFreelyProgrammableEnable(CAN_ID_2);
+    PLIB_CAN_PhaseSegment2LengthFreelyProgrammableEnable(CAN_ID_1);
 
-    //Set the Baud rate to 1000 kbps
-    PLIB_CAN_PropagationTimeSegmentSet(CAN_ID_2, 1-1);
-    PLIB_CAN_PhaseSegment1LengthSet(CAN_ID_2, 4-1);
-    PLIB_CAN_PhaseSegment2LengthSet(CAN_ID_2, 4-1);
-    PLIB_CAN_SyncJumpWidthSet(CAN_ID_2, 1-1);
-    PLIB_CAN_BaudRatePrescaleSet(CAN_ID_2, 5); // set to 1 higher then ECAN tool
+    //Set the Baud rate to 500 kbps
+    PLIB_CAN_PropagationTimeSegmentSet(CAN_ID_1, 1-1);
+    PLIB_CAN_PhaseSegment1LengthSet(CAN_ID_1, 3-1);
+    PLIB_CAN_PhaseSegment2LengthSet(CAN_ID_1, 3-1);
+    PLIB_CAN_SyncJumpWidthSet(CAN_ID_1, 1-1);
+    PLIB_CAN_BaudRatePrescaleSet(CAN_ID_1, 14); // set to 1 higher then ECAN tool
 
 
     /* Assign the buffer area to the CAN module.
       In this case assign enough memory for 2
       channels, each with 8 message buffers.*/
-    PLIB_CAN_MemoryBufferAssign(CAN_ID_2, can_message_buffer0);
+    PLIB_CAN_MemoryBufferAssign(CAN_ID_1, can_message_buffer0);
 
-    /* Configure CAN_ID_2 Channel for CAN_TX_RTR_DISABLED operation. Allocate 1 message buffer, and assign low medium priority for transmissions. */
-    PLIB_CAN_ChannelForTransmitSet(CAN_ID_2, CAN_CHANNEL0, 1, CAN_TX_RTR_DISABLED, CAN_LOW_MEDIUM_PRIORITY);
-    /* Configure CAN_ID_2 Channel for CAN_TX_RTR_DISABLED operation. Allocate 1 message buffer, and assign low medium priority for transmissions. */
-    PLIB_CAN_ChannelForTransmitSet(CAN_ID_2, CAN_CHANNEL1, 1, CAN_TX_RTR_DISABLED, CAN_LOW_MEDIUM_PRIORITY);
-    PLIB_CAN_FilterConfigure(CAN_ID_2, CAN_FILTER0, 0x7fff, CAN_SID);
-    PLIB_CAN_FilterEnable(CAN_ID_2, CAN_FILTER0);
+    /* Configure CAN_ID_1 Channel for CAN_TX_RTR_DISABLED operation. Allocate 1 message buffer, and assign low medium priority for transmissions. */
+    PLIB_CAN_ChannelForTransmitSet(CAN_ID_1, CAN_CHANNEL0, 1, CAN_TX_RTR_DISABLED, CAN_LOW_MEDIUM_PRIORITY);
+    /* Configure CAN_ID_1 Channel for CAN_TX_RTR_DISABLED operation. Allocate 1 message buffer, and assign low medium priority for transmissions. */
+    PLIB_CAN_ChannelForTransmitSet(CAN_ID_1, CAN_CHANNEL1, 1, CAN_TX_RTR_DISABLED, CAN_LOW_MEDIUM_PRIORITY);
+    PLIB_CAN_FilterConfigure(CAN_ID_1, CAN_FILTER0, 0x7fff, CAN_SID);
+    PLIB_CAN_FilterEnable(CAN_ID_1, CAN_FILTER0);
 
-    PLIB_CAN_FilterMaskConfigure(CAN_ID_2, CAN_FILTER_MASK0, 0x0, CAN_SID, CAN_FILTER_MASK_IDE_TYPE);
+    PLIB_CAN_FilterMaskConfigure(CAN_ID_1, CAN_FILTER_MASK0, 0x0, CAN_SID, CAN_FILTER_MASK_IDE_TYPE);
 
     /* Switch the CAN module to Normal mode. Wait until the switch is complete */
-    PLIB_CAN_OperationModeSelect(CAN_ID_2, CAN_NORMAL_MODE);
-    while(PLIB_CAN_OperationModeGet(CAN_ID_2) != CAN_NORMAL_MODE);
+    PLIB_CAN_OperationModeSelect(CAN_ID_1, CAN_NORMAL_MODE);
+    while(PLIB_CAN_OperationModeGet(CAN_ID_1) != CAN_NORMAL_MODE);
 
 }
 
@@ -106,31 +106,31 @@ void DRV_CAN0_Deinitialize(void)
 {
 
     /* Switch the CAN module to Disable mode. Wait until the switch is complete */
-    PLIB_CAN_OperationModeSelect(CAN_ID_2, CAN_DISABLE_MODE);
-    while(PLIB_CAN_OperationModeGet(CAN_ID_2) != CAN_DISABLE_MODE);
+    PLIB_CAN_OperationModeSelect(CAN_ID_1, CAN_DISABLE_MODE);
+    while(PLIB_CAN_OperationModeGet(CAN_ID_1) != CAN_DISABLE_MODE);
 
 }
 
 void DRV_CAN0_Open(void)
 {
    /* Switch the CAN module ON */
-    PLIB_CAN_Enable(CAN_ID_2);
+    PLIB_CAN_Enable(CAN_ID_1);
 }
 
 void DRV_CAN0_Close(void)
 {
    /* Switch the CAN module OFF */
-    PLIB_CAN_Disable(CAN_ID_2);
+    PLIB_CAN_Disable(CAN_ID_1);
 }
 
 bool DRV_CAN0_ChannelMessageTransmit(CAN_CHANNEL channelNum, int address, uint8_t DLC, uint8_t* message)
 {
 
     int count = 0;
-    if ( (PLIB_CAN_ChannelEventGet(CAN_ID_2, channelNum) & CAN_TX_CHANNEL_NOT_FULL) == CAN_TX_CHANNEL_NOT_FULL)
+    if ( (PLIB_CAN_ChannelEventGet(CAN_ID_1, channelNum) & CAN_TX_CHANNEL_NOT_FULL) == CAN_TX_CHANNEL_NOT_FULL)
     {
         //drv_Message0 = (CAN_TX_MSG_BUFFER *) &can_message_buffer0[channelNum];
-        drv_Message0 = PLIB_CAN_TransmitBufferGet(CAN_ID_2, channelNum);
+        drv_Message0 = PLIB_CAN_TransmitBufferGet(CAN_ID_1, channelNum);
 
         /* Check the address whether it falls under SID or EID,
          * SID max limit is 0x7FF, so anything beyond that is EID */
@@ -158,8 +158,8 @@ bool DRV_CAN0_ChannelMessageTransmit(CAN_CHANNEL channelNum, int address, uint8_
         }
 
         //Update CAN module and then transmit data on the bus;
-       PLIB_CAN_ChannelUpdate(CAN_ID_2, channelNum);
-       PLIB_CAN_TransmitChannelFlush(CAN_ID_2, channelNum);
+       PLIB_CAN_ChannelUpdate(CAN_ID_1, channelNum);
+       PLIB_CAN_TransmitChannelFlush(CAN_ID_1, channelNum);
         return(true);
     }
     return (false);
@@ -174,7 +174,7 @@ bool DRV_CAN0_ChannelMessageReceive(CAN_CHANNEL channelNum, int address, uint8_t
     CAN_CHANNEL_EVENT ChannelEvent;
 
     /* Get the channel RX status */
-    ChannelEvent = PLIB_CAN_ChannelEventGet( CAN_ID_2 , channelNum );
+    ChannelEvent = PLIB_CAN_ChannelEventGet( CAN_ID_1 , channelNum );
 
     /* Check if there is a message available to read. */
     if( (ChannelEvent & CAN_RX_CHANNEL_NOT_EMPTY) == CAN_RX_CHANNEL_NOT_EMPTY )
@@ -182,7 +182,7 @@ bool DRV_CAN0_ChannelMessageReceive(CAN_CHANNEL channelNum, int address, uint8_t
         /* There is a message available in the Channel FIFO. */
 
         /* Get a pointer to RX message buffer */
-        RxMessage = (CAN_RX_MSG_BUFFER *)PLIB_CAN_ReceivedMessageGet(CAN_ID_2, channelNum);
+        RxMessage = (CAN_RX_MSG_BUFFER *)PLIB_CAN_ReceivedMessageGet(CAN_ID_1, channelNum);
 
         /* Process the message fields */
 
@@ -211,7 +211,7 @@ bool DRV_CAN0_ChannelMessageReceive(CAN_CHANNEL channelNum, int address, uint8_t
         }
 
         /* Message processing is done, update the message buffer pointer. */
-        PLIB_CAN_ChannelUpdate(CAN_ID_2, channelNum);
+        PLIB_CAN_ChannelUpdate(CAN_ID_1, channelNum);
 
         /* Message is processed successfully, so return true */
         readStatus = true;
