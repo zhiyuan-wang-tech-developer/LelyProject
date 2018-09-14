@@ -62,18 +62,18 @@ extern test_params_t params;
 
 //Macro for creating parameter functions
 // Creates getParam, setParam, isHigherThanParam and isLowerThanParam functions
-#define GET_SET_PARAM(name,var) \
-    __inline uint16_t get ## name (){ \
-        return var; \
+#define GET_SET_PARAM(__PARAM_NAME__, __VAR_NAME__) \
+    __inline uint16_t get ## __PARAM_NAME__ (){ \
+        return __VAR_NAME__; \
     } \
-    __inline void set ## name (uint16_t val){ \
-        var = val; \
+    __inline void set ## __PARAM_NAME__ (uint16_t val){ \
+        __VAR_NAME__ = val; \
     } \
-    __inline bool isHigherThan ## name(uint16_t val){ \
-        return val > get ## name(); \
+    __inline bool isHigherThan ## __PARAM_NAME__(uint16_t val){ \
+        return val > get ## __PARAM_NAME__(); \
     }\
-    __inline bool isLowerThan ## name(uint16_t val){ \
-        return val < get ## name(); \
+    __inline bool isLowerThan ## __PARAM_NAME__(uint16_t val){ \
+        return val < get ## __PARAM_NAME__(); \
     }
 
 
