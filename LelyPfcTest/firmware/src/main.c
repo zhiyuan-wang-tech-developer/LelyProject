@@ -63,6 +63,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include <peripheral/peripheral.h>
 
 #include "test_startup.h"
+#include "system_config/PIC32MK_MCU_Config/framework/driver/mcpwm/drv_mcpwm_static.h"
+#include "test_uart.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -72,17 +74,41 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 //#define LELY_BUILD
 
+
+void test_zhiyuan(){
+    //Disable pre-fetch
+    CHECONbits.PREFEN = 0;
+    
+    //!! NO PWM !!
+    DRV_MCPWM_Disable();
+    
+    test_init_adc();
+
+    test_uart_init();
+    
+    
+    //TODO: CAN stuff
+    
+    while( 1 ){
+        //Main loop
+    }
+}
+
 int main ( void )
 {    
     /* Initialize all MPLAB Harmony modules, including application(s). */
     SYS_Initialize ( NULL );
 
+    
+    test_zhiyuan();
+    
+    
+    
 #ifdef LELY_BUILD
     test_startupPiccolos();
 #else
     test_startup();
 #endif
-    
     
 
     while ( true )
