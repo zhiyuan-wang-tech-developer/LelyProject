@@ -38,17 +38,17 @@
             <itemPath>../src/system_config/PIC32MK_MCU_Config/system_definitions.h</itemPath>
           </logicalFolder>
         </logicalFolder>
+        <itemPath>../src/test_startup.h</itemPath>
+        <itemPath>../src/test_adc.h</itemPath>
+        <itemPath>../src/test_pwm.h</itemPath>
+        <itemPath>../src/test_params.h</itemPath>
+        <itemPath>../src/test_uart.h</itemPath>
         <itemPath>../src/global_event.h</itemPath>
         <itemPath>../src/analog_voltage_monitor.h</itemPath>
         <itemPath>../src/error_handler.h</itemPath>
         <itemPath>../src/led_controller.h</itemPath>
         <itemPath>../src/pwm_controller.h</itemPath>
         <itemPath>../src/can_controller.h</itemPath>
-        <itemPath>../src/test_startup.h</itemPath>
-        <itemPath>../src/test_adc.h</itemPath>
-        <itemPath>../src/test_pwm.h</itemPath>
-        <itemPath>../src/test_params.h</itemPath>
-        <itemPath>../src/test_uart.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f1" displayName="framework" projectFiles="true">
         <logicalFolder name="f1" displayName="driver" projectFiles="true">
@@ -192,6 +192,12 @@
             <itemPath>../src/system_config/PIC32MK_MCU_Config/system_tasks.c</itemPath>
           </logicalFolder>
         </logicalFolder>
+        <itemPath>../src/test_startup.c</itemPath>
+        <itemPath>../src/test_adc.c</itemPath>
+        <itemPath>../src/test_pwm.c</itemPath>
+        <itemPath>../src/test_params.c</itemPath>
+        <itemPath>../src/test_uart.c</itemPath>
+        <itemPath>../src/test_uart_proto.c</itemPath>
         <itemPath>../src/global_event.c</itemPath>
         <itemPath>../src/analog_voltage_monitor.c</itemPath>
         <itemPath>../src/error_handler.c</itemPath>
@@ -199,12 +205,6 @@
         <itemPath>../src/pwm_controller.c</itemPath>
         <itemPath>../src/can_controller.c</itemPath>
         <itemPath>../src/main.c</itemPath>
-        <itemPath>../src/test_startup.c</itemPath>
-        <itemPath>../src/test_adc.c</itemPath>
-        <itemPath>../src/test_pwm.c</itemPath>
-        <itemPath>../src/test_params.c</itemPath>
-        <itemPath>../src/test_uart.c</itemPath>
-        <itemPath>../src/test_uart_proto.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f1" displayName="framework" projectFiles="true">
         <logicalFolder name="f1" displayName="driver" projectFiles="true">

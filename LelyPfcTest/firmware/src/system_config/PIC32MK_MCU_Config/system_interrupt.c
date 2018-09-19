@@ -422,11 +422,14 @@ void __ISR(_ADC_DATA47_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA47(void)
     PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_ADC_1_DATA47);
 }
      
-     
-
 void __ISR(_TIMER_1_VECTOR, ipl4AUTO) IntHandlerDrvTmrInstance0(void)
 {
     DRV_TMR_Tasks(sysObj.drvTmr0);
+}
+
+void __ISR(_CAN1_VECTOR, IPL3AUTO) _IntHandlerDrvCANInstance0(void)
+{
+    PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_CAN_1);
 }
 /*******************************************************************************
  End of File

@@ -182,7 +182,7 @@
       <Template dnOrder="2">
         <Name dnOrder="0">system_init.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/PIC32MK_MCU_Config</Path>
-        <Checksum dnOrder="2">59BF99531AAA70DEECF7677EAD542198</Checksum>
+        <Checksum dnOrder="2">CA81CD370040C09DFCE046B6042A7D52</Checksum>
         <ProjectFileChecksum dnOrder="3">8B9AAA7DB9EA1C9CA4F9C0E30195BB7F</ProjectFileChecksum>
       </Template>
       <Template dnOrder="3">
@@ -193,7 +193,8 @@
       <Template dnOrder="4">
         <Name dnOrder="0">can_controller.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app</Path>
-        <Checksum dnOrder="2">9119210CDCBD7DDD54B352FB9DFD5A29</Checksum>
+        <Checksum dnOrder="2">47BED9CF3820F8B3F1CC2120BF5EE5D0</Checksum>
+        <ProjectFileChecksum dnOrder="3">04F2FDFC4270FC2DB6C0FB1315311ABA</ProjectFileChecksum>
       </Template>
       <Template dnOrder="5">
         <Name dnOrder="0">system_config.h</Name>
@@ -204,7 +205,7 @@
       <Template dnOrder="6">
         <Name dnOrder="0">drv_can_static.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/app/system_config/PIC32MK_MCU_Config/framework/driver/can</Path>
-        <Checksum dnOrder="2">43E26EF057A4F26A2EAEF7DE52E56731</Checksum>
+        <Checksum dnOrder="2">D3F56B5AA587284969E8FA6426E77B30</Checksum>
       </Template>
       <Template dnOrder="7">
         <Name dnOrder="0">sys_devcon.c</Name>
@@ -246,6 +247,7 @@
         <Name dnOrder="0">drv_mcpwm_static.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/PIC32MK_MCU_Config/framework/driver/mcpwm/src</Path>
         <Checksum dnOrder="2">6A653B314D70EB9D38966E0991163CA8</Checksum>
+        <ProjectFileChecksum dnOrder="3">7DFD8DB988684A5F393AAA7FA9128C29</ProjectFileChecksum>
       </Template>
       <Template dnOrder="15">
         <Name dnOrder="0">sys_devcon_pic32mk.c</Name>
@@ -260,7 +262,8 @@
       <Template dnOrder="17">
         <Name dnOrder="0">drv_adc_static.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/PIC32MK_MCU_Config/framework/driver/adc/src</Path>
-        <Checksum dnOrder="2">6F008F0C78C66621D491DD8CB42A320C</Checksum>
+        <Checksum dnOrder="2">DA4BD4707A936D6AFC228AAB99F6C69D</Checksum>
+        <ProjectFileChecksum dnOrder="3">CAF5D1487255F8A95E400E9D14456C83</ProjectFileChecksum>
       </Template>
       <Template dnOrder="18">
         <Name dnOrder="0">drv_usart_static.h</Name>
@@ -331,7 +334,8 @@
       <Template dnOrder="30">
         <Name dnOrder="0">drv_can_static.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/PIC32MK_MCU_Config/framework/driver/can/src</Path>
-        <Checksum dnOrder="2">A793C361561E5CF28BA31384B5A9DA6D</Checksum>
+        <Checksum dnOrder="2">AE52DE2C0F260E6E8133A48869FCCAA4</Checksum>
+        <ProjectFileChecksum dnOrder="3">85A2F63C392485623161D138E1B3B29D</ProjectFileChecksum>
       </Template>
       <Template dnOrder="31">
         <Name dnOrder="0">system_exceptions.c</Name>
@@ -362,7 +366,7 @@
       <Template dnOrder="36">
         <Name dnOrder="0">system_interrupt.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/PIC32MK_MCU_Config</Path>
-        <Checksum dnOrder="2">7AFB1754C28B252EFA481FD7A243FA74</Checksum>
+        <Checksum dnOrder="2">FF597E18330151237FD7D5065AA432BF</Checksum>
         <ProjectFileChecksum dnOrder="3">55F7D5ACD87C2F15896A9E78FC47A86C</ProjectFileChecksum>
       </Template>
       <Template dnOrder="37">

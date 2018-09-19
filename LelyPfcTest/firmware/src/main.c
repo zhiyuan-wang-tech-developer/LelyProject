@@ -65,6 +65,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "test_startup.h"
 #include "system_config/PIC32MK_MCU_Config/framework/driver/mcpwm/drv_mcpwm_static.h"
 #include "test_uart.h"
+#include "test_adc.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -91,6 +92,7 @@ void test_zhiyuan(){
     
     while( 1 ){
         //Main loop
+        CAN_CONTROLLER_Tasks();
     }
 }
 

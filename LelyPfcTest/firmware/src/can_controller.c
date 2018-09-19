@@ -79,7 +79,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 CAN_CONTROLLER_DATA can_controllerData;
 static uint8_t can_controller_can_tx_buffer[] = "DynaTron";
-static uint8_t can_controller_can_rx_buffer[10];
+static uint8_t can_controller_can_rx_buffer[20];
 
 // *****************************************************************************
 // *****************************************************************************
@@ -118,9 +118,9 @@ static void CAN_Task(void)
         case CAN_CONTROLLER_CAN_STATE_RX:
             if (DRV_CAN_ChannelMessageReceive(
                 can_controllerData.handleCAN0,
-                CAN_CHANNEL0,  /* default channel 0 */
+                CAN_CHANNEL1,  /* default channel 0 */
                 0,  /* given address */
-                10,
+                20,
                 can_controller_can_rx_buffer) == true)
             {
                 can_controllerData.canStateMachine = CAN_CONTROLLER_CAN_STATE_DONE;
