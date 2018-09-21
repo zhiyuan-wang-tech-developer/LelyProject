@@ -182,24 +182,23 @@
       <Template dnOrder="2">
         <Name dnOrder="0">system_init.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/PIC32MK_MCU_Config</Path>
-        <Checksum dnOrder="2">CA81CD370040C09DFCE046B6042A7D52</Checksum>
+        <Checksum dnOrder="2">4CC73B3E9056713A03AEE5757CC3A500</Checksum>
         <ProjectFileChecksum dnOrder="3">8B9AAA7DB9EA1C9CA4F9C0E30195BB7F</ProjectFileChecksum>
       </Template>
       <Template dnOrder="3">
         <Name dnOrder="0">drv_usart_mapping.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/PIC32MK_MCU_Config/framework/driver/usart/src</Path>
-        <Checksum dnOrder="2">9CD3E662EEA539EA00ABC2635EFAB393</Checksum>
+        <Checksum dnOrder="2">84D12D754B67B6F268A7243A5A473239</Checksum>
       </Template>
       <Template dnOrder="4">
         <Name dnOrder="0">can_controller.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app</Path>
-        <Checksum dnOrder="2">47BED9CF3820F8B3F1CC2120BF5EE5D0</Checksum>
-        <ProjectFileChecksum dnOrder="3">04F2FDFC4270FC2DB6C0FB1315311ABA</ProjectFileChecksum>
+        <Checksum dnOrder="2">D69D53B32BDD4274FA98D97AE100DB61</Checksum>
       </Template>
       <Template dnOrder="5">
         <Name dnOrder="0">system_config.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/app/system_config/PIC32MK_MCU_Config</Path>
-        <Checksum dnOrder="2">D9A6CAB1D3D28124DE4599AADBA980CA</Checksum>
+        <Checksum dnOrder="2">7FDB424A1E29147A15CABC927D9C9711</Checksum>
         <ProjectFileChecksum dnOrder="3">A7BAB4866F64E035A234572AC80F8B0A</ProjectFileChecksum>
       </Template>
       <Template dnOrder="6">
@@ -225,12 +224,12 @@
       <Template dnOrder="10">
         <Name dnOrder="0">drv_usart_static_byte_model.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/PIC32MK_MCU_Config/framework/driver/usart/src</Path>
-        <Checksum dnOrder="2">89F74A34367F033B72BD3022FF1F60F3</Checksum>
+        <Checksum dnOrder="2">A88827AFC224304325F60896556458E3</Checksum>
       </Template>
       <Template dnOrder="11">
         <Name dnOrder="0">system_definitions.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/app/system_config/PIC32MK_MCU_Config</Path>
-        <Checksum dnOrder="2">D761644A6268D00A92F13C45487A79AF</Checksum>
+        <Checksum dnOrder="2">EE8F1C4C36213E17A6360AD521AAF6C8</Checksum>
       </Template>
       <Template dnOrder="12">
         <Name dnOrder="0">drv_can_mapping.c</Name>
@@ -299,80 +298,90 @@
         <ProjectFileChecksum dnOrder="3">409D541F4130F0108DA1C6107EFB0AA4</ProjectFileChecksum>
       </Template>
       <Template dnOrder="24">
+        <Name dnOrder="0">uart_debugger.c</Name>
+        <Path dnOrder="1">Source&amp;#160;Files/app</Path>
+        <Checksum dnOrder="2">65BD3C4F6A226F152AAB87AFCAD96DF7</Checksum>
+      </Template>
+      <Template dnOrder="25">
         <Name dnOrder="0">main.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app</Path>
         <Checksum dnOrder="2">81A51474D8A80D41AD749DEAE4C1A7A3</Checksum>
         <ProjectFileChecksum dnOrder="3">7147386D8F250FACFDAB30747E5DA193</ProjectFileChecksum>
       </Template>
-      <Template dnOrder="25">
+      <Template dnOrder="26">
         <Name dnOrder="0">global_event.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/app</Path>
         <Checksum dnOrder="2">C77D0FC170231CF0DE4F2809CDA31D7B</Checksum>
       </Template>
-      <Template dnOrder="26">
+      <Template dnOrder="27">
         <Name dnOrder="0">led_controller.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/app</Path>
         <Checksum dnOrder="2">034AE2559124D52040F2B09A63E7714E</Checksum>
         <ProjectFileChecksum dnOrder="3">716471EA21A82C428E9CE846B56160F4</ProjectFileChecksum>
       </Template>
-      <Template dnOrder="27">
+      <Template dnOrder="28">
         <Name dnOrder="0">analog_voltage_monitor.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app</Path>
         <Checksum dnOrder="2">60FCFD1CBAAB71F80D225D854E310A38</Checksum>
         <ProjectFileChecksum dnOrder="3">A41EE3503C067F499559BA45090FDA96</ProjectFileChecksum>
       </Template>
-      <Template dnOrder="28">
+      <Template dnOrder="29">
         <Name dnOrder="0">sys_devcon_local.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/app/system_config/PIC32MK_MCU_Config/framework/system/devcon/src</Path>
         <Checksum dnOrder="2">B66F9B4DBD85DA7F9DE775E864E01395</Checksum>
       </Template>
-      <Template dnOrder="29">
+      <Template dnOrder="30">
         <Name dnOrder="0">drv_usart_static_local.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/app/system_config/PIC32MK_MCU_Config/framework/driver/usart/src</Path>
         <Checksum dnOrder="2">9563F23392942CF4B5C01E1065907D06</Checksum>
       </Template>
-      <Template dnOrder="30">
+      <Template dnOrder="31">
+        <Name dnOrder="0">uart_debugger.h</Name>
+        <Path dnOrder="1">Header&amp;#160;Files/app</Path>
+        <Checksum dnOrder="2">216E983C28AED88858B4B06DC815F866</Checksum>
+      </Template>
+      <Template dnOrder="32">
         <Name dnOrder="0">drv_can_static.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/PIC32MK_MCU_Config/framework/driver/can/src</Path>
         <Checksum dnOrder="2">AE52DE2C0F260E6E8133A48869FCCAA4</Checksum>
         <ProjectFileChecksum dnOrder="3">85A2F63C392485623161D138E1B3B29D</ProjectFileChecksum>
       </Template>
-      <Template dnOrder="31">
+      <Template dnOrder="33">
         <Name dnOrder="0">system_exceptions.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/PIC32MK_MCU_Config</Path>
         <Checksum dnOrder="2">9836A04F3E98D3971DB91DF539160F34</Checksum>
       </Template>
-      <Template dnOrder="32">
+      <Template dnOrder="34">
         <Name dnOrder="0">sys_ports_static.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/PIC32MK_MCU_Config/framework/system/ports/src</Path>
         <Checksum dnOrder="2">9746EDDEC563D82E85E2849501C8A780</Checksum>
       </Template>
-      <Template dnOrder="33">
+      <Template dnOrder="35">
         <Name dnOrder="0">drv_usart_static.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/PIC32MK_MCU_Config/framework/driver/usart/src</Path>
-        <Checksum dnOrder="2">60093683F85569CFA9696CDB46C89CF2</Checksum>
+        <Checksum dnOrder="2">97AEDDB36F980524842E452B56C18184</Checksum>
       </Template>
-      <Template dnOrder="34">
+      <Template dnOrder="36">
         <Name dnOrder="0">system_tasks.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/PIC32MK_MCU_Config</Path>
-        <Checksum dnOrder="2">00BC0A8D72D264E3898462B328BBFAC7</Checksum>
+        <Checksum dnOrder="2">A356CEABFA54EA332ED7252077996F3F</Checksum>
         <ProjectFileChecksum dnOrder="3">2BACABC2D7425B94475C3FA48451F6FF</ProjectFileChecksum>
       </Template>
-      <Template dnOrder="35">
+      <Template dnOrder="37">
         <Name dnOrder="0">drv_mcpwm_static.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/app/system_config/PIC32MK_MCU_Config/framework/driver/mcpwm</Path>
         <Checksum dnOrder="2">65042306CDE5C8991E0EFEA6ADF128BF</Checksum>
       </Template>
-      <Template dnOrder="36">
+      <Template dnOrder="38">
         <Name dnOrder="0">system_interrupt.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/PIC32MK_MCU_Config</Path>
-        <Checksum dnOrder="2">FF597E18330151237FD7D5065AA432BF</Checksum>
+        <Checksum dnOrder="2">10B17EBB7EC6257C05BE61BE2CD9D0AA</Checksum>
         <ProjectFileChecksum dnOrder="3">55F7D5ACD87C2F15896A9E78FC47A86C</ProjectFileChecksum>
       </Template>
-      <Template dnOrder="37">
+      <Template dnOrder="39">
         <Name dnOrder="0">sys_clk_pic32mk.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/PIC32MK_MCU_Config/framework/system/clk/src</Path>
-        <Checksum dnOrder="2">50B202C42EBEF53D5DE63E626DD45095</Checksum>
+        <Checksum dnOrder="2">BBEFDE3E67EB097EE7E02CA8011F4292</Checksum>
       </Template>
     </Templates>
     <CompilerItems dnOrder="2">

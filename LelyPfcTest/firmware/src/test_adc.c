@@ -437,8 +437,8 @@ void test_wait_1V8_2(uint16_t targetADC){
 
 bool test_adc_get(unsigned int index, uint16_t* adcVal, float* convVal){
     switch( index ){
-        case 1: *adcVal = adcData.adc_raw_data.samples.V325V; *convVal = adcData.adc_converted_data.samples.V325V; break;
-        case 2: *adcVal = adcData.adc_raw_data.samples.V380V; *convVal = adcData.adc_converted_data.samples.V380V; break;
+        case 1: *adcVal = adcData.adc_raw_data.samples.V380V; *convVal = adcData.adc_converted_data.samples.V380V; break;
+        case 2: *adcVal = adcData.adc_raw_data.samples.V325V; *convVal = adcData.adc_converted_data.samples.V325V; break;
         case 3: *adcVal = adcData.adc_raw_data.samples.TEMP_BRUG; *convVal = adcData.adc_converted_data.samples.TEMP_BRUG; break;
         case 4: *adcVal = adcData.adc_raw_data.samples.TEMP_VOED; *convVal = adcData.adc_converted_data.samples.TEMP_VOED; break;
         case 5: *adcVal = adcData.adc_raw_data.samples.TEMP_ELCO; *convVal = adcData.adc_converted_data.samples.TEMP_ELCO; break;

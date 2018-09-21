@@ -2,17 +2,13 @@
 
 #include "test_uart.h"
 #include "system/clk/sys_clk.h"
-
-#define U2_BUF_LEN  128
-
-uint16_t u2_pos = 0;
-uint8_t u2_buf[U2_BUF_LEN];
+#include "system/debug/sys_debug.h"
 
 void __ISR(_UART2_RX_VECTOR, ipl3AUTO) _IntHandlerUART2Rx(void){
     //Buffer data
     while( U2STAbits.URXDA ){
-        u2_buf[u2_pos++] = U2RXREG;
-        if( u2_pos >= U2_BUF_LEN ) u2_pos = 0;
+        uart2_buffer[uart2_pos++] = U2RXREG;
+        if( uart2_pos >= U2_BUF_LEN ) uart2_pos = 0;
     }
     
     //Clear flag
@@ -26,7 +22,7 @@ int test_uart_write(char* fmt, ...){
     va_start(vl, fmt);
 
     char buf[256] = {0};
-    
+    // It transmits many null characters... resulting in heavy transmission overhead. 
     int nwrite = vsprintf(buf, fmt, vl);
     int i = 0;
     

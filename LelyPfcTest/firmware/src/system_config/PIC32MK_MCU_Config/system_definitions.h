@@ -66,6 +66,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "led_controller.h"
 #include "pwm_controller.h"
 #include "can_controller.h"
+#include "uart_debugger.h"
 
 
 // DOM-IGNORE-BEGIN

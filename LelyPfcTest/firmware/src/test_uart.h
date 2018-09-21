@@ -14,6 +14,13 @@ extern "C" {
 
 #include <stdbool.h>
 #include <stdarg.h>
+#include <stdint.h>
+    
+#define U2_BUF_LEN  128
+
+uint16_t uart2_pos = 0;
+char uart2_buffer[U2_BUF_LEN];
+
     
 bool test_uart_findCommand(char c);
 void test_uart_parseCommand(char* c);

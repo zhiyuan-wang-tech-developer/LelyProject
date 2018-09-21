@@ -71,14 +71,14 @@ bool test_param_set(unsigned int param, uint16_t value){
         case 18: setBuckStepPlus(value); break;
         case 19: setTBrugWarn(value); break;
         case 20: setTBrugError(value); break;
-        case 21: setTVoedError(value); break;
-        case 22: setTVoedWarn(value); break;
-        case 23: setTPfcError(value); break;
-        case 24: setTPfcWarn(value); break;
-        case 25: setTElcoError(value); break;
-        case 26: setTElcoWarn(value); break;
-        case 27: setTMotorError(value); break;
-        case 28: setTMotorWarn(value); break;
+        case 21: setTVoedWarn(value); break;
+        case 22: setTVoedError(value); break;
+        case 23: setTPfcWarn(value); break;
+        case 24: setTPfcError(value); break;
+        case 25: setTElcoWarn(value); break;
+        case 26: setTElcoError(value); break;
+        case 27: setTMotorWarn(value); break;
+        case 28: setTMotorError(value); break;
 
         default: return false;
     }
@@ -86,36 +86,36 @@ bool test_param_set(unsigned int param, uint16_t value){
     return true;
 }
 
-bool test_param_get(unsigned int param, uint16_t* value){
+bool test_param_get(unsigned int param, uint16_t* pvalue){
     switch( param ){
-        case 1: *value = getTarget380V(); break;
-        case 2: *value = getMaxError380V(); break;
-        case 3: *value = getMaxWarn380V(); break;
-        case 4: *value = getMinWarn380V(); break;
-        case 5: *value = getMinError380V(); break;
-        case 6: *value = getMaxErrorIL(); break;
-        case 7: *value = getMaxWarnIL(); break;
-        case 8: *value = getMaxErrorVL(); break;
-        case 9: *value = getMaxWarnVL(); break;
-        case 10: *value = getMinWarnVL(); break;
-        case 11: *value = getMinErrorVL(); break;
-        case 12: *value = getTolerance380V(); break;
-        case 13: *value = getBoostMaxDC(); break;
-        case 14: *value = getBoostMinDC(); break;
-        case 15: *value = getBoostStepPlus(); break;
-        case 16: *value = getBoostStepMin(); break;
-        case 17: *value = getBoostStepError(); break;
-        case 18: *value = getBuckStepPlus(); break;
-        case 19: *value = getTBrugWarn(); break;
-        case 20: *value = getTBrugError(); break;
-        case 21: *value = getTVoedError(); break;
-        case 22: *value = getTVoedWarn(); break;
-        case 23: *value = getTPfcError(); break;
-        case 24: *value = getTPfcWarn(); break;
-        case 25: *value = getTElcoError(); break;
-        case 26: *value = getTElcoWarn(); break;
-        case 27: *value = getTMotorError(); break;
-        case 28: *value = getTMotorWarn(); break;
+        case 1: *pvalue = getTarget380V(); break;
+        case 2: *pvalue = getMaxError380V(); break;
+        case 3: *pvalue = getMaxWarn380V(); break;
+        case 4: *pvalue = getMinWarn380V(); break;
+        case 5: *pvalue = getMinError380V(); break;
+        case 6: *pvalue = getMaxErrorIL(); break;
+        case 7: *pvalue = getMaxWarnIL(); break;
+        case 8: *pvalue = getMaxErrorVL(); break;
+        case 9: *pvalue = getMaxWarnVL(); break;
+        case 10: *pvalue = getMinWarnVL(); break;
+        case 11: *pvalue = getMinErrorVL(); break;
+        case 12: *pvalue = getTolerance380V(); break;
+        case 13: *pvalue = getBoostMaxDC(); break;
+        case 14: *pvalue = getBoostMinDC(); break;
+        case 15: *pvalue = getBoostStepPlus(); break;
+        case 16: *pvalue = getBoostStepMin(); break;
+        case 17: *pvalue = getBoostStepError(); break;
+        case 18: *pvalue = getBuckStepPlus(); break;
+        case 19: *pvalue = getTBrugWarn(); break;
+        case 20: *pvalue = getTBrugError(); break;
+        case 21: *pvalue = getTVoedWarn(); break;
+        case 22: *pvalue = getTVoedError(); break;
+        case 23: *pvalue = getTPfcWarn(); break;
+        case 24: *pvalue = getTPfcError(); break;
+        case 25: *pvalue = getTElcoWarn(); break;
+        case 26: *pvalue = getTElcoError(); break;
+        case 27: *pvalue = getTMotorWarn(); break;
+        case 28: *pvalue = getTMotorError(); break;
 
         default: return false;
     }

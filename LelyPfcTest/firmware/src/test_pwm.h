@@ -3,6 +3,9 @@
  * Author: thijs
  *
  * Created on 3 september 2018, 10:52
+ * 
+ * Reviser: Zhiyuan
+ * Changed on 21 september 2018, 11:56
  */
 
 #ifndef TEST_PWM_H
@@ -14,14 +17,15 @@ extern "C" {
 
 #include "pwm_controller.h"
 
+// change PWM channel index
 typedef enum {
-    PWM_ALL,
-    PWM_Pair_1,
-    PWM_Pair_2,
-    PWM_Pair_3,
-    PWM_Pair_4,
-    PWM_Group_12 = 12,
-    PWM_Group_34 = 34,
+    PWM_Pair_1 = 1,
+    PWM_Pair_2 = 2,
+    PWM_Pair_3 = 3,
+    PWM_Pair_4 = 4,
+    PWM_Group_12 = 5,
+    PWM_Group_34 = 6,
+    PWM_ALL = 7,
 } pwm_channel_t;
 
 typedef enum {

@@ -89,7 +89,6 @@ extern "C" {
 #define SYS_CLK_BUS_PERIPHERAL_5            120000000ul
 #define SYS_CLK_BUS_PERIPHERAL_6            30000000ul
 #define SYS_CLK_BUS_PERIPHERAL_7            120000000ul
-#define SYS_CLK_BUS_REFERENCE_3             30000000ul
 #define SYS_CLK_CONFIG_PRIMARY_XTAL         12000000ul
 #define SYS_CLK_CONFIG_SECONDARY_XTAL       32768ul
    
@@ -193,7 +192,7 @@ extern "C" {
 */
 #define DRV_USART_INSTANCES_NUMBER                  1
 #define DRV_USART_CLIENTS_NUMBER                    1
-#define DRV_USART_INTERRUPT_MODE                    false
+#define DRV_USART_INTERRUPT_MODE                    true
 #define DRV_USART_BYTE_MODEL_SUPPORT                true
 #define DRV_USART_READ_WRITE_MODEL_SUPPORT          false
 #define DRV_USART_BUFFER_QUEUE_SUPPORT              false
@@ -350,6 +349,8 @@ extern "C" {
 /*** Application Instance 3 Configuration ***/
     
 /*** Application Instance 4 Configuration ***/
+
+/*** Application Instance 5 Configuration ***/
 
 //DOM-IGNORE-BEGIN
 #ifdef __cplusplus

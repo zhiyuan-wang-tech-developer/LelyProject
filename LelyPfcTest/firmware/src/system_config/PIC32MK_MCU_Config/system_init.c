@@ -208,10 +208,10 @@ void SYS_Initialize ( void* data )
 //    DRV_ADC_Initialize();
 
     /* Initialize CAN Driver 0 */
-    DRV_CAN0_Initialize();
+//    DRV_CAN0_Initialize();
 
     /*Initialize MCPWM */
-    DRV_MCPWM_Initialize();
+//    DRV_MCPWM_Initialize();
 
     sysObj.drvTmr0 = DRV_TMR_Initialize(DRV_TMR_INDEX_0, (SYS_MODULE_INIT *)&drvTmr0InitData);
 
@@ -220,6 +220,12 @@ void SYS_Initialize ( void* data )
  
  
     sysObj.drvUsart0 = DRV_USART_Initialize(DRV_USART_INDEX_0, (SYS_MODULE_INIT *)NULL);
+    SYS_INT_VectorPrioritySet(INT_VECTOR_UART2_TX, INT_DISABLE_INTERRUPT);
+    SYS_INT_VectorSubprioritySet(INT_VECTOR_UART2_TX, INT_SUBPRIORITY_LEVEL0);
+    SYS_INT_VectorPrioritySet(INT_VECTOR_UART2_RX, INT_PRIORITY_LEVEL3);
+    SYS_INT_VectorSubprioritySet(INT_VECTOR_UART2_RX, INT_SUBPRIORITY_LEVEL0);
+//    SYS_INT_VectorPrioritySet(INT_VECTOR_UART2_FAULT, INT_PRIORITY_LEVEL3);
+//    SYS_INT_VectorSubprioritySet(INT_VECTOR_UART2_FAULT, INT_SUBPRIORITY_LEVEL0);
 
     /* Initialize System Services */
     sysObj.sysConsole0 = SYS_CONSOLE_Initialize(SYS_CONSOLE_INDEX_0, NULL);
@@ -240,11 +246,12 @@ void SYS_Initialize ( void* data )
 //    ANALOG_VOLTAGE_MONITOR_Initialize();
 //    ERROR_HANDLER_Initialize();
 //    LED_CONTROLLER_Initialize();
-    PWM_CONTROLLER_Initialize();
-    CAN_CONTROLLER_Initialize();
+//    PWM_CONTROLLER_Initialize();
+//    CAN_CONTROLLER_Initialize();
+    UART_DEBUGGER_Initialize();
     
     /* Prompt the successful system initialization */
-    SYS_PRINT("\nSystem is initialized!\r\n");
+    SYS_PRINT("System is initialized!\n");
 }
 
 

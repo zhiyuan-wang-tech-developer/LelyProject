@@ -1,29 +1,24 @@
 /*******************************************************************************
-  USART driver static implementation of Byte model.
+  Board Support Package Implementation
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    drv_usart_static_byte_model.c
+    bsp.c
 
   Summary:
-    Source code for the USART driver static implementation of Byte model.
+    Board Support Package implementation for PIC32MZ Embedded Connectivity (EC)
+    Starter Kit.
 
   Description:
-    This file contains the source code for the static implementation of the
-    USART driver Byte model.
-
-  Remarks:
-    Static interfaces incorporate the driver instance number within the names
-    of the routines, eliminating the need for an object ID or object handle.
-
-    Static single-open interfaces also eliminate the need for the open handle.
+    This file contains routines that implement the board support package for
+    PIC32MZ Embedded Connectivity (EC) Starter Kit.
 *******************************************************************************/
 
-//DOM-IGNORE-BEGIN
+// DOM-IGNORE-BEGIN
 /*******************************************************************************
-Copyright (c) 2015 released Microchip Technology Inc.  All rights reserved.
+Copyright (c) 2012 released Microchip Technology Inc.  All rights reserved.
 
 Microchip licenses to you the right to use, modify, copy and distribute
 Software only when embedded on a Microchip microcontroller or digital signal
@@ -44,65 +39,43 @@ CONSEQUENTIAL DAMAGES, LOST PROFITS OR LOST DATA, COST OF PROCUREMENT OF
 SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
 *******************************************************************************/
-//DOM-IGNORE-END
+// DOM-IGNORE-END
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-#include "system_config.h"
-#include "system_definitions.h"
+
+#include "bsp.h"
+
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: Global Data
 // *****************************************************************************
-// *****************************************************************************
-extern DRV_USART_OBJ  gDrvUSART0Obj ;
-
-// *****************************************************************************
-// *****************************************************************************
-// Section: Instance 0 static driver functions
+// Section: Interface Routines
 // *****************************************************************************
 // *****************************************************************************
 
-uint8_t DRV_USART0_ReadByte(void)
+// *****************************************************************************
+/* Function: 
+    void BSP_Initialize(void)
+
+  Summary:
+    Performs the necessary actions to initialize a board
+  
+  Description:
+    This function initializes the LED, Switch and other ports on the board.
+    This function must be called by the user before using any APIs present in
+    this BSP.  
+
+  Remarks:
+    Refer to bsp.h for usage information.
+*/
+
+void BSP_Initialize(void )
 {
-    uint8_t readValue;
-	
-    /* Receive one byte */
-    readValue = PLIB_USART_ReceiverByteReceive(USART_ID_2);
 
-    return readValue;
-}
-
-void DRV_USART0_WriteByte(const uint8_t byte)
-{
-    /* Send one byte */
-    PLIB_USART_TransmitterByteSend(USART_ID_2, byte);
-    SYS_INT_SourceEnable(INT_SOURCE_USART_2_TRANSMIT);
-}
-
-unsigned int DRV_USART0_ReceiverBufferSizeGet(void)
-{
-    return 8;
-}
-
-unsigned int DRV_USART0_TransmitBufferSizeGet(void)
-{
-    return 8;
-}
-
-bool DRV_USART0_ReceiverBufferIsEmpty( void )
-{
-    /* Check the status of receiver buffer */
-    return(!PLIB_USART_ReceiverDataIsAvailable(USART_ID_2));
-}
-
-bool DRV_USART0_TransmitBufferIsFull(void)
-{
-    /* Check the status of transmitter buffer */
-    return(PLIB_USART_TransmitterBufferIsFull(USART_ID_2));
 }
 
 /*******************************************************************************

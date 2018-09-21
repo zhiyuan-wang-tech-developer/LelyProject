@@ -5,7 +5,7 @@
     Microchip Technology Inc.
   
   File Name:
-    can_controller.c
+    uart_debugger.c
 
   Summary:
     This file contains the source code for the MPLAB Harmony application.
@@ -53,8 +53,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 // *****************************************************************************
 
-#include "can_controller.h"
-#include "global_event.h"
+#include "uart_debugger.h"
+      #include "global_event.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -77,9 +77,9 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     Application strings and buffers are be defined outside this structure.
 */
 
-CAN_CONTROLLER_DATA can_controllerData;
-static uint8_t can_controller_can_tx_buffer[] = "DynaTron";
-static uint8_t can_controller_can_rx_buffer[32];
+UART_DEBUGGER_DATA uart_debuggerData;
+
+//extern uint8_t uart2_buffer[128];
 
 // *****************************************************************************
 // *****************************************************************************
@@ -96,42 +96,6 @@ static uint8_t can_controller_can_rx_buffer[32];
 // *****************************************************************************
 // *****************************************************************************
 
-/* state machine for the CAN */
-static void CAN_Task(void)
-{
-    /* run the state machine here for CAN */
-    switch (can_controllerData.canStateMachine)
-    {
-        default:
-        case CAN_CONTROLLER_CAN_STATE_START:
-            if (DRV_CAN_ChannelMessageTransmit(
-                can_controllerData.handleCAN0,
-                CAN_CHANNEL0,  /* default channel 0 */
-                1024,  /* given address */
-                sizeof(can_controller_can_tx_buffer),
-                can_controller_can_tx_buffer) == true)
-            {
-                can_controllerData.canStateMachine = CAN_CONTROLLER_CAN_STATE_RX;
-            }
-        break;
-
-        case CAN_CONTROLLER_CAN_STATE_RX:
-            if (DRV_CAN_ChannelMessageReceive(
-                can_controllerData.handleCAN0,
-                CAN_CHANNEL1,  /* default channel 0 */
-                1024,  /* given address */
-                32,
-                can_controller_can_rx_buffer) == true)
-            {
-                can_controllerData.canStateMachine = CAN_CONTROLLER_CAN_STATE_DONE;
-            }
-        break;
-
-        case CAN_CONTROLLER_CAN_STATE_DONE:
-        break;
-    }
-}
-
 
 /* TODO:  Add any necessary local functions.
 */
@@ -145,66 +109,58 @@ static void CAN_Task(void)
 
 /*******************************************************************************
   Function:
-    void CAN_CONTROLLER_Initialize ( void )
+    void UART_DEBUGGER_Initialize ( void )
 
   Remarks:
-    See prototype in can_controller.h.
+    See prototype in uart_debugger.h.
  */
 
-void CAN_CONTROLLER_Initialize ( void )
+void UART_DEBUGGER_Initialize ( void )
 {
     /* Place the App state machine in its initial state. */
-    can_controllerData.state = CAN_CONTROLLER_STATE_INIT;
-
-    can_controllerData.handleCAN0 = DRV_HANDLE_INVALID;
+    uart_debuggerData.state = UART_DEBUGGER_STATE_INIT;
 
     
     /* TODO: Initialize your application's state machine and other
      * parameters.
      */
+    
 }
 
 
 /******************************************************************************
   Function:
-    void CAN_CONTROLLER_Tasks ( void )
+    void UART_DEBUGGER_Tasks ( void )
 
   Remarks:
-    See prototype in can_controller.h.
+    See prototype in uart_debugger.h.
  */
 
-void CAN_CONTROLLER_Tasks ( void )
+void UART_DEBUGGER_Tasks ( void )
 {
 
     /* Check the application's current state. */
-    switch ( can_controllerData.state )
+    switch ( uart_debuggerData.state )
     {
         /* Application's initial state. */
-        case CAN_CONTROLLER_STATE_INIT:
+        case UART_DEBUGGER_STATE_INIT:
         {
             bool appInitialized = true;
        
-            if (DRV_HANDLE_INVALID == can_controllerData.handleCAN0)
-            {
-                can_controllerData.handleCAN0 = DRV_CAN_Open(0, DRV_IO_INTENT_READWRITE);
-                appInitialized &= (DRV_HANDLE_INVALID != can_controllerData.handleCAN0);
-            }
         
             if (appInitialized)
             {
-                /* initialize the CAN state machine */
-                can_controllerData.canStateMachine = CAN_CONTROLLER_CAN_STATE_START;
             
-                can_controllerData.state = CAN_CONTROLLER_STATE_SERVICE_TASKS;
+                uart_debuggerData.state = UART_DEBUGGER_STATE_RUN;
+                printf("UART 2 is initialized!\n");
+                printf("[test lely]");
             }
             break;
         }
 
-        case CAN_CONTROLLER_STATE_SERVICE_TASKS:
+        case UART_DEBUGGER_STATE_RUN:
         {
-            /* run the state machine for servicing the CAN */
-            CAN_Task();
-        
+            test_uart_processCommands(uart2_buffer, true);
             break;
         }
 
@@ -215,6 +171,7 @@ void CAN_CONTROLLER_Tasks ( void )
         default:
         {
             /* TODO: Handle error in application's state machine. */
+            printf("UART Debugger Error!");
             break;
         }
     }
