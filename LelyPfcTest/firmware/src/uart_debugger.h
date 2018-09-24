@@ -57,6 +57,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include <stddef.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "system_config.h"
 #include "system_definitions.h"
 
@@ -75,6 +76,21 @@ extern "C" {
 // Section: Type Definitions
 // *****************************************************************************
 // *****************************************************************************
+
+/*
+ * Command FIFO structure stores the parsed command string. 
+ * This is an round FIFO queue, in which every element is a pointer to a parsed command string
+ * 
+ */
+#define FIFO_SIZE 10
+    
+typedef struct {
+    uint8_t outIndex; // This index points to the FIFO head cell for poping an element.    
+    uint8_t inIndex; // This index points to the FIFO tail empty cell for pushing an element.
+    uint8_t countUsedCells; // Counts how many cells have been used in the FIFO. 
+    uint8_t size; // FIFO length
+    char ** pFIFO;
+} CMD_FIFO_t;
 
 // *****************************************************************************
 /* Application states
@@ -117,6 +133,8 @@ typedef struct
     UART_DEBUGGER_STATES state;
 
     /* TODO: Define any additional data used by the application. */
+    // The buffer stores the parsed command message
+    CMD_FIFO_t parsedCmdMsgBuffer;
 
 } UART_DEBUGGER_DATA;
 
@@ -128,6 +146,11 @@ typedef struct
 // *****************************************************************************
 /* These routines are called by drivers when certain events occur.
 */
+bool CmdFifoInitialize(uint8_t bufferSize);
+bool isCmdFifoEmpty( void );
+bool isCmdFifoFull( void );
+bool CmdFifoPush(char *pStringIn);
+bool CmdFifoPop(char *pStringOut, size_t strLength);
 	
 // *****************************************************************************
 // *****************************************************************************

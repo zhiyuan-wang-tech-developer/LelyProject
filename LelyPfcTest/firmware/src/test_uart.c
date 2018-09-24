@@ -4,13 +4,64 @@
 #include "system/clk/sys_clk.h"
 #include "system/debug/sys_debug.h"
 
+//uint16_t uart2_pos = 0;
+static char uart2_buffer[UART2_RX_BUF_LEN];
+
+static FIFO_Buffer_t uart2_rx_fifo_buffer = { .inIndex = 0,
+                                       .outIndex = 0,
+                                       .countUsedCells = 0,
+                                       .size = UART2_RX_BUF_LEN,
+                                       .pFIFO = uart2_buffer
+                                        };
+
+
+bool isRxFifoEmpty()
+{
+    if( uart2_rx_fifo_buffer.countUsedCells == 0 ) return true;
+    else return false;
+}
+
+bool isRxFifoFull()
+{
+    if( uart2_rx_fifo_buffer.countUsedCells == uart2_rx_fifo_buffer.size ) return true;
+    else return false;
+}
+
+bool RxFifoPush(char charIn)
+{
+    if(isRxFifoFull()){
+        return false;
+    }
+    uart2_rx_fifo_buffer.pFIFO[uart2_rx_fifo_buffer.inIndex] = charIn;
+    uart2_rx_fifo_buffer.countUsedCells++;
+    uart2_rx_fifo_buffer.inIndex = (uart2_rx_fifo_buffer.inIndex + 1) % uart2_rx_fifo_buffer.size; // round FIFO buffer
+    return true;
+}
+
+bool RxFifoPop(char *pcharOut)
+{
+    if(isRxFifoEmpty()){
+        return false;
+    }
+    if(pcharOut == NULL){
+        return false;
+    }
+    *pcharOut = uart2_rx_fifo_buffer.pFIFO[uart2_rx_fifo_buffer.outIndex];
+    uart2_rx_fifo_buffer.countUsedCells--;
+    uart2_rx_fifo_buffer.outIndex = (uart2_rx_fifo_buffer.outIndex + 1) % uart2_rx_fifo_buffer.size; // round FIFO buffer
+    return true;
+}
+
 void __ISR(_UART2_RX_VECTOR, ipl3AUTO) _IntHandlerUART2Rx(void){
     //Buffer data
+    char rxChar = 0;
     while( U2STAbits.URXDA ){
-        uart2_buffer[uart2_pos++] = U2RXREG;
-        if( uart2_pos >= U2_BUF_LEN ) uart2_pos = 0;
+//        uart2_buffer[uart2_pos++] = U2RXREG;
+//        if( uart2_pos >= UART2_RX_BUF_LEN ) uart2_pos = 0;
+        rxChar = U2RXREG;
+        if(RxFifoPush(rxChar)) continue;
+        else break;
     }
-    
     //Clear flag
     IFS1bits.U2RXIF = 0;
 }
@@ -52,12 +103,12 @@ void test_uart_init(){
         
     U2BRG = SYS_CLK_PeripheralFrequencyGet(CLK_BUS_PERIPHERAL_2) / (baud * (U2MODEbits.BRGH ? 4 : 16) ) -1;
     
-    
-     U2MODEbits.UARTEN = 1;     //Enable UART
+    U2MODEbits.UARTEN = 1;     //Enable UART
        
-     U2STAbits.URXEN = 1;       //Enable receiver
-     U2STAbits.UTXEN = 1;       //Enable transmitter
+    U2STAbits.URXEN = 1;       //Enable receiver
+    
+    U2STAbits.UTXEN = 1;       //Enable transmitter
 
-     IEC1bits.U2RXIE = 1;       //Enable Rx interrupt
+    IEC1bits.U2RXIE = 1;       //Enable Rx interrupt
 }
 

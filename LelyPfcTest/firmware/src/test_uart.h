@@ -15,13 +15,23 @@ extern "C" {
 #include <stdbool.h>
 #include <stdarg.h>
 #include <stdint.h>
-    
-#define U2_BUF_LEN  128
 
-uint16_t uart2_pos = 0;
-char uart2_buffer[U2_BUF_LEN];
-
+#include <stdlib.h>
+#include <string.h>
     
+#define UART2_RX_BUF_LEN  128
+    
+typedef struct {
+    uint16_t inIndex;
+    uint16_t outIndex;
+    uint16_t countUsedCells;
+    uint16_t size;
+    char * pFIFO;
+} FIFO_Buffer_t;    
+
+bool RxFifoPush(char charIn);
+bool RxFifoPop(char *pcharOut);
+
 bool test_uart_findCommand(char c);
 void test_uart_parseCommand(char* c);
 void test_uart_processCommands(const char* str, bool reset);
