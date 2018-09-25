@@ -29,8 +29,12 @@ typedef struct {
     char * pFIFO;
 } FIFO_Buffer_t;    
 
+bool isRxFifoEmpty(void);
+bool isRxFifoFull(void);
 bool RxFifoPush(char charIn);
 bool RxFifoPop(char *pcharOut);
+
+void extractCmdFromRxFifo(void);
 
 bool test_uart_findCommand(char c);
 void test_uart_parseCommand(char* c);

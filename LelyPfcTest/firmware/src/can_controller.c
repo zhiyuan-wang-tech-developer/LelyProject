@@ -111,7 +111,7 @@ static void CAN_Task(void)
                 sizeof(can_controller_can_tx_buffer),
                 can_controller_can_tx_buffer) == true)
             {
-                can_controllerData.canStateMachine = CAN_CONTROLLER_CAN_STATE_RX;
+                can_controllerData.canStateMachine = CAN_CONTROLLER_CAN_STATE_START;
             }
         break;
 
@@ -128,6 +128,7 @@ static void CAN_Task(void)
         break;
 
         case CAN_CONTROLLER_CAN_STATE_DONE:
+            can_controllerData.canStateMachine = CAN_CONTROLLER_CAN_STATE_RX;
         break;
     }
 }

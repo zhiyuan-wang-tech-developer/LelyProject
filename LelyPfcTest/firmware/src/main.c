@@ -85,7 +85,7 @@ void test_zhiyuan(){
     
 //    test_init_adc();
 
-    test_uart_init();
+//    test_uart_init();
     
     //TODO: CAN stuff
 //    int i;
@@ -94,7 +94,7 @@ void test_zhiyuan(){
         //Main loop
         
         UART_DEBUGGER_Tasks();
-//        CAN_CONTROLLER_Tasks();
+        CAN_CONTROLLER_Tasks();
 //        for(i = 0; i < 10; i++){
 //            printf("count = %d\n", i);
 //            test_uart_write("count = %d\n", i);

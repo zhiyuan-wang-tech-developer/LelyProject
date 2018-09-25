@@ -54,13 +54,18 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 
 #include "uart_debugger.h"
-      #include "global_event.h"
+#include "global_event.h"
 
+#define CMD_LEN 64
 // *****************************************************************************
 // *****************************************************************************
 // Section: Global Data Definitions
 // *****************************************************************************
 // *****************************************************************************
+// The command waiting to be processed is held here.
+static char cmdToProcess[CMD_LEN];
+// It holds the length of the command from the command FIFO buffer.
+static size_t cmdLength = 0;
 
 // *****************************************************************************
 /* Application Data
@@ -155,16 +160,43 @@ void UART_DEBUGGER_Tasks ( void )
                     // return if FIFO initialization failed.
                     return;
                 }
-                printf("UART 2 is initialized!\n");
+                memset(cmdToProcess, '\0', sizeof(cmdToProcess));
+//                printf("UART 2 is initialized!\n");
                 printf("[test lely]");
-                uart_debuggerData.state = UART_DEBUGGER_STATE_RUN;
+                uart_debuggerData.state = UART_DEBUGGER_STATE_RECEIVE_CMD;
             }
             break;
         }
 
-        case UART_DEBUGGER_STATE_RUN:
+        case UART_DEBUGGER_STATE_RECEIVE_CMD:
         {
-//            test_uart_processCommands(uart2_buffer, true);
+            if(!isRxFifoEmpty())
+            {
+                extractCmdFromRxFifo();
+            }
+            
+            if(!isCmdFifoEmpty())
+            {
+                uart_debuggerData.state = UART_DEBUGGER_STATE_PROCESS_CMD;
+            }
+            break;
+        }
+        
+        case UART_DEBUGGER_STATE_PROCESS_CMD:
+        {
+            if(CmdFifoPop(cmdToProcess, &cmdLength))
+            {
+//                printf("\nRx Cmd: %s", cmdToProcess);
+//                printf("\nRx Cmd Size: %d", cmdLength);
+                test_uart_parseCommand(cmdToProcess);
+                memset(cmdToProcess, '\0', cmdLength);
+                cmdLength = 0;
+            }
+            
+            if(isCmdFifoEmpty())
+            {
+                uart_debuggerData.state = UART_DEBUGGER_STATE_RECEIVE_CMD;
+            }
             break;
         }
 
@@ -258,11 +290,12 @@ bool isCmdFifoFull( void )
  *      Push a command string into the FIFO buffer
  * @Parameters 
  *      pStringIn: pointer to an input command string
+ *      strLength: specify the input string length
  * @Return 
  *      true: pushing a string into the FIFO buffer is successful
  *      false: pushing a string into the FIFO buffer is failed
  */
-bool CmdFifoPush(char *pStringIn)
+bool CmdFifoPush(char *pStringIn, size_t strLength)
 {
     if(pStringIn == NULL)
     {
@@ -273,7 +306,7 @@ bool CmdFifoPush(char *pStringIn)
         return false;
     }
     // get the input string length
-    size_t strLength = strlen(pStringIn);
+    // size_t strLength = strlen(pStringIn);
     // allocate memory for storing string
     uart_debuggerData.parsedCmdMsgBuffer.pFIFO[uart_debuggerData.parsedCmdMsgBuffer.inIndex] = (char *) calloc(strLength, sizeof(char));
     if(uart_debuggerData.parsedCmdMsgBuffer.pFIFO[uart_debuggerData.parsedCmdMsgBuffer.inIndex] == NULL)
@@ -282,8 +315,8 @@ bool CmdFifoPush(char *pStringIn)
         return false;
     }
     // copy the string to the allocated memory
-    strcpy(uart_debuggerData.parsedCmdMsgBuffer.pFIFO[uart_debuggerData.parsedCmdMsgBuffer.inIndex], pStringIn);
-    uart_debuggerData.parsedCmdMsgBuffer.countUsedCells++; // one cell has been occupied in FIFO buffer.
+    strncpy(uart_debuggerData.parsedCmdMsgBuffer.pFIFO[uart_debuggerData.parsedCmdMsgBuffer.inIndex], pStringIn, strLength);
+    uart_debuggerData.parsedCmdMsgBuffer.countUsedCells++; // one cell has been used in FIFO buffer.
     uart_debuggerData.parsedCmdMsgBuffer.inIndex = (uart_debuggerData.parsedCmdMsgBuffer.inIndex + 1)%uart_debuggerData.parsedCmdMsgBuffer.size; // round FIFO buffer
     return true;
 }
@@ -293,12 +326,12 @@ bool CmdFifoPush(char *pStringIn)
  *      Pop a command string from the FIFO buffer
  * @Parameters 
  *      pStringOut: pointer to an output command string
- *      strLength: indicate the output command string length
+ *      pStrLength: indicate the output command string length
  * @Return 
  *      true: popping a string from the FIFO buffer is successful
  *      false: popping a string from the FIFO buffer is failed
  */
-bool CmdFifoPop(char *pStringOut, size_t strLength)
+bool CmdFifoPop(char *pStringOut, size_t *pStrLength)
 {
     if(pStringOut == NULL)
     {
@@ -309,9 +342,11 @@ bool CmdFifoPop(char *pStringOut, size_t strLength)
         return false;
     }
     // Get the popped command string length
+    size_t strLength = 0;
     strLength = strlen(uart_debuggerData.parsedCmdMsgBuffer.pFIFO[uart_debuggerData.parsedCmdMsgBuffer.outIndex]);
     // Copy the popped command string
-    strcpy(pStringOut, uart_debuggerData.parsedCmdMsgBuffer.pFIFO[uart_debuggerData.parsedCmdMsgBuffer.outIndex]);
+    strncpy(pStringOut, uart_debuggerData.parsedCmdMsgBuffer.pFIFO[uart_debuggerData.parsedCmdMsgBuffer.outIndex], strLength);
+    *pStrLength = strLength;
     // free the allocated memory
     free((void *)uart_debuggerData.parsedCmdMsgBuffer.pFIFO[uart_debuggerData.parsedCmdMsgBuffer.outIndex]);
     // set the popped FIFO item as NULL because the memory block it points to has been released.
@@ -321,10 +356,7 @@ bool CmdFifoPop(char *pStringOut, size_t strLength)
     return true;
 }        
 
-void extractCmdFromRxFifo( void )
-{
-    
-}
+
 /*******************************************************************************
  End of File
  */

@@ -3,6 +3,9 @@
 #include "test_params.h"
 #include "test_adc.h"
 
+#include "system_config/PIC32MK_MCU_Config/system_config.h" // for LED control
+#include "uart_debugger.h"
+
 #include <stdio.h>
 
 #define TEST_START_CHAR '['
@@ -61,7 +64,36 @@ bool test_io_set(unsigned int index, bool value){
     return true;
 }
 
+bool test_led_get(unsigned int ledIndex, bool* pledValue)
+{
+    switch( ledIndex )
+    {
+        case 1: *pledValue = V_LED1_RStateGet(); break;
+        case 2: *pledValue = V_LED1_GStateGet(); break;
+        case 3: *pledValue = V_LED2_RStateGet(); break;
+        case 4: *pledValue = V_LED2_GStateGet(); break;
+        case 5: *pledValue = V_LED3_RStateGet(); break;
+        case 6: *pledValue = V_LED3_GStateGet(); break;
+        
+        default: return false;
+    }
+    return true;
+}
 
+bool test_led_set(unsigned int ledIndex, bool ledValue)
+{
+    switch( ledIndex )
+    {
+        case 1: V_LED1_RStateSet(ledValue); break;
+        case 2: V_LED1_GStateSet(ledValue); break;
+        case 3: V_LED2_RStateSet(ledValue); break;
+        case 4: V_LED2_GStateSet(ledValue); break;
+        case 5: V_LED3_RStateSet(ledValue); break;
+        case 6: V_LED3_GStateSet(ledValue); break;        
+        default: return false;
+    }
+    return true;
+}
 
 void test_uart_parseGetIO(char* c){
     unsigned int index;
@@ -154,6 +186,22 @@ void test_uart_parseSetParameter(char* c){
     }
 }
 
+void test_uart_parseSetLed(char* c)
+{
+    unsigned int ledIndex;
+    char ledValue;
+    // %*c here * means that the char data 'L' is ignored and not put into the corresponding parameter.
+    if( sscanf(c, "%*c%u=%c", &ledIndex, &ledValue) == 2 )
+    {
+        bool bval = (ledValue != '0');
+        if( test_led_set(ledIndex, bval) )
+        {
+            test_led_get(ledIndex, &bval);
+            // After set LED, the Lely response is: [sLx=x] 
+            printf("%csL%u=%u%c", TEST_START_CHAR, ledIndex, bval, TEST_END_CHAR);
+        }
+    }
+}
 
 void test_uart_parseGetAdc(char* c){
     unsigned int index;
@@ -173,8 +221,7 @@ void test_uart_parseGetPWM(char* c){
     unsigned int channel;
     char type;
     
-    
-    if( sscanf(c, "%c%u", &type, &channel ) == 2){        
+    if( sscanf(c, "%c%u", &type, &channel ) == 2 ){        
         uint16_t dc, phase;
 
         test_pwm_Get( channel, type, &dc, &phase);
@@ -237,6 +284,13 @@ void test_uart_parsSet(char* c){
         case 'i':
         case 'I':
             test_uart_parseSetIO(c);
+            break;
+            
+        case 'l':
+        case 'L':
+            test_uart_parseSetLed(c);
+            break;
+            
         default:
             break;
     }
@@ -250,12 +304,12 @@ void test_uart_parseCommand(char* c){
     switch( *c ){
         case 's':
         case 'S':
-            // skip start char
+            // skip 'S' char
             test_uart_parsSet(++c);
             break;
         case 'g':
         case 'G':
-            // skip start char
+            // skip 'G' char
             test_uart_parsGet(++c);
             break;
             
@@ -306,6 +360,40 @@ void test_uart_processCommands(const char* str, bool reset){
         if( test_uart_findCommand(*str++) ){
             // The command is found, parse it.
             test_uart_parseCommand(cmd);
+        }
+    }
+}
+
+/*
+ * @Desciption 
+ *      extract the command message from the RX FIFO buffer into the command FIFO buffer
+ * @Parameters 
+ *      None
+ * @Return 
+ *      None
+ */
+void extractCmdFromRxFifo( void )
+{
+    /* Do not reset cmd_pos and protoState every time when this function is invoked.
+     * Otherwise, you can not extract the complete command.
+     * Sometimes, it can only find part of a command. When it is called next time, we want 
+     * it can continue to find rest of the command.
+     */
+//    cmd_pos = 0;
+//    protoState = ProtoFindStart;
+    static char rxChar = 0; // the character popped from rx FIFO is stored here
+    while( RxFifoPop(&rxChar) )
+    {
+//        putchar(rxChar);
+        if( test_uart_findCommand(rxChar) )
+        {
+            // a complete command is found
+            // extract the command into the FIFO buffer
+            // here cmd_pos == cmd_length
+            CmdFifoPush(cmd, cmd_pos);
+//            printf("found cmd: %s", cmd);
+            // clear command string
+            memset(cmd, '\0', cmd_pos);
         }
     }
 }

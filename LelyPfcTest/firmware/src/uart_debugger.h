@@ -76,7 +76,7 @@ extern "C" {
 // Section: Type Definitions
 // *****************************************************************************
 // *****************************************************************************
-
+    
 /*
  * Command FIFO structure stores the parsed command string. 
  * This is an round FIFO queue, in which every element is a pointer to a parsed command string
@@ -107,8 +107,8 @@ typedef enum
 {
 	/* Application's state machine's initial state. */
 	UART_DEBUGGER_STATE_INIT=0,
-	UART_DEBUGGER_STATE_RUN,
-
+	UART_DEBUGGER_STATE_RECEIVE_CMD,
+    UART_DEBUGGER_STATE_PROCESS_CMD        
 	/* TODO: Define states used by the application state machine. */
 
 } UART_DEBUGGER_STATES;
@@ -149,8 +149,8 @@ typedef struct
 bool CmdFifoInitialize(uint8_t bufferSize);
 bool isCmdFifoEmpty( void );
 bool isCmdFifoFull( void );
-bool CmdFifoPush(char *pStringIn);
-bool CmdFifoPop(char *pStringOut, size_t strLength);
+bool CmdFifoPush(char *pStringIn, size_t strLength);
+bool CmdFifoPop(char *pStringOut, size_t *pStrLength);
 	
 // *****************************************************************************
 // *****************************************************************************

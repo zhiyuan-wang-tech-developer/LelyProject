@@ -14,19 +14,45 @@ static FIFO_Buffer_t uart2_rx_fifo_buffer = { .inIndex = 0,
                                        .pFIFO = uart2_buffer
                                         };
 
-
-bool isRxFifoEmpty()
+/*
+ * @Desciption 
+ *      check if the RX FIFO buffer is empty
+ * @Parameters 
+ *      None
+ * @Return 
+ *      true: the RX FIFO buffer is empty
+ *      false: the RX FIFO buffer has RX characters
+ */
+bool isRxFifoEmpty(void)
 {
     if( uart2_rx_fifo_buffer.countUsedCells == 0 ) return true;
     else return false;
 }
 
-bool isRxFifoFull()
+/*
+ * @Desciption 
+ *      check if the RX FIFO buffer is full
+ * @Parameters 
+ *      None
+ * @Return 
+ *      true: the RX FIFO buffer is full
+ *      false: the RX FIFO buffer can store more characters
+ */
+bool isRxFifoFull(void)
 {
     if( uart2_rx_fifo_buffer.countUsedCells == uart2_rx_fifo_buffer.size ) return true;
     else return false;
 }
 
+/*
+ * @Desciption 
+ *      push a character into the RX FIFO buffer
+ * @Parameters 
+ *      charIn: the character you want to push into the FIFO buffer
+ * @Return 
+ *      true: pushing a character into the RX FIFO buffer is successful
+ *      false: can not push a character into the RX FIFO buffer
+ */
 bool RxFifoPush(char charIn)
 {
     if(isRxFifoFull()){
@@ -38,6 +64,15 @@ bool RxFifoPush(char charIn)
     return true;
 }
 
+/*
+ * @Desciption 
+ *      pop a character from the RX FIFO buffer
+ * @Parameters 
+ *      pcharOut: pointer to a place where you store the character popped from the FIFO buffer
+ * @Return 
+ *      true: popping a character from the RX FIFO buffer is successful
+ *      false: can not pop a character from the RX FIFO buffer
+ */
 bool RxFifoPop(char *pcharOut)
 {
     if(isRxFifoEmpty()){
