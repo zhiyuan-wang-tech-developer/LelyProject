@@ -129,18 +129,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 // *****************************************************************************
 // <editor-fold defaultstate="collapsed" desc="DRV_Timer Initialization Data">
-/*** TMR Driver Initialization Data ***/
-
-const DRV_TMR_INIT drvTmr0InitData =
-{
-    .moduleInit.sys.powerState = DRV_TMR_POWER_STATE_IDX0,
-    .tmrId = DRV_TMR_PERIPHERAL_ID_IDX0,
-    .clockSource = DRV_TMR_CLOCK_SOURCE_IDX0,
-    .prescale = DRV_TMR_PRESCALE_IDX0,
-    .mode = DRV_TMR_OPERATION_MODE_IDX0,
-    .interruptSource = DRV_TMR_INTERRUPT_SOURCE_IDX0,
-    .asyncWriteEnable = false,
-};
 // </editor-fold>
 // <editor-fold defaultstate="collapsed" desc="DRV_USART Initialization Data">
 // </editor-fold>
@@ -212,8 +200,12 @@ void SYS_Initialize ( void* data )
 
     /*Initialize MCPWM */
 //    DRV_MCPWM_Initialize();
+    /*Initialize TMR0 */
+//    DRV_TMR0_Initialize();
+    /*Initialize TMR1 */
+    DRV_TMR1_Initialize();
 
-    sysObj.drvTmr0 = DRV_TMR_Initialize(DRV_TMR_INDEX_0, (SYS_MODULE_INIT *)&drvTmr0InitData);
+//    sysObj.drvTmr0 = DRV_TMR_Initialize(DRV_TMR_INDEX_0, (SYS_MODULE_INIT *)&drvTmr0InitData);
 
     SYS_INT_VectorPrioritySet(INT_VECTOR_T1, INT_PRIORITY_LEVEL4);
     SYS_INT_VectorSubprioritySet(INT_VECTOR_T1, INT_SUBPRIORITY_LEVEL0);
@@ -224,8 +216,8 @@ void SYS_Initialize ( void* data )
     SYS_INT_VectorSubprioritySet(INT_VECTOR_UART2_TX, INT_SUBPRIORITY_LEVEL0);
     SYS_INT_VectorPrioritySet(INT_VECTOR_UART2_RX, INT_PRIORITY_LEVEL3);
     SYS_INT_VectorSubprioritySet(INT_VECTOR_UART2_RX, INT_SUBPRIORITY_LEVEL0);
-//    SYS_INT_VectorPrioritySet(INT_VECTOR_UART2_FAULT, INT_PRIORITY_LEVEL3);
-//    SYS_INT_VectorSubprioritySet(INT_VECTOR_UART2_FAULT, INT_SUBPRIORITY_LEVEL0);
+//    SYS_INT_VectorPrioritySet(INT_VECTOR_CAN1, INT_PRIORITY_LEVEL4);
+//    SYS_INT_VectorSubprioritySet(INT_VECTOR_CAN1, INT_SUBPRIORITY_LEVEL0);
 
     /* Initialize System Services */
     sysObj.sysConsole0 = SYS_CONSOLE_Initialize(SYS_CONSOLE_INDEX_0, NULL);

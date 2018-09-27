@@ -162,7 +162,7 @@ void UART_DEBUGGER_Tasks ( void )
                 }
                 memset(cmdToProcess, '\0', sizeof(cmdToProcess));
 //                printf("UART 2 is initialized!\n");
-                printf("[test lely]");
+                printf("[test lely]\n");
                 uart_debuggerData.state = UART_DEBUGGER_STATE_RECEIVE_CMD;
             }
             break;

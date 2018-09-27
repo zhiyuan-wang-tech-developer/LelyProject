@@ -171,8 +171,6 @@ extern "C" {
 #define DRV_MCPWM_DRIVER_MODE_STATIC 
 /*** Timer Driver Configuration ***/
 #define DRV_TMR_INTERRUPT_MODE             true
-#define DRV_TMR_INSTANCES_NUMBER           1
-#define DRV_TMR_CLIENTS_NUMBER             1
 
 /*** Timer Driver 0 Configuration ***/
 #define DRV_TMR_PERIPHERAL_ID_IDX0          TMR_ID_1
@@ -185,8 +183,19 @@ extern "C" {
 #define DRV_TMR_PRESCALE_IDX0               TMR_PRESCALE_VALUE_256
 #define DRV_TMR_OPERATION_MODE_IDX0         DRV_TMR_OPERATION_MODE_16_BIT
 #define DRV_TMR_ASYNC_WRITE_ENABLE_IDX0     false
-#define DRV_TMR_POWER_STATE_IDX0            SYS_MODULE_POWER_RUN_FULL
+#define DRV_TMR_POWER_STATE_IDX0            
 
+#define DRV_TMR_PERIPHERAL_ID_IDX1          TMR_ID_6
+#define DRV_TMR_INTERRUPT_SOURCE_IDX1       INT_SOURCE_TIMER_6
+#define DRV_TMR_INTERRUPT_VECTOR_IDX1       INT_VECTOR_T6
+#define DRV_TMR_ISR_VECTOR_IDX1             _TIMER_6_VECTOR
+#define DRV_TMR_INTERRUPT_PRIORITY_IDX1     INT_PRIORITY_LEVEL4
+#define DRV_TMR_INTERRUPT_SUB_PRIORITY_IDX1 INT_SUBPRIORITY_LEVEL1
+#define DRV_TMR_CLOCK_SOURCE_IDX1           DRV_TMR_CLKSOURCE_INTERNAL
+#define DRV_TMR_PRESCALE_IDX1               TMR_PRESCALE_VALUE_1
+#define DRV_TMR_OPERATION_MODE_IDX1         DRV_TMR_OPERATION_MODE_32_BIT
+#define DRV_TMR_ASYNC_WRITE_ENABLE_IDX1     false
+#define DRV_TMR_POWER_STATE_IDX1            
 // *****************************************************************************
 /* USART Driver Configuration Options
 */
@@ -349,6 +358,9 @@ extern "C" {
 /*** Application Instance 3 Configuration ***/
     
 /*** Application Instance 4 Configuration ***/
+#define CAN_CONTROLLER_TMR_DRV                       1
+#define CAN_CONTROLLER_TMR_DRV_IS_PERIODIC           true
+#define CAN_CONTROLLER_TMR_DRV_PERIOD                0x7270e00
 
 /*** Application Instance 5 Configuration ***/
 

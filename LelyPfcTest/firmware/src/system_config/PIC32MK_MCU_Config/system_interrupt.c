@@ -65,6 +65,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "led_controller.h"
 #include "pwm_controller.h"
 #include "can_controller.h"
+#include "uart_debugger.h"
 #include "system_definitions.h"
 
 //#define DEBUG_ADC_INTERRUPTS
@@ -424,13 +425,22 @@ void __ISR(_ADC_DATA47_VECTOR, ipl3AUTO) _IntHandlerDrvAdc_DATA47(void)
      
 void __ISR(_TIMER_1_VECTOR, ipl4AUTO) IntHandlerDrvTmrInstance0(void)
 {
-    DRV_TMR_Tasks(sysObj.drvTmr0);
+    PLIB_INT_SourceFlagClear(INT_ID_0,INT_SOURCE_TIMER_1);
 }
 
-void __ISR(_CAN1_VECTOR, IPL3AUTO) _IntHandlerDrvCANInstance0(void)
+void __ISR(_TIMER_6_VECTOR, ipl4AUTO) IntHandlerDrvTmrInstance1(void)
+{
+    PLIB_INT_SourceFlagClear(INT_ID_0,INT_SOURCE_TIMER_6);
+    DRV_TMR1_Tasks();
+}
+
+void __ISR(_CAN1_VECTOR, IPL4AUTO) _IntHandlerDrvCANInstance0(void)
 {
     PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_CAN_1);
 }
+
+
+
 /*******************************************************************************
  End of File
 */

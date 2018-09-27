@@ -51,7 +51,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVOCES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 // *****************************************************************************
 #include "driver/can/drv_can.h"
-#include "system/debug/sys_debug.h"
 
 
 static CAN_TX_MSG_BUFFER  *drv_Message0;
@@ -88,10 +87,10 @@ void DRV_CAN0_Initialize(void)
       channels, each with 8 message buffers.*/
     PLIB_CAN_MemoryBufferAssign(CAN_ID_1, can_message_buffer0);
 
-    /* Configure CAN_ID_1 Channel for CAN_TX_RTR_DISABLED operation. Allocate 32 message buffer, and assign low medium priority for transmissions. */
-    PLIB_CAN_ChannelForTransmitSet(CAN_ID_1, CAN_CHANNEL0, 32, CAN_TX_RTR_DISABLED, CAN_LOW_MEDIUM_PRIORITY);
-    /* Configure CAN_ID_1 Channel for CAN_RX_FULL_RECEIVE operation. Allocate 32 message buffer, and assign low medium priority for transmissions. */
-    PLIB_CAN_ChannelForReceiveSet(CAN_ID_1, CAN_CHANNEL1, 32, CAN_RX_FULL_RECEIVE);
+    /* Configure CAN_ID_1 Channel for CAN_TX_RTR_DISABLED operation. Allocate 16 message buffer, and assign low medium priority for transmissions. */
+    PLIB_CAN_ChannelForTransmitSet(CAN_ID_1, CAN_CHANNEL0, 16, CAN_TX_RTR_DISABLED, CAN_LOW_MEDIUM_PRIORITY);
+    /* Configure CAN_ID_1 Channel for CAN_RX_FULL_RECEIVE operation. Allocate 16 message buffer, and assign low medium priority for transmissions. */
+    PLIB_CAN_ChannelForReceiveSet(CAN_ID_1, CAN_CHANNEL1, 16, CAN_RX_FULL_RECEIVE);
     PLIB_CAN_FilterToChannelLink(CAN_ID_1, CAN_FILTER0, CAN_FILTER_MASK0, CAN_CHANNEL1);
     PLIB_CAN_ChannelEventEnable(CAN_ID_1, CAN_CHANNEL1, CAN_RX_CHANNEL_NOT_EMPTY);
     PLIB_CAN_FilterConfigure(CAN_ID_1, CAN_FILTER0, 0x400, CAN_SID);
@@ -100,18 +99,11 @@ void DRV_CAN0_Initialize(void)
     PLIB_CAN_FilterMaskConfigure(CAN_ID_1, CAN_FILTER_MASK0, 0x7f0, CAN_SID, CAN_FILTER_MASK_IDE_TYPE);
 
     /* Switch the CAN module to Normal mode. Wait until the switch is complete */
+//    PLIB_CAN_OperationModeSelect(CAN_ID_1, CAN_LOOPBACK_MODE);
+//    while(PLIB_CAN_OperationModeGet(CAN_ID_1) != CAN_LOOPBACK_MODE);    
     PLIB_CAN_OperationModeSelect(CAN_ID_1, CAN_NORMAL_MODE);
     while(PLIB_CAN_OperationModeGet(CAN_ID_1) != CAN_NORMAL_MODE);
 
-    PLIB_CAN_ModuleEventEnable(CAN_ID_1 , 0|CAN_RX_EVENT);
-
-
-
-
-    /* Setup CAN_ID_1 Interrupt */
-    PLIB_INT_SourceEnable(INT_ID_0,INT_SOURCE_CAN_1);
-    PLIB_INT_VectorPrioritySet(INT_ID_0,INT_VECTOR_CAN1, INT_PRIORITY_LEVEL3);
-    PLIB_INT_VectorSubPrioritySet(INT_ID_0,INT_VECTOR_CAN1, INT_SUBPRIORITY_LEVEL0);
 }
 
 void DRV_CAN0_Deinitialize(void)

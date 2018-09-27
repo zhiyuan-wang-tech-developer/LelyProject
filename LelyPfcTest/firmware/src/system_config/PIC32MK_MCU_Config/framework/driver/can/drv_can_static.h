@@ -52,7 +52,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVOCES, OR ANY CLAIMS BY THIRD PARTIES
 
 #include <sys/kmem.h>
 #include "peripheral/can/plib_can.h"
-#include "peripheral/int/plib_int.h"
 
 #ifdef __cplusplus
     extern "C" {

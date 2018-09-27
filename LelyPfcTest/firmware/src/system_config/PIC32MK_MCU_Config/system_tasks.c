@@ -75,9 +75,6 @@ void SYS_Tasks ( void )
     SYS_CONSOLE_Tasks(sysObj.sysConsole0);
 
     /* Maintain Device Drivers */
-    DRV_USART_TasksTransmit(sysObj.drvUsart0);
-    DRV_USART_TasksError (sysObj.drvUsart0);
-    DRV_USART_TasksReceive(sysObj.drvUsart0);
 
     /* Maintain Middleware & Other Libraries */
 
@@ -85,8 +82,8 @@ void SYS_Tasks ( void )
 //    ANALOG_VOLTAGE_MONITOR_Tasks();
 //    ERROR_HANDLER_Tasks();
 //    LED_CONTROLLER_Tasks();
-    PWM_CONTROLLER_Tasks();
-    CAN_CONTROLLER_Tasks();
+//    PWM_CONTROLLER_Tasks();
+//    CAN_CONTROLLER_Tasks();
 }
 
 

@@ -18,7 +18,10 @@
                 <logicalFolder name="f3" displayName="mcpwm" projectFiles="true">
                   <itemPath>../src/system_config/PIC32MK_MCU_Config/framework/driver/mcpwm/drv_mcpwm_static.h</itemPath>
                 </logicalFolder>
-                <logicalFolder name="f4" displayName="usart" projectFiles="true">
+                <logicalFolder name="f4" displayName="tmr" projectFiles="true">
+                  <itemPath>../src/system_config/PIC32MK_MCU_Config/framework/driver/tmr/drv_tmr_static.h</itemPath>
+                </logicalFolder>
+                <logicalFolder name="f5" displayName="usart" projectFiles="true">
                   <logicalFolder name="f1" displayName="src" projectFiles="true">
                     <itemPath>../src/system_config/PIC32MK_MCU_Config/framework/driver/usart/src/drv_usart_static_local.h</itemPath>
                   </logicalFolder>
@@ -62,7 +65,6 @@
           <logicalFolder name="f3" displayName="tmr" projectFiles="true">
             <logicalFolder name="f1" displayName="src" projectFiles="true">
               <itemPath>../../../../../../Microchip/harmony/v2_05_01/framework/driver/tmr/src/drv_tmr_variant_mapping.h</itemPath>
-              <itemPath>../../../../../../Microchip/harmony/v2_05_01/framework/driver/tmr/src/drv_tmr_local.h</itemPath>
             </logicalFolder>
             <itemPath>../../../../../../Microchip/harmony/v2_05_01/framework/driver/tmr/drv_tmr.h</itemPath>
             <itemPath>../../../../../../Microchip/harmony/v2_05_01/framework/driver/tmr/drv_tmr_mapping.h</itemPath>
@@ -155,7 +157,13 @@
                     <itemPath>../src/system_config/PIC32MK_MCU_Config/framework/driver/mcpwm/src/drv_mcpwm_static.c</itemPath>
                   </logicalFolder>
                 </logicalFolder>
-                <logicalFolder name="f4" displayName="usart" projectFiles="true">
+                <logicalFolder name="f4" displayName="tmr" projectFiles="true">
+                  <logicalFolder name="f1" displayName="src" projectFiles="true">
+                    <itemPath>../src/system_config/PIC32MK_MCU_Config/framework/driver/tmr/src/drv_tmr_static.c</itemPath>
+                    <itemPath>../src/system_config/PIC32MK_MCU_Config/framework/driver/tmr/src/drv_tmr_mapping.c</itemPath>
+                  </logicalFolder>
+                </logicalFolder>
+                <logicalFolder name="f5" displayName="usart" projectFiles="true">
                   <logicalFolder name="f1" displayName="src" projectFiles="true">
                     <itemPath>../src/system_config/PIC32MK_MCU_Config/framework/driver/usart/src/drv_usart_mapping.c</itemPath>
                     <itemPath>../src/system_config/PIC32MK_MCU_Config/framework/driver/usart/src/drv_usart_static.c</itemPath>
@@ -209,16 +217,7 @@
         <itemPath>../src/main.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f1" displayName="framework" projectFiles="true">
-        <logicalFolder name="f1" displayName="driver" projectFiles="true">
-          <logicalFolder name="f1" displayName="tmr" projectFiles="true">
-            <logicalFolder name="f1" displayName="src" projectFiles="true">
-              <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
-                <itemPath>../../../../../../Microchip/harmony/v2_05_01/framework/driver/tmr/src/dynamic/drv_tmr.c</itemPath>
-              </logicalFolder>
-            </logicalFolder>
-          </logicalFolder>
-        </logicalFolder>
-        <logicalFolder name="f2" displayName="system" projectFiles="true">
+        <logicalFolder name="f1" displayName="system" projectFiles="true">
           <logicalFolder name="f1" displayName="debug" projectFiles="true">
             <logicalFolder name="f1" displayName="src" projectFiles="true">
               <itemPath>../../../../../../Microchip/harmony/v2_05_01/framework/system/debug/src/sys_debug.c</itemPath>
@@ -502,6 +501,7 @@
         <property key="UART5" value="true"/>
         <property key="UART6" value="true"/>
         <property key="debugoptions.useswbreakpoints" value="false"/>
+        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="memories.aux" value="false"/>
         <property key="memories.bootflash" value="false"/>

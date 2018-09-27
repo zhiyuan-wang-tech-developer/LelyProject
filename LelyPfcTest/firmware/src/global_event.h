@@ -62,6 +62,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 
 typedef struct {
     bool tmr_drv_led_200ms_blink_event;
+    bool start_can_tx;
 } global_events_t;
 
 extern global_events_t global_events;

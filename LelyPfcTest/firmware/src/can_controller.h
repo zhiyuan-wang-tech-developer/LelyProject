@@ -59,13 +59,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "system_config.h"
 #include "system_definitions.h"
 
-typedef enum
-{
-    CAN_CONTROLLER_CAN_STATE_START,
-    CAN_CONTROLLER_CAN_STATE_RX,
-    CAN_CONTROLLER_CAN_STATE_DONE
-} CAN_CONTROLLER_CAN_STATES;
-
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
@@ -79,6 +72,14 @@ extern "C" {
 // Section: Type Definitions
 // *****************************************************************************
 // *****************************************************************************
+
+/* CAN message data structure for standard ID format */
+typedef struct
+{
+    uint16_t Id; // 11 bits identifier
+    uint8_t dataLength; // data length code
+    uint8_t data[8]; // 8 bytes of data payload
+} CAN_MSG_t;
 
 // *****************************************************************************
 /* Application states
@@ -95,8 +96,10 @@ typedef enum
 {
 	/* Application's state machine's initial state. */
 	CAN_CONTROLLER_STATE_INIT=0,
-	CAN_CONTROLLER_STATE_SERVICE_TASKS,
-
+	CAN_CONTROLLER_STATE_WAIT,
+    CAN_CONTROLLER_STATE_TX,
+    CAN_CONTROLLER_STATE_RX
+            
 	/* TODO: Define states used by the application state machine. */
 
 } CAN_CONTROLLER_STATES;
@@ -121,12 +124,7 @@ typedef struct
     CAN_CONTROLLER_STATES state;
 
     /* TODO: Define any additional data used by the application. */
-
-    CAN_CONTROLLER_CAN_STATES canStateMachine;
-
-    /* CAN Driver Handle definitions */
-    DRV_HANDLE handleCAN0;
-
+    DRV_HANDLE handleTimer1forCANTx;
 
 } CAN_CONTROLLER_DATA;
 
@@ -211,6 +209,8 @@ void CAN_CONTROLLER_Initialize ( void );
 
 void CAN_CONTROLLER_Tasks( void );
 
+bool CAN_SendMsg(CAN_MSG_t *pCanTxMsg);
+bool CAN_ReceiveMsg(CAN_MSG_t *pCanRxMsg);
 
 #endif /* _CAN_CONTROLLER_H */
 

@@ -56,11 +56,29 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "can_controller.h"
 #include "global_event.h"
 
+#define CAN_FIFO_SIZE   32
+#define CAN_TX_CHANNEL  CAN_CHANNEL0
+#define CAN_RX_CHANNEL  CAN_CHANNEL1
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Global Data Definitions
 // *****************************************************************************
 // *****************************************************************************
+//static CAN_MSG_t CAN_TX_FIFO_Buffer[CAN_FIFO_SIZE];
+//static CAN_MSG_t CAN_RX_FIFO_Buffer[CAN_FIFO_SIZE];
+
+static CAN_MSG_t can_tx_test_msg = {
+                                    .Id = 0x400,
+                                    .dataLength = 8,
+                                    .data = "DynaTron"
+                                    };
+static CAN_MSG_t can_rx_test_msg = {
+                                    .Id = 0x400,
+                                    .dataLength = 8,
+                                    .data = {'\0'}
+                                    };
+static CAN_CHANNEL_EVENT rxChannelEvent;
 
 // *****************************************************************************
 /* Application Data
@@ -78,14 +96,18 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 */
 
 CAN_CONTROLLER_DATA can_controllerData;
-static uint8_t can_controller_can_tx_buffer[] = "DynaTron";
-static uint8_t can_controller_can_rx_buffer[32];
 
 // *****************************************************************************
 // *****************************************************************************
 // Section: Application Callback Functions
 // *****************************************************************************
 // *****************************************************************************
+
+/* Application's Timer Callback Function */
+static void TimerCallback (  uintptr_t context, uint32_t alarmCount )
+{
+    global_events.start_can_tx = true;   
+}
 
 /* TODO:  Add any necessary callback functions.
 */
@@ -96,43 +118,18 @@ static uint8_t can_controller_can_rx_buffer[32];
 // *****************************************************************************
 // *****************************************************************************
 
-/* state machine for the CAN */
-static void CAN_Task(void)
-{
-    /* run the state machine here for CAN */
-    switch (can_controllerData.canStateMachine)
-    {
-        default:
-        case CAN_CONTROLLER_CAN_STATE_START:
-            if (DRV_CAN_ChannelMessageTransmit(
-                can_controllerData.handleCAN0,
-                CAN_CHANNEL0,  /* default channel 0 */
-                1024,  /* given address */
-                sizeof(can_controller_can_tx_buffer),
-                can_controller_can_tx_buffer) == true)
+
+/* Application's Timer Setup Function */
+static void TimerSetup( void )
             {
-                can_controllerData.canStateMachine = CAN_CONTROLLER_CAN_STATE_START;
+    DRV_TMR_AlarmRegister(
+        can_controllerData.handleTimer1forCANTx, 
+        CAN_CONTROLLER_TMR_DRV_PERIOD, 
+        CAN_CONTROLLER_TMR_DRV_IS_PERIODIC,
+        (uintptr_t)NULL, 
+        TimerCallback);
+    DRV_TMR_Start(can_controllerData.handleTimer1forCANTx);
             }
-        break;
-
-        case CAN_CONTROLLER_CAN_STATE_RX:
-            if (DRV_CAN_ChannelMessageReceive(
-                can_controllerData.handleCAN0,
-                CAN_CHANNEL1,  /* default channel 0 */
-                1024,  /* given address */
-                32,
-                can_controller_can_rx_buffer) == true)
-            {
-                can_controllerData.canStateMachine = CAN_CONTROLLER_CAN_STATE_DONE;
-            }
-        break;
-
-        case CAN_CONTROLLER_CAN_STATE_DONE:
-            can_controllerData.canStateMachine = CAN_CONTROLLER_CAN_STATE_RX;
-        break;
-    }
-}
-
 
 /* TODO:  Add any necessary local functions.
 */
@@ -157,9 +154,8 @@ void CAN_CONTROLLER_Initialize ( void )
     /* Place the App state machine in its initial state. */
     can_controllerData.state = CAN_CONTROLLER_STATE_INIT;
 
-    can_controllerData.handleCAN0 = DRV_HANDLE_INVALID;
+    can_controllerData.handleTimer1forCANTx = DRV_HANDLE_INVALID;
 
-    
     /* TODO: Initialize your application's state machine and other
      * parameters.
      */
@@ -185,44 +181,93 @@ void CAN_CONTROLLER_Tasks ( void )
         {
             bool appInitialized = true;
        
-            if (DRV_HANDLE_INVALID == can_controllerData.handleCAN0)
+            if (can_controllerData.handleTimer1forCANTx == DRV_HANDLE_INVALID)
             {
-                can_controllerData.handleCAN0 = DRV_CAN_Open(0, DRV_IO_INTENT_READWRITE);
-                appInitialized &= (DRV_HANDLE_INVALID != can_controllerData.handleCAN0);
+                can_controllerData.handleTimer1forCANTx = DRV_TMR_Open(CAN_CONTROLLER_TMR_DRV, DRV_IO_INTENT_EXCLUSIVE);
+                appInitialized &= ( DRV_HANDLE_INVALID != can_controllerData.handleTimer1forCANTx );
             }
         
             if (appInitialized)
             {
-                /* initialize the CAN state machine */
-                can_controllerData.canStateMachine = CAN_CONTROLLER_CAN_STATE_START;
-            
-                can_controllerData.state = CAN_CONTROLLER_STATE_SERVICE_TASKS;
+                TimerSetup();
+                DRV_TMR1_AlarmEnable(true);
+                can_controllerData.state = CAN_CONTROLLER_STATE_WAIT;
             }
             break;
         }
 
-        case CAN_CONTROLLER_STATE_SERVICE_TASKS:
+        case CAN_CONTROLLER_STATE_WAIT:
         {
-            /* run the state machine for servicing the CAN */
-            CAN_Task();
-        
+            // wait for Timer 6 interrupt for CAN Transmit
+            if( global_event_triggered(&global_events.start_can_tx) )
+            {
+                printf("[CAN TX ...]\n");
+                can_controllerData.state = CAN_CONTROLLER_STATE_TX;
+            }
+            rxChannelEvent = PLIB_CAN_ChannelEventGet(CAN_ID_1, CAN_RX_CHANNEL);
+            if( (rxChannelEvent & CAN_RX_CHANNEL_NOT_EMPTY) == CAN_RX_CHANNEL_NOT_EMPTY )
+            {
+                printf("[CAN RX ...]\n");
+                can_controllerData.state = CAN_CONTROLLER_STATE_RX;
+            }
             break;
         }
 
         /* TODO: implement your application state machine.*/
-        
+
+        case CAN_CONTROLLER_STATE_TX:
+        {
+            printf("[CAN Baudrate %d kbps]\n", PLIB_CAN_BaudRateGet(CAN_ID_1, SYS_CLK_SystemFrequencyGet()));
+            if( CAN_SendMsg(&can_tx_test_msg) )
+            {
+                printf("[CAN TX succeeded]\n");
+            }
+            else
+            {
+                printf("[CAN TX failed]\n");
+            }
+            can_controllerData.state = CAN_CONTROLLER_STATE_WAIT;
+            break;
+        }
+
+        case CAN_CONTROLLER_STATE_RX:
+        {
+            if( CAN_ReceiveMsg(&can_rx_test_msg) )
+            {
+                printf("[CAN RX succeeded]\n");
+                printf("[CAN RX Msg %s]\n", can_rx_test_msg.data);
+            }
+            else
+            {
+                printf("[CAN RX failed]\n");
+            }
+            can_controllerData.state = CAN_CONTROLLER_STATE_WAIT;
+            break;
+        }        
 
         /* The default state should never be executed. */
         default:
         {
             /* TODO: Handle error in application's state machine. */
+            can_controllerData.state = CAN_CONTROLLER_STATE_INIT;
             break;
         }
     }
 }
 
+bool CAN_SendMsg(CAN_MSG_t *pCanTxMsg)
+{
+    bool retVal = false;
+    retVal = DRV_CAN0_ChannelMessageTransmit(CAN_TX_CHANNEL, pCanTxMsg->Id, pCanTxMsg->dataLength, pCanTxMsg->data);
+    return retVal;
+}
  
-
+bool CAN_ReceiveMsg(CAN_MSG_t *pCanRxMsg)
+{
+    bool retVal = false;
+    retVal = DRV_CAN0_ChannelMessageReceive(CAN_RX_CHANNEL, pCanRxMsg->Id, pCanRxMsg->dataLength, pCanRxMsg->data);
+    return retVal;
+}
 /*******************************************************************************
  End of File
  */

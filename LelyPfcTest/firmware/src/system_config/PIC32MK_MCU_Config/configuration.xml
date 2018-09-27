@@ -9,7 +9,7 @@
     <Processor dnOrder="1" name="PIC32MK0512MCF100"/>
     <Board dnOrder="2" name=" "/>
     <ForceOptimization dnOrder="3" flag="false"/>
-    <MergeStrategy dnOrder="4" flag="USER_RECENT"/>
+    <MergeStrategy dnOrder="4" flag="ALL"/>
   </General>
   <Manifest>
     <Files dnOrder="0">
@@ -22,146 +22,138 @@
         <Path dnOrder="1">Header&amp;#160;Files/framework/driver/tmr/src</Path>
       </File>
       <File dnOrder="2">
-        <Name dnOrder="0">drv_tmr_local.h</Name>
-        <Path dnOrder="1">Header&amp;#160;Files/framework/driver/tmr/src</Path>
-      </File>
-      <File dnOrder="3">
         <Name dnOrder="0">driver_common.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/framework/driver</Path>
       </File>
-      <File dnOrder="4">
+      <File dnOrder="3">
         <Name dnOrder="0">drv_tmr.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/framework/driver/tmr</Path>
       </File>
-      <File dnOrder="5">
+      <File dnOrder="4">
         <Name dnOrder="0">drv_can.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/framework/driver/can</Path>
       </File>
-      <File dnOrder="6">
+      <File dnOrder="5">
         <Name dnOrder="0">sys_dma.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/framework/system/dma</Path>
       </File>
-      <File dnOrder="7">
+      <File dnOrder="6">
         <Name dnOrder="0">sys_dma_definitions.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/framework/system/dma</Path>
       </File>
-      <File dnOrder="8">
+      <File dnOrder="7">
         <Name dnOrder="0">osal.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/framework/osal</Path>
       </File>
-      <File dnOrder="9">
+      <File dnOrder="8">
         <Name dnOrder="0">tmr_definitions_pic32m.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/framework/driver/tmr</Path>
       </File>
-      <File dnOrder="10">
+      <File dnOrder="9">
         <Name dnOrder="0">sys_ports.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/framework/system/ports</Path>
       </File>
-      <File dnOrder="11">
+      <File dnOrder="10">
         <Name dnOrder="0">driver.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/framework/driver</Path>
       </File>
-      <File dnOrder="12">
+      <File dnOrder="11">
         <Name dnOrder="0">sys_debug_local.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/framework/system/debug/src</Path>
       </File>
-      <File dnOrder="13">
+      <File dnOrder="12">
         <Name dnOrder="0">sys_common.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/framework/system/common</Path>
       </File>
-      <File dnOrder="14">
+      <File dnOrder="13">
         <Name dnOrder="0">sys_buffer.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/framework/system/common</Path>
       </File>
-      <File dnOrder="15">
+      <File dnOrder="14">
         <Name dnOrder="0">sys_int_pic32.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/framework/system/int/src</Path>
       </File>
-      <File dnOrder="16">
+      <File dnOrder="15">
         <Name dnOrder="0">drv_usart_definitions.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/framework/driver/usart</Path>
       </File>
-      <File dnOrder="17">
+      <File dnOrder="16">
         <Name dnOrder="0">sys_clk_compatibility.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/framework/system/clk</Path>
       </File>
-      <File dnOrder="18">
+      <File dnOrder="17">
         <Name dnOrder="0">sys_clk.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/framework/system/clk</Path>
       </File>
-      <File dnOrder="19">
+      <File dnOrder="18">
         <Name dnOrder="0">sys_ports_definitions.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/framework/system/ports</Path>
       </File>
-      <File dnOrder="20">
+      <File dnOrder="19">
         <Name dnOrder="0">osal_impl_basic.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/framework/osal</Path>
       </File>
-      <File dnOrder="21">
+      <File dnOrder="20">
         <Name dnOrder="0">sys_clk_mapping.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/framework/system/clk</Path>
       </File>
-      <File dnOrder="22">
+      <File dnOrder="21">
         <Name dnOrder="0">sys_int_mapping.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/framework/system/int</Path>
       </File>
-      <File dnOrder="23">
+      <File dnOrder="22">
         <Name dnOrder="0">osal_definitions.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/framework/osal</Path>
       </File>
-      <File dnOrder="24">
-        <Name dnOrder="0">drv_tmr.c</Name>
-        <Path dnOrder="1">Source&amp;#160;Files/framework/driver/tmr/src/dynamic</Path>
-      </File>
-      <File dnOrder="25">
+      <File dnOrder="23">
         <Name dnOrder="0">drv_mcpwm.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/framework/driver/mcpwm</Path>
       </File>
-      <File dnOrder="26">
+      <File dnOrder="24">
         <Name dnOrder="0">sys_int_private.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/framework/system/int/src</Path>
       </File>
-      <File dnOrder="27">
+      <File dnOrder="25">
         <Name dnOrder="0">drv_tmr_compatibility.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/framework/driver/tmr</Path>
       </File>
-      <File dnOrder="28">
+      <File dnOrder="26">
         <Name dnOrder="0">system.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/framework/system</Path>
       </File>
-      <File dnOrder="29">
+      <File dnOrder="27">
         <Name dnOrder="0">drv_usart.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/framework/driver/usart</Path>
       </File>
-      <File dnOrder="30">
+      <File dnOrder="28">
         <Name dnOrder="0">sys_debug.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/framework/system/debug/src</Path>
       </File>
-      <File dnOrder="31">
+      <File dnOrder="29">
         <Name dnOrder="0">sys_console.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/framework/system/console</Path>
       </File>
-      <File dnOrder="32">
+      <File dnOrder="30">
         <Name dnOrder="0">sys_debug.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/framework/system/debug</Path>
       </File>
-      <File dnOrder="33">
+      <File dnOrder="31">
         <Name dnOrder="0">drv_usart_variant_mapping.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/framework/driver/usart/src</Path>
       </File>
-      <File dnOrder="34">
+      <File dnOrder="32">
         <Name dnOrder="0">sys_module.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/framework/system/common</Path>
       </File>
-      <File dnOrder="35">
+      <File dnOrder="33">
         <Name dnOrder="0">sys_queue.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/framework/system/common</Path>
       </File>
-      <File dnOrder="36">
+      <File dnOrder="34">
         <Name dnOrder="0">sys_console_local.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/framework/system/console/src</Path>
       </File>
-      <File dnOrder="37">
+      <File dnOrder="35">
         <Name dnOrder="0">sys_int.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/framework/system/int</Path>
       </File>
@@ -182,206 +174,248 @@
       <Template dnOrder="2">
         <Name dnOrder="0">system_init.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/PIC32MK_MCU_Config</Path>
-        <Checksum dnOrder="2">4CC73B3E9056713A03AEE5757CC3A500</Checksum>
+        <Checksum dnOrder="2">5EFAF7CD76B832FEA159A1BED53D539C</Checksum>
         <ProjectFileChecksum dnOrder="3">8B9AAA7DB9EA1C9CA4F9C0E30195BB7F</ProjectFileChecksum>
       </Template>
       <Template dnOrder="3">
         <Name dnOrder="0">drv_usart_mapping.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/PIC32MK_MCU_Config/framework/driver/usart/src</Path>
         <Checksum dnOrder="2">84D12D754B67B6F268A7243A5A473239</Checksum>
+        <ProjectFileChecksum dnOrder="3">1EC18FB944466EBADEDFB6EC096BD097</ProjectFileChecksum>
       </Template>
       <Template dnOrder="4">
         <Name dnOrder="0">can_controller.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app</Path>
-        <Checksum dnOrder="2">D69D53B32BDD4274FA98D97AE100DB61</Checksum>
+        <Checksum dnOrder="2">BBD1D0A8AC71C60273E01FEBCDA17113</Checksum>
+        <ProjectFileChecksum dnOrder="3">04F2FDFC4270FC2DB6C0FB1315311ABA</ProjectFileChecksum>
       </Template>
       <Template dnOrder="5">
         <Name dnOrder="0">system_config.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/app/system_config/PIC32MK_MCU_Config</Path>
-        <Checksum dnOrder="2">7FDB424A1E29147A15CABC927D9C9711</Checksum>
+        <Checksum dnOrder="2">AFEEBAAA237A3953294A164E1334DC84</Checksum>
         <ProjectFileChecksum dnOrder="3">A7BAB4866F64E035A234572AC80F8B0A</ProjectFileChecksum>
       </Template>
       <Template dnOrder="6">
         <Name dnOrder="0">drv_can_static.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/app/system_config/PIC32MK_MCU_Config/framework/driver/can</Path>
-        <Checksum dnOrder="2">D3F56B5AA587284969E8FA6426E77B30</Checksum>
+        <Checksum dnOrder="2">43E26EF057A4F26A2EAEF7DE52E56731</Checksum>
+        <ProjectFileChecksum dnOrder="3">40F9F540C9713A680A1BF2F9324D3DAB</ProjectFileChecksum>
       </Template>
       <Template dnOrder="7">
         <Name dnOrder="0">sys_devcon.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/PIC32MK_MCU_Config/framework/system/devcon/src</Path>
         <Checksum dnOrder="2">54ADBD4A35BCA03C42C74182FCE41849</Checksum>
+        <ProjectFileChecksum dnOrder="3">128F5FE24B10B6A0AD64E5F05CC7802B</ProjectFileChecksum>
       </Template>
       <Template dnOrder="8">
         <Name dnOrder="0">global_event.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app</Path>
-        <Checksum dnOrder="2">5F2D60CB1EEE8011592428D25B25D47B</Checksum>
+        <Checksum dnOrder="2">317AD0B60197CB35D4E7232E568E1B0A</Checksum>
+        <ProjectFileChecksum dnOrder="3">D013FF7E7CF3C9F4802BC30C34C5847E</ProjectFileChecksum>
       </Template>
       <Template dnOrder="9">
         <Name dnOrder="0">drv_adc_static.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/app/system_config/PIC32MK_MCU_Config/framework/driver/adc</Path>
         <Checksum dnOrder="2">5A335E3E0A438B7417CED4025EF9F9D9</Checksum>
+        <ProjectFileChecksum dnOrder="3">A451DC3BF07117BA9EB370A5B06672A6</ProjectFileChecksum>
       </Template>
       <Template dnOrder="10">
         <Name dnOrder="0">drv_usart_static_byte_model.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/PIC32MK_MCU_Config/framework/driver/usart/src</Path>
         <Checksum dnOrder="2">A88827AFC224304325F60896556458E3</Checksum>
+        <ProjectFileChecksum dnOrder="3">16228281410D6CCFBF9E9E29D7CD976A</ProjectFileChecksum>
       </Template>
       <Template dnOrder="11">
-        <Name dnOrder="0">system_definitions.h</Name>
-        <Path dnOrder="1">Header&amp;#160;Files/app/system_config/PIC32MK_MCU_Config</Path>
-        <Checksum dnOrder="2">EE8F1C4C36213E17A6360AD521AAF6C8</Checksum>
+        <Name dnOrder="0">drv_tmr_static.h</Name>
+        <Path dnOrder="1">Header&amp;#160;Files/app/system_config/PIC32MK_MCU_Config/framework/driver/tmr</Path>
+        <Checksum dnOrder="2">05B5785724E85C2FF64449B6B228D2EB</Checksum>
+        <ProjectFileChecksum dnOrder="3">9E63745C5D40C2CF1B01334C5E99C26E</ProjectFileChecksum>
       </Template>
       <Template dnOrder="12">
+        <Name dnOrder="0">system_definitions.h</Name>
+        <Path dnOrder="1">Header&amp;#160;Files/app/system_config/PIC32MK_MCU_Config</Path>
+        <Checksum dnOrder="2">A54C9C6046ECC2998DC5754A34EEEEB9</Checksum>
+        <ProjectFileChecksum dnOrder="3">3A653B28ED2EF08235AB44E6BFC076CD</ProjectFileChecksum>
+      </Template>
+      <Template dnOrder="13">
         <Name dnOrder="0">drv_can_mapping.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/PIC32MK_MCU_Config/framework/driver/can/src</Path>
         <Checksum dnOrder="2">2B147795224B5A9A1995555189288D1A</Checksum>
+        <ProjectFileChecksum dnOrder="3">9F27F146D7E928320688E482A1E5BF1D</ProjectFileChecksum>
       </Template>
-      <Template dnOrder="13">
+      <Template dnOrder="14">
         <Name dnOrder="0">analog_voltage_monitor.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/app</Path>
         <Checksum dnOrder="2">0D02C8E3F087FBD237F6CA9407B6BAE3</Checksum>
         <ProjectFileChecksum dnOrder="3">EAFB090AD812A613196D159724ACB444</ProjectFileChecksum>
       </Template>
-      <Template dnOrder="14">
+      <Template dnOrder="15">
         <Name dnOrder="0">drv_mcpwm_static.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/PIC32MK_MCU_Config/framework/driver/mcpwm/src</Path>
         <Checksum dnOrder="2">6A653B314D70EB9D38966E0991163CA8</Checksum>
         <ProjectFileChecksum dnOrder="3">7DFD8DB988684A5F393AAA7FA9128C29</ProjectFileChecksum>
       </Template>
-      <Template dnOrder="15">
+      <Template dnOrder="16">
         <Name dnOrder="0">sys_devcon_pic32mk.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/PIC32MK_MCU_Config/framework/system/devcon/src</Path>
         <Checksum dnOrder="2">60AF89730F54FE4D9C5A197A69DDD80B</Checksum>
+        <ProjectFileChecksum dnOrder="3">BA9930EA54CB35ED2B3F0055B5E254AE</ProjectFileChecksum>
       </Template>
-      <Template dnOrder="16">
+      <Template dnOrder="17">
+        <Name dnOrder="0">drv_tmr_static.c</Name>
+        <Path dnOrder="1">Source&amp;#160;Files/app/system_config/PIC32MK_MCU_Config/framework/driver/tmr/src</Path>
+        <Checksum dnOrder="2">3175B24CD7A6BB4CD81CD3B3BBC29549</Checksum>
+        <ProjectFileChecksum dnOrder="3">C5F0D3177E6DE11CAE0DAA0774C00DC4</ProjectFileChecksum>
+      </Template>
+      <Template dnOrder="18">
         <Name dnOrder="0">sys_console_static.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/PIC32MK_MCU_Config/framework/system/console/src</Path>
         <Checksum dnOrder="2">0B506F1F6112899EF538390AD8DBD62F</Checksum>
+        <ProjectFileChecksum dnOrder="3">C305385FCE75E0259DC903ACF7DAE4E1</ProjectFileChecksum>
       </Template>
-      <Template dnOrder="17">
+      <Template dnOrder="19">
         <Name dnOrder="0">drv_adc_static.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/PIC32MK_MCU_Config/framework/driver/adc/src</Path>
         <Checksum dnOrder="2">DA4BD4707A936D6AFC228AAB99F6C69D</Checksum>
         <ProjectFileChecksum dnOrder="3">CAF5D1487255F8A95E400E9D14456C83</ProjectFileChecksum>
       </Template>
-      <Template dnOrder="18">
+      <Template dnOrder="20">
         <Name dnOrder="0">drv_usart_static.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/app/system_config/PIC32MK_MCU_Config/framework/driver/usart</Path>
         <Checksum dnOrder="2">5CECAF42B01CE886D52A8868E39E7772</Checksum>
+        <ProjectFileChecksum dnOrder="3">DF51A02FE6372EFB82C4B9F4CD4B549A</ProjectFileChecksum>
       </Template>
-      <Template dnOrder="19">
+      <Template dnOrder="21">
         <Name dnOrder="0">can_controller.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/app</Path>
-        <Checksum dnOrder="2">80CB307255CE4FD7989BBEFDFA592F69</Checksum>
+        <Checksum dnOrder="2">AC520AFED9D4AC6A2C169142FC490663</Checksum>
+        <ProjectFileChecksum dnOrder="3">937EA8D48B5EF02AA646BE39C8B183FC</ProjectFileChecksum>
       </Template>
-      <Template dnOrder="20">
+      <Template dnOrder="22">
+        <Name dnOrder="0">drv_tmr_mapping.c</Name>
+        <Path dnOrder="1">Source&amp;#160;Files/app/system_config/PIC32MK_MCU_Config/framework/driver/tmr/src</Path>
+        <Checksum dnOrder="2">3916F8DF7C3B6D8051EC8A5C1B65D668</Checksum>
+        <ProjectFileChecksum dnOrder="3">EBA5C3BC3E862D3084E5A072E331BF94</ProjectFileChecksum>
+      </Template>
+      <Template dnOrder="23">
         <Name dnOrder="0">sys_devcon.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/app/system_config/PIC32MK_MCU_Config/framework/system/devcon</Path>
         <Checksum dnOrder="2">07580DCDEF89D9C79B062544109C5367</Checksum>
+        <ProjectFileChecksum dnOrder="3">7812D664C229D4FAB3E751EB87752B19</ProjectFileChecksum>
       </Template>
-      <Template dnOrder="21">
+      <Template dnOrder="24">
         <Name dnOrder="0">error_handler.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app</Path>
         <Checksum dnOrder="2">74B11A78D6FC6B525E8A5F01C8F8EA55</Checksum>
         <ProjectFileChecksum dnOrder="3">800A45952709A6CA7B21053DF24DC44D</ProjectFileChecksum>
       </Template>
-      <Template dnOrder="22">
+      <Template dnOrder="25">
         <Name dnOrder="0">pwm_controller.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app</Path>
         <Checksum dnOrder="2">FD2D7A9731B26FE238CE21205C2DE668</Checksum>
         <ProjectFileChecksum dnOrder="3">ED40E593C4E5D3A4DE2BBCE79481CCC8</ProjectFileChecksum>
       </Template>
-      <Template dnOrder="23">
+      <Template dnOrder="26">
         <Name dnOrder="0">error_handler.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/app</Path>
         <Checksum dnOrder="2">430CE5F016B38D61A5874EB2721498EA</Checksum>
         <ProjectFileChecksum dnOrder="3">409D541F4130F0108DA1C6107EFB0AA4</ProjectFileChecksum>
       </Template>
-      <Template dnOrder="24">
+      <Template dnOrder="27">
         <Name dnOrder="0">uart_debugger.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app</Path>
         <Checksum dnOrder="2">65BD3C4F6A226F152AAB87AFCAD96DF7</Checksum>
+        <ProjectFileChecksum dnOrder="3">E80CFC985D2DE659C2E5CA764A8AE62A</ProjectFileChecksum>
       </Template>
-      <Template dnOrder="25">
+      <Template dnOrder="28">
         <Name dnOrder="0">main.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app</Path>
         <Checksum dnOrder="2">81A51474D8A80D41AD749DEAE4C1A7A3</Checksum>
         <ProjectFileChecksum dnOrder="3">7147386D8F250FACFDAB30747E5DA193</ProjectFileChecksum>
       </Template>
-      <Template dnOrder="26">
+      <Template dnOrder="29">
         <Name dnOrder="0">global_event.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/app</Path>
-        <Checksum dnOrder="2">C77D0FC170231CF0DE4F2809CDA31D7B</Checksum>
+        <Checksum dnOrder="2">77FC5697A57A56F30D381482C5AD3845</Checksum>
+        <ProjectFileChecksum dnOrder="3">E1F422A98C1DA204228FF2A9775E2CCA</ProjectFileChecksum>
       </Template>
-      <Template dnOrder="27">
+      <Template dnOrder="30">
         <Name dnOrder="0">led_controller.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/app</Path>
         <Checksum dnOrder="2">034AE2559124D52040F2B09A63E7714E</Checksum>
         <ProjectFileChecksum dnOrder="3">716471EA21A82C428E9CE846B56160F4</ProjectFileChecksum>
       </Template>
-      <Template dnOrder="28">
+      <Template dnOrder="31">
         <Name dnOrder="0">analog_voltage_monitor.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app</Path>
         <Checksum dnOrder="2">60FCFD1CBAAB71F80D225D854E310A38</Checksum>
         <ProjectFileChecksum dnOrder="3">A41EE3503C067F499559BA45090FDA96</ProjectFileChecksum>
       </Template>
-      <Template dnOrder="29">
+      <Template dnOrder="32">
         <Name dnOrder="0">sys_devcon_local.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/app/system_config/PIC32MK_MCU_Config/framework/system/devcon/src</Path>
         <Checksum dnOrder="2">B66F9B4DBD85DA7F9DE775E864E01395</Checksum>
+        <ProjectFileChecksum dnOrder="3">E1B04ABD532B066F837BE3761D6796C2</ProjectFileChecksum>
       </Template>
-      <Template dnOrder="30">
+      <Template dnOrder="33">
         <Name dnOrder="0">drv_usart_static_local.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/app/system_config/PIC32MK_MCU_Config/framework/driver/usart/src</Path>
         <Checksum dnOrder="2">9563F23392942CF4B5C01E1065907D06</Checksum>
+        <ProjectFileChecksum dnOrder="3">3707F9B39C3C38A721415CE7ADB03298</ProjectFileChecksum>
       </Template>
-      <Template dnOrder="31">
+      <Template dnOrder="34">
         <Name dnOrder="0">uart_debugger.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/app</Path>
         <Checksum dnOrder="2">216E983C28AED88858B4B06DC815F866</Checksum>
+        <ProjectFileChecksum dnOrder="3">79D7D4C13D0369C76AEB315A8927AEF0</ProjectFileChecksum>
       </Template>
-      <Template dnOrder="32">
+      <Template dnOrder="35">
         <Name dnOrder="0">drv_can_static.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/PIC32MK_MCU_Config/framework/driver/can/src</Path>
-        <Checksum dnOrder="2">AE52DE2C0F260E6E8133A48869FCCAA4</Checksum>
+        <Checksum dnOrder="2">00A920BD19249B8F1BEB543B4AD28B79</Checksum>
         <ProjectFileChecksum dnOrder="3">85A2F63C392485623161D138E1B3B29D</ProjectFileChecksum>
       </Template>
-      <Template dnOrder="33">
+      <Template dnOrder="36">
         <Name dnOrder="0">system_exceptions.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/PIC32MK_MCU_Config</Path>
         <Checksum dnOrder="2">9836A04F3E98D3971DB91DF539160F34</Checksum>
+        <ProjectFileChecksum dnOrder="3">F07D4E047D8290358E7DD75F9CD02B79</ProjectFileChecksum>
       </Template>
-      <Template dnOrder="34">
+      <Template dnOrder="37">
         <Name dnOrder="0">sys_ports_static.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/PIC32MK_MCU_Config/framework/system/ports/src</Path>
         <Checksum dnOrder="2">9746EDDEC563D82E85E2849501C8A780</Checksum>
+        <ProjectFileChecksum dnOrder="3">F03ED53E6D0931BF77FD3881465590CE</ProjectFileChecksum>
       </Template>
-      <Template dnOrder="35">
+      <Template dnOrder="38">
         <Name dnOrder="0">drv_usart_static.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/PIC32MK_MCU_Config/framework/driver/usart/src</Path>
         <Checksum dnOrder="2">97AEDDB36F980524842E452B56C18184</Checksum>
+        <ProjectFileChecksum dnOrder="3">46FFED836A021D013309700ACEB72298</ProjectFileChecksum>
       </Template>
-      <Template dnOrder="36">
+      <Template dnOrder="39">
         <Name dnOrder="0">system_tasks.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/PIC32MK_MCU_Config</Path>
         <Checksum dnOrder="2">A356CEABFA54EA332ED7252077996F3F</Checksum>
         <ProjectFileChecksum dnOrder="3">2BACABC2D7425B94475C3FA48451F6FF</ProjectFileChecksum>
       </Template>
-      <Template dnOrder="37">
+      <Template dnOrder="40">
         <Name dnOrder="0">drv_mcpwm_static.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/app/system_config/PIC32MK_MCU_Config/framework/driver/mcpwm</Path>
         <Checksum dnOrder="2">65042306CDE5C8991E0EFEA6ADF128BF</Checksum>
+        <ProjectFileChecksum dnOrder="3">CFF614C7E03EDB681E65814B1251A12F</ProjectFileChecksum>
       </Template>
-      <Template dnOrder="38">
+      <Template dnOrder="41">
         <Name dnOrder="0">system_interrupt.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/PIC32MK_MCU_Config</Path>
-        <Checksum dnOrder="2">10B17EBB7EC6257C05BE61BE2CD9D0AA</Checksum>
+        <Checksum dnOrder="2">50A043AB8E9A92CFC002600C246B43B2</Checksum>
         <ProjectFileChecksum dnOrder="3">55F7D5ACD87C2F15896A9E78FC47A86C</ProjectFileChecksum>
       </Template>
-      <Template dnOrder="39">
+      <Template dnOrder="42">
         <Name dnOrder="0">sys_clk_pic32mk.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/PIC32MK_MCU_Config/framework/system/clk/src</Path>
         <Checksum dnOrder="2">BBEFDE3E67EB097EE7E02CA8011F4292</Checksum>
+        <ProjectFileChecksum dnOrder="3">9404CC02734B7A3672CCF00656D84A65</ProjectFileChecksum>
       </Template>
     </Templates>
     <CompilerItems dnOrder="2">

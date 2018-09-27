@@ -114,7 +114,7 @@ int main ( void )
     
     
 #ifdef LELY_BUILD
-    test_startupPiccolos();
+//    test_startupPiccolos();
 #else
     test_startup();
 #endif
@@ -123,7 +123,8 @@ int main ( void )
     while ( true )
     {
         /* Maintain state machines of all polled MPLAB Harmony modules. */
-        SYS_Tasks ();
+        SYS_Tasks ( );
+
     }
 
     /* Execution should not come here during normal operation */
