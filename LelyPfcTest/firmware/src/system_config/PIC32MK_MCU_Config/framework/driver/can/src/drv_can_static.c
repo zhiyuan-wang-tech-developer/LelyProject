@@ -89,6 +89,7 @@ void DRV_CAN0_Initialize(void)
 
     /* Configure CAN_ID_1 Channel for CAN_TX_RTR_DISABLED operation. Allocate 16 message buffer, and assign low medium priority for transmissions. */
     PLIB_CAN_ChannelForTransmitSet(CAN_ID_1, CAN_CHANNEL0, 16, CAN_TX_RTR_DISABLED, CAN_LOW_MEDIUM_PRIORITY);
+    PLIB_CAN_ChannelEventEnable(CAN_ID_1, CAN_CHANNEL0, CAN_TX_CHANNEL_NOT_FULL);
     /* Configure CAN_ID_1 Channel for CAN_RX_FULL_RECEIVE operation. Allocate 16 message buffer, and assign low medium priority for transmissions. */
     PLIB_CAN_ChannelForReceiveSet(CAN_ID_1, CAN_CHANNEL1, 16, CAN_RX_FULL_RECEIVE);
     PLIB_CAN_FilterToChannelLink(CAN_ID_1, CAN_FILTER0, CAN_FILTER_MASK0, CAN_CHANNEL1);
@@ -99,10 +100,12 @@ void DRV_CAN0_Initialize(void)
     PLIB_CAN_FilterMaskConfigure(CAN_ID_1, CAN_FILTER_MASK0, 0x7f0, CAN_SID, CAN_FILTER_MASK_IDE_TYPE);
 
     /* Switch the CAN module to Normal mode. Wait until the switch is complete */
-//    PLIB_CAN_OperationModeSelect(CAN_ID_1, CAN_LOOPBACK_MODE);
-//    while(PLIB_CAN_OperationModeGet(CAN_ID_1) != CAN_LOOPBACK_MODE);    
-    PLIB_CAN_OperationModeSelect(CAN_ID_1, CAN_NORMAL_MODE);
-    while(PLIB_CAN_OperationModeGet(CAN_ID_1) != CAN_NORMAL_MODE);
+    PLIB_CAN_OperationModeSelect(CAN_ID_1, CAN_LOOPBACK_MODE);
+    while(PLIB_CAN_OperationModeGet(CAN_ID_1) != CAN_LOOPBACK_MODE);
+//    PLIB_CAN_OperationModeSelect(CAN_ID_1, CAN_LISTEN_ALL_MESSAGES_MODE);
+//    while(PLIB_CAN_OperationModeGet(CAN_ID_1) != CAN_LISTEN_ALL_MESSAGES_MODE);        
+//    PLIB_CAN_OperationModeSelect(CAN_ID_1, CAN_NORMAL_MODE);
+//    while(PLIB_CAN_OperationModeGet(CAN_ID_1) != CAN_NORMAL_MODE);
 
 }
 

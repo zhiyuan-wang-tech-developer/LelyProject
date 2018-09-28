@@ -372,7 +372,7 @@
       <Template dnOrder="35">
         <Name dnOrder="0">drv_can_static.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/PIC32MK_MCU_Config/framework/driver/can/src</Path>
-        <Checksum dnOrder="2">00A920BD19249B8F1BEB543B4AD28B79</Checksum>
+        <Checksum dnOrder="2">F0019F5F4F327E067EE5F94408758BD2</Checksum>
         <ProjectFileChecksum dnOrder="3">85A2F63C392485623161D138E1B3B29D</ProjectFileChecksum>
       </Template>
       <Template dnOrder="36">
@@ -384,7 +384,7 @@
       <Template dnOrder="37">
         <Name dnOrder="0">sys_ports_static.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/PIC32MK_MCU_Config/framework/system/ports/src</Path>
-        <Checksum dnOrder="2">9746EDDEC563D82E85E2849501C8A780</Checksum>
+        <Checksum dnOrder="2">4D5F8B5743EEB1EAC113EBC72AB109B9</Checksum>
         <ProjectFileChecksum dnOrder="3">F03ED53E6D0931BF77FD3881465590CE</ProjectFileChecksum>
       </Template>
       <Template dnOrder="38">

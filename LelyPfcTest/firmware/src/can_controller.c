@@ -69,7 +69,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 //static CAN_MSG_t CAN_RX_FIFO_Buffer[CAN_FIFO_SIZE];
 
 static CAN_MSG_t can_tx_test_msg = {
-                                    .Id = 0x400,
+                                    .Id = 0x403,
                                     .dataLength = 8,
                                     .data = "DynaTron"
                                     };
@@ -78,6 +78,7 @@ static CAN_MSG_t can_rx_test_msg = {
                                     .dataLength = 8,
                                     .data = {'\0'}
                                     };
+static CAN_CHANNEL_EVENT txChannelEvent;
 static CAN_CHANNEL_EVENT rxChannelEvent;
 
 // *****************************************************************************
@@ -202,6 +203,12 @@ void CAN_CONTROLLER_Tasks ( void )
             if( global_event_triggered(&global_events.start_can_tx) )
             {
                 printf("[CAN TX ...]\n");
+//                PLIB_PORTS_PinToggle(PORTS_ID_0, PORT_CHANNEL_D, PORTS_BIT_POS_5);
+//                V_CANTXToggle();
+//                LATDbits.LATD5 ^= 1;
+//                PORTDbits.RD5 ^= 1;
+//                V_CANRXToggle();
+                V_LED2_GToggle();
                 can_controllerData.state = CAN_CONTROLLER_STATE_TX;
             }
             rxChannelEvent = PLIB_CAN_ChannelEventGet(CAN_ID_1, CAN_RX_CHANNEL);
@@ -217,7 +224,7 @@ void CAN_CONTROLLER_Tasks ( void )
 
         case CAN_CONTROLLER_STATE_TX:
         {
-            printf("[CAN Baudrate %d kbps]\n", PLIB_CAN_BaudRateGet(CAN_ID_1, SYS_CLK_SystemFrequencyGet()));
+//            printf("[CAN Baudrate %d kbps]\n", PLIB_CAN_BaudRateGet(CAN_ID_1, SYS_CLK_SystemFrequencyGet()));
             if( CAN_SendMsg(&can_tx_test_msg) )
             {
                 printf("[CAN TX succeeded]\n");
@@ -225,6 +232,8 @@ void CAN_CONTROLLER_Tasks ( void )
             else
             {
                 printf("[CAN TX failed]\n");
+                txChannelEvent = PLIB_CAN_ChannelEventGet(CAN_ID_1, CAN_TX_CHANNEL);
+                printf("[CAN TX Channel Event %X]\n", txChannelEvent);
             }
             can_controllerData.state = CAN_CONTROLLER_STATE_WAIT;
             break;
@@ -235,7 +244,17 @@ void CAN_CONTROLLER_Tasks ( void )
             if( CAN_ReceiveMsg(&can_rx_test_msg) )
             {
                 printf("[CAN RX succeeded]\n");
-                printf("[CAN RX Msg %s]\n", can_rx_test_msg.data);
+                printf("[CAN RX ID = 0x%3X]\n", can_rx_test_msg.Id);
+                printf("[CAN RX DLC = %d]\n", can_rx_test_msg.dataLength);
+                printf("[CAN RX MSG = %s]\n", can_rx_test_msg.data);
+                printf("[CAN RX DATA = 0x%2X 0x%2X 0x%2X 0x%2X 0x%2X 0x%2X 0x%2X 0x%2X]\n",     can_rx_test_msg.data[0],
+                                                                                can_rx_test_msg.data[1],
+                                                                                can_rx_test_msg.data[2],
+                                                                                can_rx_test_msg.data[3],
+                                                                                can_rx_test_msg.data[4],
+                                                                                can_rx_test_msg.data[5],
+                                                                                can_rx_test_msg.data[6],
+                                                                                can_rx_test_msg.data[7]);
             }
             else
             {
@@ -257,16 +276,125 @@ void CAN_CONTROLLER_Tasks ( void )
 
 bool CAN_SendMsg(CAN_MSG_t *pCanTxMsg)
 {
-    bool retVal = false;
-    retVal = DRV_CAN0_ChannelMessageTransmit(CAN_TX_CHANNEL, pCanTxMsg->Id, pCanTxMsg->dataLength, pCanTxMsg->data);
-    return retVal;
+//    bool retVal = false;
+//    retVal = DRV_CAN0_ChannelMessageTransmit(CAN_TX_CHANNEL, pCanTxMsg->Id, pCanTxMsg->dataLength, pCanTxMsg->data);
+//    return retVal;
+
+    uint16_t txMsgId = pCanTxMsg->Id;
+    uint8_t DLC = pCanTxMsg->dataLength; // Data Length Code
+    uint8_t * pTxData = pCanTxMsg->data;
+    uint8_t txByteCount = 0;
+    CAN_TX_MSG_BUFFER * pTxMsgBuffer = NULL;
+    
+    if( (PLIB_CAN_ChannelEventGet(CAN_ID_1, CAN_TX_CHANNEL) & CAN_TX_CHANNEL_NOT_FULL) == CAN_TX_CHANNEL_NOT_FULL)
+    {
+        // Get a pointer to an empty transmit buffer
+        pTxMsgBuffer = PLIB_CAN_TransmitBufferGet(CAN_ID_1, CAN_TX_CHANNEL);
+        
+        if( pTxMsgBuffer == NULL )
+        {
+            // There is not any empty transmit message buffer and hence quit with false
+            return false;
+        }
+        // There is an empty transmit message buffer and hence load the message
+        
+        /* Check whether the id is a Standard ID
+         * The standard ID has 11 bits and its max limit is 0x7FF, so anything beyond that is Extended ID message */
+        if( txMsgId > 0x7FF )
+        {
+            // It is an extended ID message and discarded!
+            return false;
+        }
+        else
+        {
+            pTxMsgBuffer->msgSID.sid = txMsgId;
+            pTxMsgBuffer->msgEID.eid = 0;
+            pTxMsgBuffer->msgEID.ide = 0;
+        }
+        
+        if( DLC > 8 )
+        {
+            DLC = 8;
+        }
+
+        pTxMsgBuffer->msgEID.data_length_code = DLC;
+        
+        while( txByteCount < DLC )
+        {
+            pTxMsgBuffer->data[txByteCount++] = *pTxData++;
+        }
+
+        // Update CAN module and then transmit data on the bus;
+        // Update the CAN channel internal pointer 
+        PLIB_CAN_ChannelUpdate(CAN_ID_1, CAN_TX_CHANNEL);
+        // Transmit all messages in the TX channel
+        PLIB_CAN_TransmitChannelFlush(CAN_ID_1, CAN_TX_CHANNEL);
+        return(true);
+    }
+    // CAN TX Channel is full
+    return (false);
 }
  
 bool CAN_ReceiveMsg(CAN_MSG_t *pCanRxMsg)
 {
-    bool retVal = false;
-    retVal = DRV_CAN0_ChannelMessageReceive(CAN_RX_CHANNEL, pCanRxMsg->Id, pCanRxMsg->dataLength, pCanRxMsg->data);
-    return retVal;
+//    bool retVal = false;
+//    retVal = DRV_CAN0_ChannelMessageReceive(CAN_RX_CHANNEL, pCanRxMsg->Id, pCanRxMsg->dataLength, pCanRxMsg->data);
+//    return retVal;
+    
+    uint8_t rxByteCount = 0;
+    uint8_t * pRxData = pCanRxMsg->data;
+    bool readStatus = false;    
+    CAN_CHANNEL_EVENT rxChannelEvent = 0;
+    CAN_RX_MSG_BUFFER *pRxMsgBuffer = NULL;
+    
+    /* Get the RX channel status */
+    rxChannelEvent = PLIB_CAN_ChannelEventGet(CAN_ID_1, CAN_RX_CHANNEL);
+
+    /* Check if there is a message available in RX channel. */
+    if( (rxChannelEvent & CAN_RX_CHANNEL_NOT_EMPTY) == CAN_RX_CHANNEL_NOT_EMPTY )
+    {
+        /* There is a message available in the RX Channel FIFO. */
+
+        /* Get a pointer to RX message buffer */
+        pRxMsgBuffer = (CAN_RX_MSG_BUFFER *)PLIB_CAN_ReceivedMessageGet(CAN_ID_1, CAN_RX_CHANNEL);
+
+        /* Process the message fields */
+
+        /* Check if it is an extended message type */
+        if( pRxMsgBuffer->msgEID.ide )
+        {
+            // It is not a standard ID message
+            pCanRxMsg->Id = 0;
+//            readStatus = false;
+        }
+        else
+        {
+            pCanRxMsg->Id = pRxMsgBuffer->msgSID.sid;
+        }
+
+        pCanRxMsg->dataLength = pRxMsgBuffer->msgEID.data_length_code;
+        
+        if( pRxMsgBuffer->msgEID.data_length_code > 0 )
+        {
+            while( rxByteCount < pRxMsgBuffer->msgEID.data_length_code )
+            {
+                 *pRxData++ = pRxMsgBuffer->data[rxByteCount++];
+            }
+        }
+
+        /* Message processing is done, update the message buffer pointer. */
+        PLIB_CAN_ChannelUpdate(CAN_ID_1, CAN_RX_CHANNEL);
+
+        /* Message is processed successfully, so return true */
+        readStatus = true;
+    }
+    else
+    {
+        /* There is no message to read ,so return false */
+        readStatus = false;
+    }
+
+    return readStatus;
 }
 /*******************************************************************************
  End of File

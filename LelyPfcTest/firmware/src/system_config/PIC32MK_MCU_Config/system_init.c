@@ -80,7 +80,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #pragma config DMTINTV =    WIN_127_128
 #pragma config FSOSCEN =    OFF
 #pragma config IESO =       OFF
-#pragma config POSCMOD =    EC
+#pragma config POSCMOD =    OFF
 #pragma config OSCIOFNC =   OFF
 #pragma config FCKSM =      CSECME
 #pragma config WDTPS =      PS1048576
@@ -93,9 +93,9 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 /*** DEVCFG2 ***/
 
 #pragma config FPLLIDIV =   DIV_1
-#pragma config FPLLRNG =    RANGE_8_16_MHZ
-#pragma config FPLLICLK =   PLL_POSC
-#pragma config FPLLMULT =   MUL_40
+#pragma config FPLLRNG =    RANGE_5_10_MHZ
+#pragma config FPLLICLK =   PLL_FRC
+#pragma config FPLLMULT =   MUL_60
 #pragma config FPLLODIV =   DIV_4
 #pragma config VBATBOREN =  OFF
 #pragma config DSBOREN =    OFF
@@ -120,7 +120,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 /*** BF1SEQ0 ***/
 
 #pragma config TSEQ =       0x0000
-#pragma config CSEQ =       0xffff
+#pragma config CSEQ =       0xffff  
 // </editor-fold>
 
 // *****************************************************************************
