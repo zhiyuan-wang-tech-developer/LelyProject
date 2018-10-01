@@ -280,6 +280,8 @@ bool CAN_SendMsg(CAN_MSG_t *pCanTxMsg)
 //    retVal = DRV_CAN0_ChannelMessageTransmit(CAN_TX_CHANNEL, pCanTxMsg->Id, pCanTxMsg->dataLength, pCanTxMsg->data);
 //    return retVal;
 
+//    return true;
+    
     uint16_t txMsgId = pCanTxMsg->Id;
     uint8_t DLC = pCanTxMsg->dataLength; // Data Length Code
     uint8_t * pTxData = pCanTxMsg->data;
@@ -297,6 +299,7 @@ bool CAN_SendMsg(CAN_MSG_t *pCanTxMsg)
             return false;
         }
         // There is an empty transmit message buffer and hence load the message
+        CAN_TX_MSG_BUFFER tempMsg = { .messageWord = {0} };
         
         /* Check whether the id is a Standard ID
          * The standard ID has 11 bits and its max limit is 0x7FF, so anything beyond that is Extended ID message */
@@ -307,9 +310,9 @@ bool CAN_SendMsg(CAN_MSG_t *pCanTxMsg)
         }
         else
         {
-            pTxMsgBuffer->msgSID.sid = txMsgId;
-            pTxMsgBuffer->msgEID.eid = 0;
-            pTxMsgBuffer->msgEID.ide = 0;
+            tempMsg.msgSID.sid = txMsgId;
+            tempMsg.msgEID.eid = 0;
+            tempMsg.msgEID.ide = 0;
         }
         
         if( DLC > 8 )
@@ -317,12 +320,18 @@ bool CAN_SendMsg(CAN_MSG_t *pCanTxMsg)
             DLC = 8;
         }
 
-        pTxMsgBuffer->msgEID.data_length_code = DLC;
+        tempMsg.msgEID.data_length_code = DLC;
         
         while( txByteCount < DLC )
         {
-            pTxMsgBuffer->data[txByteCount++] = *pTxData++;
+            tempMsg.data[txByteCount++] = *pTxData++;
         }
+        
+        int i;
+        for( i = 0; i < 4; i++ ){
+            pTxMsgBuffer->messageWord[i] = tempMsg.messageWord[i];
+        }
+        
 
         // Update CAN module and then transmit data on the bus;
         // Update the CAN channel internal pointer 

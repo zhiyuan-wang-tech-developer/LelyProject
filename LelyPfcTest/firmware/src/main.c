@@ -108,6 +108,14 @@ int main ( void )
     /* Initialize all MPLAB Harmony modules, including application(s). */
     SYS_Initialize ( NULL );
 
+    V_EN_12VOn();
+    
+    
+    
+    uint8_t message[8] = { 0xAA, 0x55, 0xA5, 0x5A, 0xA0, 0x0A, 0x50, 0x05};
+    DRV_CAN0_ChannelMessageTransmit(CAN_CHANNEL0, 0x100, 8, message);
+    
+    SYS_DEBUG_BreakPoint();
     
     test_zhiyuan();
     
