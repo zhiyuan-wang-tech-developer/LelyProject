@@ -106,11 +106,24 @@ void test_zhiyuan(){
 int main ( void )
 {    
     /* Initialize all MPLAB Harmony modules, including application(s). */
+
+    SYS_DEBUG_BreakPoint();
+    
     SYS_Initialize ( NULL );
 
-    V_EN_12VOn();
+    V_EN_3V3_1Off();
+    V_EN_3V3_2Off();
+
+    SYS_DEBUG_BreakPoint();
+
     
+    DRV_CAN0_Initialize();
+    CAN_CONTROLLER_Initialize();
+
+//    V_EN_12VOn();
     
+        SYS_DEBUG_BreakPoint();
+
     
     uint8_t message[8] = { 0xAA, 0x55, 0xA5, 0x5A, 0xA0, 0x0A, 0x50, 0x05};
     DRV_CAN0_ChannelMessageTransmit(CAN_CHANNEL0, 0x100, 8, message);

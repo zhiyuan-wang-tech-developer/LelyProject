@@ -68,12 +68,12 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 //static CAN_MSG_t CAN_TX_FIFO_Buffer[CAN_FIFO_SIZE];
 //static CAN_MSG_t CAN_RX_FIFO_Buffer[CAN_FIFO_SIZE];
 
-static CAN_MSG_t can_tx_test_msg = {
+static CAN_MSG_t can_tx_msg = {
                                     .Id = 0x403,
                                     .dataLength = 8,
                                     .data = "DynaTron"
                                     };
-static CAN_MSG_t can_rx_test_msg = {
+static CAN_MSG_t can_rx_msg = {
                                     .Id = 0x400,
                                     .dataLength = 8,
                                     .data = {'\0'}
@@ -225,7 +225,7 @@ void CAN_CONTROLLER_Tasks ( void )
         case CAN_CONTROLLER_STATE_TX:
         {
 //            printf("[CAN Baudrate %d kbps]\n", PLIB_CAN_BaudRateGet(CAN_ID_1, SYS_CLK_SystemFrequencyGet()));
-            if( CAN_SendMsg(&can_tx_test_msg) )
+            if( CAN_SendMsg(&can_tx_msg) )
             {
                 printf("[CAN TX succeeded]\n");
             }
@@ -241,20 +241,20 @@ void CAN_CONTROLLER_Tasks ( void )
 
         case CAN_CONTROLLER_STATE_RX:
         {
-            if( CAN_ReceiveMsg(&can_rx_test_msg) )
+            if( CAN_ReceiveMsg(&can_rx_msg) )
             {
                 printf("[CAN RX succeeded]\n");
-                printf("[CAN RX ID = 0x%3X]\n", can_rx_test_msg.Id);
-                printf("[CAN RX DLC = %d]\n", can_rx_test_msg.dataLength);
-                printf("[CAN RX MSG = %s]\n", can_rx_test_msg.data);
-                printf("[CAN RX DATA = 0x%2X 0x%2X 0x%2X 0x%2X 0x%2X 0x%2X 0x%2X 0x%2X]\n",     can_rx_test_msg.data[0],
-                                                                                can_rx_test_msg.data[1],
-                                                                                can_rx_test_msg.data[2],
-                                                                                can_rx_test_msg.data[3],
-                                                                                can_rx_test_msg.data[4],
-                                                                                can_rx_test_msg.data[5],
-                                                                                can_rx_test_msg.data[6],
-                                                                                can_rx_test_msg.data[7]);
+                printf("[CAN RX ID = 0x%3X]\n", can_rx_msg.Id);
+                printf("[CAN RX DLC = %d]\n", can_rx_msg.dataLength);
+                printf("[CAN RX MSG = %s]\n", can_rx_msg.data);
+                printf("[CAN RX DATA = 0x%2X 0x%2X 0x%2X 0x%2X 0x%2X 0x%2X 0x%2X 0x%2X]\n",     can_rx_msg.data[0],
+                                                                                can_rx_msg.data[1],
+                                                                                can_rx_msg.data[2],
+                                                                                can_rx_msg.data[3],
+                                                                                can_rx_msg.data[4],
+                                                                                can_rx_msg.data[5],
+                                                                                can_rx_msg.data[6],
+                                                                                can_rx_msg.data[7]);
             }
             else
             {
@@ -405,6 +405,74 @@ bool CAN_ReceiveMsg(CAN_MSG_t *pCanRxMsg)
 
     return readStatus;
 }
+
+/*
+ * @Desciption 
+ *      extract the command message from the RX FIFO buffer into the command FIFO buffer
+ * @Parameters 
+ *      None
+ * @Return 
+ *      None
+ */
+void CAN_parseRxMsg( CAN_MSG_t can_rx_msg )
+{
+    switch( can_rx_msg.Id )
+    {
+        case IdErrorReport:
+            // Report Error
+            
+            break;
+            
+        case IdStatusRequest:
+            // Request Status
+            
+            break;
+            
+        case IdVersionRequest:
+            // Request Version
+            
+            break;
+            
+        case IdProductionDataRequest:
+            
+            break;
+            
+        case IdMacAddressRequest:
+            
+            break;
+        
+        case IdParameterSetRequest:
+            
+            break;
+            
+        case IdParameterReadRequest:
+            
+            break;
+            
+        case IdGeneralMeasureRequest:
+            
+            break;
+        
+        case IdMainsMeasureRequest:
+            
+            break;
+            
+        case IdTempMeasureRequest:
+            
+            break;
+
+        default:
+            
+            break;
+    }
+}
+
+
+void CAN_processErrorReportMsg()
+{
+//    erro
+}
+
 /*******************************************************************************
  End of File
  */

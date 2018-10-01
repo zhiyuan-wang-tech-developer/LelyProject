@@ -67,6 +67,18 @@ extern "C" {
 #endif
 // DOM-IGNORE-END 
 
+// CAN Message Identifier
+#define     IdErrorReport                   0x400
+#define     IdStatusRequest                 0x401
+#define     IdVersionRequest                0x402
+#define     IdProductionDataRequest         0x403
+#define     IdMacAddressRequest             0x404
+#define     IdParameterSetRequest           0x405
+#define     IdParameterReadRequest          0x406
+#define     IdGeneralMeasureRequest         0x409
+#define     IdMainsMeasureRequest           0x40A
+#define     IdTempMeasureRequest            0x40B
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Type Definitions

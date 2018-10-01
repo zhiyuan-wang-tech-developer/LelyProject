@@ -76,39 +76,25 @@ void DRV_CAN0_Initialize(void)
 
     PLIB_CAN_PhaseSegment2LengthFreelyProgrammableEnable(CAN_ID_1);
 
-    //Set the Baud rate to 100 kbps
-//    PLIB_CAN_PropagationTimeSegmentSet(CAN_ID_1, 1-1);
-//    PLIB_CAN_PhaseSegment1LengthSet(CAN_ID_1, 4-1);
-//    PLIB_CAN_PhaseSegment2LengthSet(CAN_ID_1, 4-1);
-//    PLIB_CAN_SyncJumpWidthSet(CAN_ID_1, 1-1);
-//    PLIB_CAN_BaudRatePrescaleSet(CAN_ID_1, 14); // set to 1 higher then ECAN tool
-//    
-    PLIB_CAN_PropagationTimeSegmentSet(CAN_ID_1, 2);
-    PLIB_CAN_PhaseSegment1LengthSet(CAN_ID_1, 2);
-    PLIB_CAN_PhaseSegment2LengthSet(CAN_ID_1, 2);
-    PLIB_CAN_SyncJumpWidthSet(CAN_ID_1, 2);
-    PLIB_CAN_BaudRatePrescaleSet(CAN_ID_1, 59); // set to 1 higher then ECAN tool
-
-    
     SYS_DEBUG_BreakPoint();
     
-    uint8_t     prescale = 30;
+    uint8_t     prescale = 12;
     uint8_t     syncjumpWidth = 3;
     uint8_t     propagation = 3;
     uint8_t     segment1 = 3;
     uint8_t     segment2 = 3;
 
-    //  SEG2PH ? SEG1PH. If SEG2PHTS is clear, SEG2PH will be set automatically
+    //  SEG2PH <= SEG1PH. If SEG2PHTS is clear, SEG2PH will be set automatically
     //  3 Time bit sampling is not allowed for BRP < 2.
-    //  SJW ? SEG2PH.
+    //  SJW <= SEG2PH.
     //  The Time Quanta per bit must be greater than 7 (that is, TQBIT > 7).
     //
     //
     //          (sync + prop + p1) / (sync + prop + p1 + p2)
     // Sample @ (1+3+3) / (1+3+3+3) = 70% of bit
     //
-    //  Tq = (2 * prescale) / Fsys = 2 * 60 / 120 MHz = 1 us
-    //  Bit = (sync + prop + p1 + p2) * Tq = 10 * Tq = 10 us = 100 KHz
+    //  Tq = (2 * prescale) / Fsys = 2 * 12 / 120 MHz = 0.2 us
+    //  Bit = (sync + prop + p1 + p2) * Tq = 10 * Tq = 2 us = 500 KHz
     //
     // Max prescale = 64
     
@@ -137,14 +123,14 @@ void DRV_CAN0_Initialize(void)
     PLIB_CAN_FilterMaskConfigure(CAN_ID_1, CAN_FILTER_MASK0, 0x0, CAN_SID, CAN_FILTER_MASK_ANY_TYPE);
 
     /* Switch the CAN module to Normal mode. Wait until the switch is complete */
-    PLIB_CAN_OperationModeSelect(CAN_ID_1, CAN_LOOPBACK_MODE);
-    while(PLIB_CAN_OperationModeGet(CAN_ID_1) != CAN_LOOPBACK_MODE);
+//    PLIB_CAN_OperationModeSelect(CAN_ID_1, CAN_LOOPBACK_MODE);
+//    while(PLIB_CAN_OperationModeGet(CAN_ID_1) != CAN_LOOPBACK_MODE);
 //    PLIB_CAN_OperationModeSelect(CAN_ID_1, CAN_LISTEN_ALL_MESSAGES_MODE);
 //    while(PLIB_CAN_OperationModeGet(CAN_ID_1) != CAN_LISTEN_ALL_MESSAGES_MODE);        
     SYS_DEBUG_BreakPoint();
     
-//    PLIB_CAN_OperationModeSelect(CAN_ID_1, CAN_NORMAL_MODE);
-//    while(PLIB_CAN_OperationModeGet(CAN_ID_1) != CAN_NORMAL_MODE);
+    PLIB_CAN_OperationModeSelect(CAN_ID_1, CAN_NORMAL_MODE);
+    while(PLIB_CAN_OperationModeGet(CAN_ID_1) != CAN_NORMAL_MODE);
 
     SYS_DEBUG_BreakPoint();
     
