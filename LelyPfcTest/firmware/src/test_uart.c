@@ -15,7 +15,7 @@ static FIFO_Buffer_t uart2_rx_fifo_buffer = { .inIndex = 0,
                                         };
 
 /*
- * @Desciption 
+ * @Description 
  *      check if the RX FIFO buffer is empty
  * @Parameters 
  *      None
@@ -30,7 +30,7 @@ bool isRxFifoEmpty(void)
 }
 
 /*
- * @Desciption 
+ * @Description 
  *      check if the RX FIFO buffer is full
  * @Parameters 
  *      None
@@ -45,7 +45,7 @@ bool isRxFifoFull(void)
 }
 
 /*
- * @Desciption 
+ * @Description 
  *      push a character into the RX FIFO buffer
  * @Parameters 
  *      charIn: the character you want to push into the FIFO buffer
@@ -65,7 +65,7 @@ bool RxFifoPush(char charIn)
 }
 
 /*
- * @Desciption 
+ * @Description 
  *      pop a character from the RX FIFO buffer
  * @Parameters 
  *      pcharOut: pointer to a place where you store the character popped from the FIFO buffer

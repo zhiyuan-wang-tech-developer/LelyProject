@@ -52,8 +52,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVOCES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 #include "driver/can/drv_can.h"
 
-#include "system/debug/sys_debug.h"
-
 
 static CAN_TX_MSG_BUFFER  *drv_Message0;
 static CAN_TX_MSG_BUFFER __attribute__((coherent, aligned(16))) can_message_buffer0[2*2*16];
@@ -76,17 +74,17 @@ void DRV_CAN0_Initialize(void)
 
     PLIB_CAN_PhaseSegment2LengthFreelyProgrammableEnable(CAN_ID_1);
 
-    SYS_DEBUG_BreakPoint();
-    
-    uint8_t     prescale = 12;
-    uint8_t     syncjumpWidth = 3;
-    uint8_t     propagation = 3;
-    uint8_t     segment1 = 3;
-    uint8_t     segment2 = 3;
+    //Set the Baud rate to 500 kbps
+    PLIB_CAN_PropagationTimeSegmentSet(CAN_ID_1, 1-1);
+    PLIB_CAN_PhaseSegment1LengthSet(CAN_ID_1, 3-1);
+    PLIB_CAN_PhaseSegment2LengthSet(CAN_ID_1, 3-1);
+    PLIB_CAN_SyncJumpWidthSet(CAN_ID_1, 1-1);
+    PLIB_CAN_BaudRatePrescaleSet(CAN_ID_1, 14); // set to 1 higher then ECAN tool
 
-    //  SEG2PH <= SEG1PH. If SEG2PHTS is clear, SEG2PH will be set automatically
+
+    //  SEG2PH ? SEG1PH. If SEG2PHTS is clear, SEG2PH will be set automatically
     //  3 Time bit sampling is not allowed for BRP < 2.
-    //  SJW <= SEG2PH.
+    //  SJW ? SEG2PH.
     //  The Time Quanta per bit must be greater than 7 (that is, TQBIT > 7).
     //
     //
@@ -98,18 +96,15 @@ void DRV_CAN0_Initialize(void)
     //
     // Max prescale = 64
     
-    PLIB_CAN_BusLine3TimesSamplingEnable( CAN_ID_1 );    
-    PLIB_CAN_PrecalculatedBitRateSetup( CAN_ID_1, prescale , syncjumpWidth , propagation , segment1 , segment2 );
-
-    SYS_DEBUG_BreakPoint();
-    
+    // Sampling 3 times increases the correctness of data received!
+    PLIB_CAN_BusLine3TimesSamplingEnable( CAN_ID_1 ); 
     
     /* Assign the buffer area to the CAN module.
       In this case assign enough memory for 2
       channels, each with 8 message buffers.*/
     PLIB_CAN_MemoryBufferAssign(CAN_ID_1, can_message_buffer0);
 
-    /* Configure CAN_ID_1 Channel for CAN_TX_RTR_DISABLED operation. Allocate 16 message buffer, and assign low medium priority for transmissions. */
+    /* Configure CAN_ID_1 Channel for CAN_TX_RTR_ENABLED operation. Allocate 16 message buffer, and assign low medium priority for transmissions. */
     PLIB_CAN_ChannelForTransmitSet(CAN_ID_1, CAN_CHANNEL0, 16, CAN_TX_RTR_ENABLED, CAN_LOW_MEDIUM_PRIORITY);
     PLIB_CAN_ChannelEventEnable(CAN_ID_1, CAN_CHANNEL0, CAN_TX_CHANNEL_NOT_FULL);
     /* Configure CAN_ID_1 Channel for CAN_RX_FULL_RECEIVE operation. Allocate 16 message buffer, and assign low medium priority for transmissions. */
@@ -119,21 +114,15 @@ void DRV_CAN0_Initialize(void)
     PLIB_CAN_FilterConfigure(CAN_ID_1, CAN_FILTER0, 0x400, CAN_SID);
     PLIB_CAN_FilterEnable(CAN_ID_1, CAN_FILTER0);
 
-//    PLIB_CAN_FilterMaskConfigure(CAN_ID_1, CAN_FILTER_MASK0, 0x7f0, CAN_SID, CAN_FILTER_MASK_IDE_TYPE);
-    PLIB_CAN_FilterMaskConfigure(CAN_ID_1, CAN_FILTER_MASK0, 0x0, CAN_SID, CAN_FILTER_MASK_ANY_TYPE);
+    PLIB_CAN_FilterMaskConfigure(CAN_ID_1, CAN_FILTER_MASK0, 0x7f0, CAN_SID, CAN_FILTER_MASK_IDE_TYPE);
 
     /* Switch the CAN module to Normal mode. Wait until the switch is complete */
 //    PLIB_CAN_OperationModeSelect(CAN_ID_1, CAN_LOOPBACK_MODE);
 //    while(PLIB_CAN_OperationModeGet(CAN_ID_1) != CAN_LOOPBACK_MODE);
-//    PLIB_CAN_OperationModeSelect(CAN_ID_1, CAN_LISTEN_ALL_MESSAGES_MODE);
-//    while(PLIB_CAN_OperationModeGet(CAN_ID_1) != CAN_LISTEN_ALL_MESSAGES_MODE);        
-    SYS_DEBUG_BreakPoint();
     
     PLIB_CAN_OperationModeSelect(CAN_ID_1, CAN_NORMAL_MODE);
     while(PLIB_CAN_OperationModeGet(CAN_ID_1) != CAN_NORMAL_MODE);
 
-    SYS_DEBUG_BreakPoint();
-    
 }
 
 void DRV_CAN0_Deinitialize(void)

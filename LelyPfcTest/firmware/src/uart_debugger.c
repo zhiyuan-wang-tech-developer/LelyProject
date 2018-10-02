@@ -214,7 +214,7 @@ void UART_DEBUGGER_Tasks ( void )
 }
 
 /*
- * @Desciption 
+ * @Description 
  *      Initialize the parsed command FIFO buffer
  * @Parameters 
  *      bufferSize: specify the FIFO buffer size
@@ -244,7 +244,7 @@ bool CmdFifoInitialize(uint8_t bufferSize)
 }
 
 /*
- * @Desciption 
+ * @Description 
  *      Check if the command FIFO buffer is empty
  * @Parameters 
  *      None
@@ -265,7 +265,7 @@ bool isCmdFifoEmpty( void )
 }
 
 /*
- * @Desciption 
+ * @Description 
  *      Check if the command FIFO buffer is full
  * @Parameters 
  *      None
@@ -286,7 +286,7 @@ bool isCmdFifoFull( void )
 }
 
 /*
- * @Desciption 
+ * @Description 
  *      Push a command string into the FIFO buffer
  * @Parameters 
  *      pStringIn: pointer to an input command string

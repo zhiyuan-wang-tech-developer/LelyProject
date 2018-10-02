@@ -79,6 +79,46 @@ extern "C" {
 #define     IdMainsMeasureRequest           0x40A
 #define     IdTempMeasureRequest            0x40B
 
+// Enumeration type for system error report message data byte 1
+typedef enum 
+{
+    NoError = 0x00,
+    MainVoltError = 0x01,
+    OverloadError = 0x02,
+    PFCError = 0x03,
+    InternalPowerSupplyError = 0x04
+} ERR_MSG;
+
+// Data structure for system error report via CAN bus
+typedef union
+{
+    uint8_t errStatus;
+    struct 
+    {
+        uint8_t MainVolt: 1;
+        uint8_t OverLoad: 1;
+        uint8_t PFC: 1;
+        uint8_t InternalPowerSupply: 1;
+        uint8_t Other: 4;        
+    } errStatusFlag;
+} SYS_ERR_STATUS;
+
+// Enumeration type for system parameter message date byte 1
+typedef enum
+{
+    Umax = 0x00,
+    Imax = 0x01,
+    Tpfcmax = 0x02,
+    Tmotormax = 0x03,
+    Tbrugmax = 0x04,
+    Tvoedmax = 0x05,
+    Telcomax = 0x06,
+    PFCreset = 0x07,
+    U380typical = 0x08,
+    reserved01 = 0x09,
+    reserved02 = 0x0A
+} PARAMETER_MSG;
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Type Definitions
@@ -93,6 +133,15 @@ typedef struct
     uint8_t data[8]; // 8 bytes of data payload
 } CAN_MSG_t;
 
+// Data type for CAN Message FIFO in application software
+typedef struct
+{
+    uint8_t inPosition;
+    uint8_t outPosition;
+    uint8_t countMsgs;
+    uint8_t size;
+    CAN_MSG_t *pFIFO;
+} CAN_MSG_FIFO_BUFFER_t;
 // *****************************************************************************
 /* Application states
 
@@ -223,6 +272,13 @@ void CAN_CONTROLLER_Tasks( void );
 
 bool CAN_SendMsg(CAN_MSG_t *pCanTxMsg);
 bool CAN_ReceiveMsg(CAN_MSG_t *pCanRxMsg);
+
+void CAN_parseRxMsg(CAN_MSG_t can_rx_msg);
+void CAN_processErrorReportMsg(CAN_MSG_t can_msg_to_process);
+bool isCanTxMsgFifoEmpty(void);
+bool isCanTxMsgFifoFull(void);
+bool CanTxMsgFifoPush(CAN_MSG_t TxMsgIn);
+bool CanTxMsgFifoPop(CAN_MSG_t *pTxMsgOut);
 
 #endif /* _CAN_CONTROLLER_H */
 

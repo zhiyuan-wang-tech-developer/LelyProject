@@ -372,7 +372,7 @@
       <Template dnOrder="35">
         <Name dnOrder="0">drv_can_static.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/PIC32MK_MCU_Config/framework/driver/can/src</Path>
-        <Checksum dnOrder="2">F0019F5F4F327E067EE5F94408758BD2</Checksum>
+        <Checksum dnOrder="2">BF79BD8CC8A879C02E12A1B3C4A91181</Checksum>
         <ProjectFileChecksum dnOrder="3">85A2F63C392485623161D138E1B3B29D</ProjectFileChecksum>
       </Template>
       <Template dnOrder="36">

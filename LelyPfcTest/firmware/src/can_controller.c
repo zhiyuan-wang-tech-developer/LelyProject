@@ -65,21 +65,46 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // Section: Global Data Definitions
 // *****************************************************************************
 // *****************************************************************************
-//static CAN_MSG_t CAN_TX_FIFO_Buffer[CAN_FIFO_SIZE];
-//static CAN_MSG_t CAN_RX_FIFO_Buffer[CAN_FIFO_SIZE];
+static CAN_MSG_t CAN_TX_FIFO_Buffer_Array[CAN_FIFO_SIZE];
+static CAN_MSG_FIFO_BUFFER_t CAN_TX_MSG_FIFO = {
+                                                .inPosition = 0,
+                                                .outPosition = 0,
+                                                .countMsgs = 0,
+                                                .size = CAN_FIFO_SIZE,
+                                                .pFIFO = CAN_TX_FIFO_Buffer_Array
+                                                };
 
+//static CAN_MSG_t CAN_RX_FIFO_Buffer_Array[CAN_FIFO_SIZE];
+//static CAN_MSG_FIFO_BUFFER_t CAN_RX_MSG_FIFO = {
+//                                                .inPosition = 0,
+//                                                .outPosition = 0,
+//                                                .countMsgs = 0,
+//                                                .size = CAN_FIFO_SIZE,
+//                                                .pFIFO = CAN_RX_FIFO_Buffer_Array
+//                                                };
+
+
+// Hold one CAN standard tx message
 static CAN_MSG_t can_tx_msg = {
-                                    .Id = 0x403,
-                                    .dataLength = 8,
-                                    .data = "DynaTron"
-                                    };
+                                .Id = 0x403,
+                                .dataLength = 8,
+                                .data = "DynaTron"
+                                };
+// Hold one CAN standard rx message 
 static CAN_MSG_t can_rx_msg = {
-                                    .Id = 0x400,
-                                    .dataLength = 8,
-                                    .data = {'\0'}
-                                    };
+                                .Id = 0x400,
+                                .dataLength = 8,
+                                .data = {'\0'}
+                                };
+// Hold CAN channel event
 static CAN_CHANNEL_EVENT txChannelEvent;
 static CAN_CHANNEL_EVENT rxChannelEvent;
+
+// There global variables for CAN Bus Message Parser
+// Hold system overall error status for error report via CAN bus
+static SYS_ERR_STATUS system_error = {
+                                        .errStatus = 0x0F
+                                        };
 
 // *****************************************************************************
 /* Application Data
@@ -247,14 +272,15 @@ void CAN_CONTROLLER_Tasks ( void )
                 printf("[CAN RX ID = 0x%3X]\n", can_rx_msg.Id);
                 printf("[CAN RX DLC = %d]\n", can_rx_msg.dataLength);
                 printf("[CAN RX MSG = %s]\n", can_rx_msg.data);
-                printf("[CAN RX DATA = 0x%2X 0x%2X 0x%2X 0x%2X 0x%2X 0x%2X 0x%2X 0x%2X]\n",     can_rx_msg.data[0],
-                                                                                can_rx_msg.data[1],
-                                                                                can_rx_msg.data[2],
-                                                                                can_rx_msg.data[3],
-                                                                                can_rx_msg.data[4],
-                                                                                can_rx_msg.data[5],
-                                                                                can_rx_msg.data[6],
-                                                                                can_rx_msg.data[7]);
+                printf("[CAN RX DATA = 0x%2X 0x%2X 0x%2X 0x%2X 0x%2X 0x%2X 0x%2X 0x%2X]\n", 
+                                                                        can_rx_msg.data[0],
+                                                                        can_rx_msg.data[1],
+                                                                        can_rx_msg.data[2],
+                                                                        can_rx_msg.data[3],
+                                                                        can_rx_msg.data[4],
+                                                                        can_rx_msg.data[5],
+                                                                        can_rx_msg.data[6],
+                                                                        can_rx_msg.data[7]);
             }
             else
             {
@@ -274,13 +300,20 @@ void CAN_CONTROLLER_Tasks ( void )
     }
 }
 
+/*
+ * @Description 
+ *      Send a CAN standard ID message to the CAN bus
+ * @Parameters 
+ *      pCANTxMsg: a pointer to a CAN Message you want to transmit
+ * @Return 
+ *      true: if a CAN message is transmitted successfully
+ *      false: failed to transmit CAN message
+ */
 bool CAN_SendMsg(CAN_MSG_t *pCanTxMsg)
 {
 //    bool retVal = false;
 //    retVal = DRV_CAN0_ChannelMessageTransmit(CAN_TX_CHANNEL, pCanTxMsg->Id, pCanTxMsg->dataLength, pCanTxMsg->data);
 //    return retVal;
-
-//    return true;
     
     uint16_t txMsgId = pCanTxMsg->Id;
     uint8_t DLC = pCanTxMsg->dataLength; // Data Length Code
@@ -343,7 +376,16 @@ bool CAN_SendMsg(CAN_MSG_t *pCanTxMsg)
     // CAN TX Channel is full
     return (false);
 }
- 
+
+/*
+ * @Description 
+ *      Receive a CAN standard ID message from CAN RX Message FIFO if there is at least one CAN message available in RX FIFO
+ * @Parameters 
+ *      pCanRxMsg: a pointer to a CAN message where the received message is held
+ * @Return 
+ *      true: succeed to read a message from the CAN bus RX FIFO buffer
+ *      false: fail to read a message from the CAN bus RX FIFO buffer if the buffer is empty
+ */
 bool CAN_ReceiveMsg(CAN_MSG_t *pCanRxMsg)
 {
 //    bool retVal = false;
@@ -407,10 +449,10 @@ bool CAN_ReceiveMsg(CAN_MSG_t *pCanRxMsg)
 }
 
 /*
- * @Desciption 
- *      extract the command message from the RX FIFO buffer into the command FIFO buffer
+ * @Description 
+ *      parse a received CAN bus message and feed a response back to the CAN bus
  * @Parameters 
- *      None
+ *      can_rx_msg: the CAN Rx Message that you want to parse
  * @Return 
  *      None
  */
@@ -467,12 +509,179 @@ void CAN_parseRxMsg( CAN_MSG_t can_rx_msg )
     }
 }
 
-
-void CAN_processErrorReportMsg()
+/*
+ * @Description 
+ *      If a CAN message is parsed as system error report message, process this error report message 
+ * @Parameters 
+ *      can_msg_to_process: the system error report message to process 
+ * @Return 
+ *      None
+ */
+void CAN_processErrorReportMsg( CAN_MSG_t can_msg_to_process )
 {
-//    erro
+    CAN_MSG_t can_msg_response;
+    can_msg_response.Id = can_msg_to_process.Id;
+    can_msg_response.dataLength = 8;
+    // Check the system error state
+    if(system_error.errStatus == 0)
+    {
+        can_msg_response.data[0] = NoError;
+        strcpy(&can_msg_response.data[1], "NoError");
+        CanTxMsgFifoPush(can_msg_response);
+    }
+    
+    if(system_error.errStatusFlag.MainVolt)
+    {
+        can_msg_response.data[0] = MainVoltError;
+        strcpy(&can_msg_response.data[1], "MainVlt");
+        CanTxMsgFifoPush(can_msg_response);
+    }
+    
+    if(system_error.errStatusFlag.OverLoad)
+    {
+        can_msg_response.data[0] = OverloadError;
+        strcpy(&can_msg_response.data[1], "Ovrload");
+        CanTxMsgFifoPush(can_msg_response);
+    }
+    
+    if(system_error.errStatusFlag.PFC)
+    {
+        can_msg_response.data[0] = PFCError;
+        strcpy(&can_msg_response.data[1], "PFCErro");
+        CanTxMsgFifoPush(can_msg_response);        
+    }
+     
+    if(system_error.errStatusFlag.InternalPowerSupply)
+    {
+        can_msg_response.data[0] = InternalPowerSupplyError;
+        strcpy(&can_msg_response.data[1], "PwerErr");
+        CanTxMsgFifoPush(can_msg_response);
+    }
 }
 
+void CAN_processStatusRequestMsg( CAN_MSG_t can_msg_to_process )
+{
+    uint16_t id = 0;
+    uint8_t msg = 0;
+    uint8_t data[5] = {0};
+    if(can_msg_to_process.dataLength == 8)
+    {
+        id = can_msg_to_process.data[1]; // Hold high byte ID 0b0000 0xxx
+        id = id << 8;
+        id = id + can_msg_to_process.data[0]; // Hold low byte ID 0bxxxx xxxx
+        msg = can_msg_to_process.data[2];
+        memcpy(data, &can_msg_to_process.data[3], 5);
+    }
+    // Here handle id that you get
+    
+    // Here handle msg that you get 
+    
+    // Here handle data that you get
+    
+}
+
+void CAN_processVersionRequestMsg( CAN_MSG_t can_msg_to_process )
+{
+    CAN_MSG_t can_msg_response;
+    can_msg_response.Id = can_msg_to_process.Id;
+    can_msg_response.dataLength = 8;
+    memcpy(&can_msg_response.data[0], "T1", 2);     // Data 0.1 hold hardware type
+    memcpy(&can_msg_response.data[2], "V1", 2);     // Data 2.3 hold hardware version
+    memcpy(&can_msg_response.data[4], "V1", 2);     // Data 4.5 hold bootloader version
+    memcpy(&can_msg_response.data[6], "V1", 2);     // Data 6.7 hold application version
+    CanTxMsgFifoPush(can_msg_response);
+}
+
+void CAN_processProductionDataRequest( CAN_MSG_t can_msg_to_process )
+{
+    
+}
+
+
+
+/*
+ * @Description 
+ *      check if the CAN TX MSG FIFO buffer is empty
+ * @Parameters 
+ *      None
+ * @Return 
+ *      true: the CAN TX MSG FIFO buffer is empty
+ *      false: the CAN TX MSG FIFO buffer has some TX messages
+ */
+bool isCanTxMsgFifoEmpty(void)
+{
+    if( CAN_TX_MSG_FIFO.countMsgs == 0 ) return true;
+    else return false;
+}
+
+/*
+ * @Description 
+ *      check if the CAN TX MSG FIFO buffer is full
+ * @Parameters 
+ *      None
+ * @Return 
+ *      true: the CAN TX MSG FIFO buffer is full
+ *      false: the CAN TX MSG FIFO buffer can store more messages
+ */
+bool isCanTxMsgFifoFull(void)
+{
+    if( CAN_TX_MSG_FIFO.countMsgs == CAN_TX_MSG_FIFO.size ) return true;
+    else return false;
+}
+
+/*
+ * @Description 
+ *      push a tx message into the CAN TX MSG FIFO buffer
+ * @Parameters 
+ *      TxMsgIn: the tx message you want to push into the CAN TX MSG FIFO buffer
+ * @Return 
+ *      true: pushing a tx message into the CAN TX MSG FIFO buffer is successful
+ *      false: can not push a tx message into the CAN TX MSG FIFO buffer
+ */
+bool CanTxMsgFifoPush(CAN_MSG_t TxMsgIn)
+{
+    if(isCanTxMsgFifoFull())
+    {
+        return false;
+    }
+    CAN_TX_MSG_FIFO.pFIFO[CAN_TX_MSG_FIFO.inPosition] = TxMsgIn;
+    CAN_TX_MSG_FIFO.countMsgs++;
+    CAN_TX_MSG_FIFO.inPosition = (CAN_TX_MSG_FIFO.inPosition + 1) % CAN_TX_MSG_FIFO.size; // round FIFO buffer
+    return true;
+}
+
+/*
+ * @Description 
+ *      pop a tx message from the CAN TX MSG FIFO buffer
+ * @Parameters 
+ *      pTxMsgOut: pointer to a place where you store the tx message popped from the CAN TX MSG FIFO buffer
+ * @Return 
+ *      true: popping a tx message from the CAN TX FIFO buffer is successful
+ *      false: can not pop a tx message from the CAN TX FIFO buffer
+ */
+bool CanTxMsgFifoPop(CAN_MSG_t *pTxMsgOut)
+{
+    if(isCanTxMsgFifoEmpty())
+    {
+        return false;
+    }
+    if(pTxMsgOut == NULL)
+    {
+        return false;
+    }
+    *pTxMsgOut = CAN_TX_MSG_FIFO.pFIFO[CAN_TX_MSG_FIFO.outPosition];
+    CAN_TX_MSG_FIFO.countMsgs--;
+    CAN_TX_MSG_FIFO.outPosition = (CAN_TX_MSG_FIFO.outPosition + 1) % CAN_TX_MSG_FIFO.size; // round FIFO buffer
+    return true;
+}
+/*
+ * @Description 
+ *      
+ * @Parameters 
+ *      None
+ * @Return 
+ *      None
+ */
 /*******************************************************************************
  End of File
  */
